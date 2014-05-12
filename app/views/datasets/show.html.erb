@@ -193,9 +193,7 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
     <%if Kai.test_file(@dataset.jdx_file) %>
           <%= button_to "interactive plot",{ action: "plotpoint",:dataset_id => @dataset.id}, :class => "btn btn-xs btn-default" %>
     <%end%>
-  <div class="well"> 
- 
-  </div>
+    <div  class="well"> <div id="duplic"> </div> </div>
     <%= image_tag(@dataset.preview_url, size: "450x300", alt: "preview") %> 
 </div>
 
@@ -276,10 +274,13 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
                 <!-- The extended global progress information -->
                 <div class="progress-extended">&nbsp;</div>
             </div>
+    
+   
     </form>
 
 </div>
-
+ 
+ 
 <br/>
 
 <!-- The template to display files available for upload -->
@@ -324,11 +325,14 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
         <td>
+             {% if (file.thumbnailUrl) { %}
             <span class="preview">
-                {% if (file.thumbnailUrl) { %}
+               
                     <a href="{%=file.url%}" target="_blank" title="{%=file.name%}" download="{%=file.name%}" ><img src="{%=file.thumbnailUrl%}" height="40px"></a>
-                {% } %}
+                
             </span>
+            
+                {% } %}
         </td>
         <td>
             <span>{%=file.relativePath%}</span><p class="name">
@@ -363,9 +367,11 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
         </td>
     </tr>
 {% } %}
+
 </script>
 
 <script src="/js/vendor/jquery.ui.widget.js"></script>
+
 
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="/js/tmpl.min.js"></script>
