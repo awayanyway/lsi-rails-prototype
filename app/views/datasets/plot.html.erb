@@ -3,16 +3,15 @@
 <button id="2">show spectrum</button>
 <div id="fullspectrum" style="height: 50px; width: 100%;"> </div> 
 <div id="spectrum" style="height: 420px; width: 100%;"> </div>  
-<script type="text/javascript">
 
+<%= link_to 'Back to dataset', @dataset, :class => "btn btn-sm btn-default" %> 
+
+<script type="text/javascript">
 
 var cont,cont2, data, opt; 
 cont  =   document.getElementById("spectrum");
 cont2 =  document.getElementById("fullspectrum");
-
 data =  <%= @plotdx.xy %> ;
-
-
 opt = {
         
         title: "<%= @plotdx.TITLE %> - <%= @plotdx.TYPE %> ",
@@ -26,9 +25,8 @@ opt = {
         titleAngle: 90, 
         autoscale: false     
         },
-        
-       
-    };
+     };
+     
 
 dual_mouse_zoom(cont,cont2, data, opt);
 </script>
@@ -42,4 +40,5 @@ $(document).ready(function(){
 });
 
 </script>
+
 
