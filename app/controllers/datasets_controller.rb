@@ -264,7 +264,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if c.save
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully committed.' }
+        format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully committed.' }
         format.json { head :no_content }
       else
         format.html { render action: "show" }
@@ -374,7 +374,7 @@ class DatasetsController < ApplicationController
         dsg.save
         dsg.datasets << @dataset
 
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
+        format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully created.' }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
         format.html { render action: "new" }
@@ -423,7 +423,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
 
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully forked.' }
+        format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully forked.' }
         format.json { render json: @dataset, status: :created, location: @dataset }
 
     end
@@ -440,7 +440,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.update_attributes(params[:dataset])
-        format.html { redirect_to dataset_path(@dataset.id, :reaction_id => params[:reaction_id], notice: 'Dataset was successfully updated.') }
+        format.html { redirect_to dataset_path(@dataset.id, :reaction_id => params[:reaction_id], :project_id => @project.id, notice: 'Dataset was successfully updated.') }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -459,7 +459,7 @@ class DatasetsController < ApplicationController
     @dataset.destroy
 
     respond_to do |format|
-      format.html { redirect_to datasets_url }
+      format.html { redirect_to datasets_path(:project_id => @project.id) }
       format.json { head :no_content }
     end
   end
