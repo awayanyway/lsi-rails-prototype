@@ -103,7 +103,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
 
   def set_content_type(*args)
-    self.file.instance_variable_set(:@content_type, "image/jpg")
+    self.file.instance_variable_set(:@content_type, "image/jpeg")
   end
 
   def image?(new_file)
