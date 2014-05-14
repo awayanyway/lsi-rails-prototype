@@ -271,6 +271,9 @@ class Dataset < ActiveRecord::Base
     #detect jdx
       if a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
+
+        a.cache_stored_file!
+        a.retrieve_from_cache!(a.cache_name)
         jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
        
         
