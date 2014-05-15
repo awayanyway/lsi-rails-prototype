@@ -269,12 +269,22 @@ class Dataset < ActiveRecord::Base
     attachments.each do |a|
 
     #detect jdx
-      if Rails.env.localserver? && a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
+      if a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
 
-        a.cache_stored_file!
-        a.retrieve_from_cache!(a.cache_name)
-        jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
+        if !Rails.env.localserver? then
+          Tempfile.open("jdxfile") do |f|
+            f.binmode
+            f.write(model.attachment.file.read)
+
+            jdx_data = Jcampdx.load_jdx(":file #{f.path} :process  extract #{extract_label}, extract_first ").last[:extract]
+          end
+
+
+
+        else
+          jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
+        end
        
         
         title = (jdx_data[:"TITLE"] && jdx_data[:"TITLE"][0] ) || "n.d." 
