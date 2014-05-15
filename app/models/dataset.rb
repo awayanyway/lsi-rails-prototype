@@ -269,7 +269,7 @@ class Dataset < ActiveRecord::Base
     attachments.each do |a|
 
     #detect jdx
-      if a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
+      if Rails.env.localserver? && a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
 
         if !Rails.env.localserver? then
