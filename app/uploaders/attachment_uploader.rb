@@ -56,8 +56,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image? do
    
      
-     
-    #process :dx_to_ps, :if => :jdx?
+    if Rails.env.localserver? or Rails.env.development? then 
+      process :dx_to_ps, :if => :jdx?
+    end
     # process :resize_first_page
 
     process :convert => :jpg
@@ -108,9 +109,11 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def image?(new_file)
 
-    # extensions = %w(jpg jpeg gif png pdf ps dx jdx)
-
-    extensions = %w(jpg jpeg gif png pdf ps)
+    if Rails.env.localserver? or Rails.env.development? then
+      extensions = %w(jpg jpeg gif png pdf ps dx jdx)
+    else
+      extensions = %w(jpg jpeg gif png pdf ps)
+    end
 
     extension = File.extname(new_file.path.to_s).downcase
     extension = extension[1..-1] if extension[0,1] == '.'

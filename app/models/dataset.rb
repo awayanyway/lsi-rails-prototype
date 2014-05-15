@@ -269,24 +269,10 @@ class Dataset < ActiveRecord::Base
     attachments.each do |a|
 
     #detect jdx
-      if Rails.env.localserver? && a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
+      if (if Rails.env.localserver? or Rails.env.development?) && a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
 
-        if !Rails.env.localserver? then
-          Tempfile.open("jdxfile") do |f|
-            f.binmode
-            f.write(a.file.read)
-            f.close
-
-            jdx_data = Jcampdx.load_jdx(":file #{f.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
-          end
-
-
-
-        else
-          jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
-        end
-       
+        jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]      
         
         title = (jdx_data[:"TITLE"] && jdx_data[:"TITLE"][0] ) || "n.d." 
         if jdx_data[:"DATA TYPE"] && jdx_data[:"DATA TYPE"][0] =~ /NMR/

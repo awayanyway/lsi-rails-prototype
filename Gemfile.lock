@@ -18,9 +18,9 @@ GIT
 
 GIT
   remote: git://github.com/awayanyway/kaitatari.git
-  revision: 3b9db2df0c2b62a625a27266c68b8783b9a13744
+  revision: 626c190cd6a3c87471e35f7fd66ce654e0b99e5b
   specs:
-    kaitatari (0.0.2.23)
+    kaitatari (0.0.2.24)
 
 GIT
   remote: git://github.com/davidw/noVNCgem.git
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 2fe11e4cddfa0b1e7faa199bfd2279fed3b55d48
+  revision: e57328dd018cbb51e248742014aac1ec5198c5bc
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
