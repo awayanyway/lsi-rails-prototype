@@ -269,7 +269,7 @@ class Dataset < ActiveRecord::Base
     attachments.each do |a|
 
     #detect jdx
-      if (if Rails.env.localserver? or Rails.env.development?) && a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
+      if (Rails.env.localserver? or Rails.env.development?) && a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
 
         jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]      
