@@ -275,7 +275,7 @@ class Dataset < ActiveRecord::Base
         if !Rails.env.localserver? then
           Tempfile.open("jdxfile") do |f|
             f.binmode
-            f.write(model.attachment.file.read)
+            f.write(a.file.read)
 
             jdx_data = Jcampdx.load_jdx(":file #{f.path} :process  extract #{extract_label}, extract_first ").last[:extract]
           end
