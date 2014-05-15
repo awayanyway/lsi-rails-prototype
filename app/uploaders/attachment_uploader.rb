@@ -108,7 +108,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def image?(new_file)
 
-    extensions = %w(jpg jpeg gif png pdf ps dx jdx)
+    # extensions = %w(jpg jpeg gif png pdf ps dx jdx)
+
+    extensions = %w(jpg jpeg gif png pdf ps)
 
     extension = File.extname(new_file.path.to_s).downcase
     extension = extension[1..-1] if extension[0,1] == '.'
