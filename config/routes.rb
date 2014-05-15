@@ -99,6 +99,8 @@ LsiRailsPrototype::Application.routes.draw do
 
   controller :datasets do
     post 'datasets/:id/plot' => :plotpoint
+    post 'datasets/plot' => :plotpoint
+    post 'datasets/munch' => :munch
   end
   
   resources :datasets do

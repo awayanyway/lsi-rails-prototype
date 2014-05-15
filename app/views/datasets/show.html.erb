@@ -142,7 +142,7 @@
     <div class="navbar navbar-fixed-left col-xs-12 col-sm-2 col-md-2 bs-sidebar">
 
 
-      <div class="well">
+    <div class="well">
 
         <% @currentitem = "datasets" %>
 
@@ -152,7 +152,7 @@
 
 <%= render 'layouts/databasemenu', :category => "datasets", :project_id => @project.id %>
 
-        <%= render 'layouts/projectsmenu', :category => "datasets", :project_id => @project.id %>
+<%= render 'layouts/projectsmenu', :category => "datasets", :project_id => @project.id %>
 
 
 
@@ -183,8 +183,9 @@ $(document).ajaxSend(function(e, xhr, options) {
 
 </script>
 
-<h1><span class="glyphicon glyphicon-paperclip" /><%= @dataset.method %><% if !@dataset.title.blank? then %> - <%= @dataset.title %><% end %>&nbsp;<%= link_to "/datasets/"+@dataset.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %><% if @changerights then %>&nbsp;
-
+<h1><span class="glyphicon glyphicon-paperclip" /><%= @dataset.method %><% if !@dataset.title.blank? then %> - <%= @dataset.title %><% end %>
+    <%= link_to "/datasets/"+@dataset.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %>
+    <% if @changerights then %>&nbsp;
     <%= link_to 'Edit metadata', edit_dataset_path(@dataset, :reaction_id => params[:reaction_id]), :class => "btn btn-sm btn-success" %>
     &nbsp;<%= link_to("Delete", @dataset, :method => :delete, :confirm => "Are you sure?", :title => "Delete Dataset.", :class => "btn btn-sm btn-warning") %>
 
@@ -213,15 +214,29 @@ $(document).ajaxSend(function(e, xhr, options) {
 var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
  
 </script>
-<div id="plotting">  
-    <%if Kai.test_file(@dataset.jdx_file) %>
-          <%= button_to "interactive plot",{ action: "plotpoint",:dataset_id => @dataset.id}, :class => "btn btn-xs btn-default" %>
-    <%end%>
-    <div  class="well"> <div id="duplic"> </div> </div>
-    <%= image_tag(@dataset.preview_url, size: "450x300", alt: "preview") %> 
+<div  class="well" id="plotting">
+    
+      <button id="intplt">interactive plot</button>  
+      <div id="preview0" style="display:none;">  </div>  
+      <div id="preview1"   >  <%= image_tag(@dataset.preview_url, size: "450x300", alt: "preview") %>      </div> 
+    <div id="preview2"   >  </div>
 </div>
-
-
+<script>
+$(document).ready(function(){
+  $("button#intplt").click(function(){
+    var   url =       '/datasets/plot',    //'/datasets/munch',
+       ajdata = { 
+                  dataset_id: <%=@dataset.id %>,
+                  id: <%=@dataset.id %>,
+                 } ,
+    getnewdata2 = $.ajax({ type: "POST", url: url,  data: ajdata   }) ;   
+    //$.ajax({ type: "POST", url: url,  data: ajdata   }); 
+  $.when(getnewdata2).done(function(msg){  $( "#preview0" ).html( msg ); } );
+    $("div#preview0").toggle();
+    $("div#preview1").toggle(); 
+     });
+});
+</script>
 <br>
 <br>
 <div>
