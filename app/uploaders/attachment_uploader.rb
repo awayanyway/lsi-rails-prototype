@@ -57,7 +57,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
    
      
      
-    process :dx_to_ps, :if => :jdx?
+    #process :dx_to_ps, :if => :jdx?
     # process :resize_first_page
 
     process :convert => :jpg
