@@ -25,65 +25,60 @@ $(function () {
       //  filesContainer: $('.files'),
         replaceFileInput: false,
     });
-    $('#fileupload').fileupload({
-       //filesContainer: $('table.files'),
-       // uploadTemplateId: null,
-        downloadTemplateId: null,
-        downloadTemplate: function (o) {
-            var rows = $();
-            $.each(o.files, function (index, file) {
-                var row = $('<tr class="template-download fade">' +
-                    '<td><span class="preview"></span></td>' +
-                    '<td><p class="name"></p>' +
-                    (file.error ? '<div class="error"></div>' : '') +
-                    '</td>' +
-                    '<td><span class="size"></span></td>' +
-                    '<td><button class="btn btn-danger delete"><span>Delete</span></button>' +
-                    '<input type="checkbox" name="delete" value="1" class="toggle"></td>'+
-                    '</tr>'),
-                    credential = {"withCredentials":true};
-                row.find('.size').text(o.formatFileSize(file.size));
-                if (file.error) {
-                    row.find('.name').text(file.name);
-                    row.find('.error').text(file.error);
-                } else {
-                    row.find('.name').append($('<a></a>').text(file.name));
-                    if (file.thumbnailUrl) {
-                        row.find('.preview').append(
-                            $('<a></a>').append(
-                                $('<img>')
-                                          .prop('src', file.thumbnailUrl)
-//                                          .height(40)
-//                                          .width(60)            
-                            )
-                        );
-                       row.find('img').clone(true).appendTo("#duplic");
-//                       $("#duplic").find('img')
-//                        .height(240)
-//                        .width(360) ;
-                        row.find('img')
-                        .height(40)
-                        .width(60);
-                    }
-                    row.find('a')
-                        .attr('data-gallery', '')
-                        .prop('href', file.url);
-                    if (file.deleteUrl) { 
-                     row.find('.delete')
-                        .attr('data-type', file.deleteType)
-                        .attr('data-url', file.deleteUrl);
-                     row.find('button').append($('<i class="glyphicon glyphicon-trash"></i>'));
-                    }
-                    if (file.deleteWithCredentials) { 
-                    	row.find('.delete').prop('data-xhr-fields', credential);
-                     }
-                }
-                rows = rows.add(row);
-            });
-            return rows;
-        }
-    });
- //   }
+//    $('#fileupload').fileupload({
+//       //filesContainer: $('table.files'),
+//       // uploadTemplateId: null,
+//        downloadTemplateId: null,
+//        downloadTemplate: function (o) {
+//            var rows = $();
+//            $.each(o.files, function (index, file) {
+//                var row = $('<tr class="template-download fade">' +
+//                    '<td><span class="preview"></span></td>' +
+//                    '<td><p class="name"></p>' +
+//                    (file.error ? '<div class="error"></div>' : '') +
+//                    '</td>' +
+//                    '<td><span class="size"></span></td>' +
+//                    '<td><button class="btn btn-danger delete"><span>Delete</span></button>' +
+//                    '<input type="checkbox" name="delete" value="1" class="toggle"></td>'+
+//                    '</tr>'),
+//                    credential = {"withCredentials":true};
+//                row.find('.size').text(o.formatFileSize(file.size));
+//                if (file.error) {
+//                    row.find('.name').text(file.name);
+//                    row.find('.error').text(file.error);
+//                } else {
+//                    row.find('.name').append($('<a></a>').text(file.name));
+//                    if (file.thumbnailUrl) {
+//                        row.find('.preview').append(
+//                            $('<a></a>').append(
+//                                $('<img>')
+//                                          .prop('src', file.thumbnailUrl)         
+//                            )
+//                        );
+//                       row.find('img').clone(true).appendTo("#duplic");
+//                        row.find('img')
+//                        .height(40)
+//                        .width(60);
+//                    }
+//                    row.find('a')
+//                        .attr('data-gallery', '')
+//                        .prop('href', file.url);
+//                    if (file.deleteUrl) { 
+//                     row.find('.delete')
+//                        .attr('data-type', file.deleteType)
+//                        .attr('data-url', file.deleteUrl);
+//                     row.find('button').append($('<i class="glyphicon glyphicon-trash"></i>'));
+//                    }
+//                    if (file.deleteWithCredentials) { 
+//                    	row.find('.delete').prop('data-xhr-fields', credential);
+//                     }
+//                }
+//                rows = rows.add(row);
+//            });
+//            return rows;
+//        }
+//    });
+
     
     
     // Enable iframe cross-domain access via redirect option:
