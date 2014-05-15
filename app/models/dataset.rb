@@ -276,6 +276,7 @@ class Dataset < ActiveRecord::Base
           Tempfile.open("jdxfile") do |f|
             f.binmode
             f.write(a.file.read)
+            f.close
 
             jdx_data = Jcampdx.load_jdx(":file #{f.path} :process  extract #{extract_label}, extract_first ").last[:extract]
           end
