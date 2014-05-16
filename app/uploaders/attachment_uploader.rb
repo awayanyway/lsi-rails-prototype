@@ -94,11 +94,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def dx_to_ps
-  # j=Jcampdx.load_jdx(":file #{current_path} :return_as ps :output  ps  :output_file #{current_path}")
-  # j=Jcampdx.new(":file #{current_path} :process extract TITLE, DATA TYPE, param data point raw first")
-  # j.processor
-  # j.output_cw
-  Jcampdx.load_jdx4cw(":file #{current_path} :process x_all extract TITLE,OWNER, DATA TYPE, param data point raw first")
+   
+   Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
   end
 
 
