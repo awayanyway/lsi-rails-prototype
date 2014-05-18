@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 03a0e0c5a88ba8a6a9c4cbc90a070e09400f2dc9
+  revision: 867ce443c99256b6416852c349846e3dad4c57c4
   specs:
-    dial_a_device_node (0.0.26)
+    dial_a_device_node (0.0.27)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: e57328dd018cbb51e248742014aac1ec5198c5bc
+  revision: 52ecae4e79858063aba51885594409fcce2f38cc
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -215,8 +215,10 @@ GEM
       rails_stdout_logging
     rails_serve_static_assets (0.0.2)
     rails_stdout_logging (0.0.3)
-    rake (10.3.1)
+    rake (10.3.2)
     redis (3.0.7)
+    redis-objects (0.9.1)
+      redis (>= 3.0.2)
     ref (1.0.5)
     rubabel (0.1.0)
     rubyzip (1.1.3)
@@ -260,13 +262,14 @@ GEM
     warden (1.2.3)
       rack (>= 1.0)
     websocket-driver (0.3.3)
-    websocket-rails (0.6.2)
+    websocket-rails (0.7.0)
       em-synchrony
       faye-websocket
       hiredis
       rack
       rails
       redis
+      redis-objects
       thin
     will_paginate (3.0.5)
     will_paginate-bootstrap (1.0.0)
@@ -317,6 +320,6 @@ DEPENDENCIES
   thin
   uglifier
   unf
-  websocket-rails (~> 0.6.2)
+  websocket-rails
   will_paginate (~> 3.0.5)
   will_paginate-bootstrap
