@@ -31,13 +31,14 @@
         <div class="thumbnail">
             <%= image_submit_tag "../assets/beagleboard.jpg", :style => "width: 240px; height: 140px;", :onclick => "" %>
             <div class="caption">
-                <h3>Connect to BeagleBone</h3>                
-                <p>Serial number:</p>
+                <h3>Connect to BeagleBone</h3>     
+
+                <%= select_tag(:beaglebone_id, options_for_select(current_user.beaglebones.collect{ |r| [r.serialnumber, r.id] }, @device.beaglebone_id)) %>
+
                 <p>
-                <input id="beaglebone_serialnumber" type="text" name="beaglebone_serialnumber"/>
                  <button class = "btn btn-primary">Connect</button>                
                 </p>
-                <div id="connect-status"></div>
+
             </div>
 
         </div>
