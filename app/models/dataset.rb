@@ -185,7 +185,7 @@ class Dataset < ActiveRecord::Base
       if (at.nil?) then
         # select the best fit
 
-        at = attachments.where(["file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ?", "%jpg", "%pdf", "%gif", "%ps", "%dx", "%jdx"]).first
+        at = attachments.where(["file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ?", "%jpeg", "%jpg", "%pdf", "%gif", "%ps", "%dx", "%jdx"]).first
       end
     end
 
