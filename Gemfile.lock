@@ -1,0 +1,325 @@
+GIT
+  remote: git://github.com/Cominch/chemrails.git
+  revision: d595fc995c96a07a6146534c3fdc53830f6ecb02
+  specs:
+    chemrails (0.0.34)
+
+GIT
+  remote: git://github.com/Cominch/dial-a-device-node.git
+  revision: f7b990695ed24da56f72d2c8b11cd43ea816b664
+  specs:
+    dial_a_device_node (0.0.28)
+
+GIT
+  remote: git://github.com/Cominch/openbabel-heroku-gem.git
+  revision: 78225803d9d71db5f8fcb5721da9e411f9a2a962
+  specs:
+    openbabel-heroku (2.3.2.0)
+
+GIT
+  remote: git://github.com/awayanyway/kaitatari.git
+  revision: 626c190cd6a3c87471e35f7fd66ce654e0b99e5b
+  specs:
+    kaitatari (0.0.2.24)
+
+GIT
+  remote: git://github.com/davidw/noVNCgem.git
+  revision: 50f1826e9d1d9f37e7adfc992a12eca409c885bb
+  specs:
+    noVNC (0.3)
+      rails
+
+GIT
+  remote: git://github.com/plataformatec/simple_form.git
+  revision: 9196efd2562573aa08037034051fc8c924083e10
+  specs:
+    simple_form (3.1.0.rc1)
+      actionpack (~> 4.0)
+      activemodel (~> 4.0)
+
+GIT
+  remote: git://github.com/rails/rails.git
+  revision: bb39fffc5556093243e5b4df5c95bb2df6d6b72a
+  branch: 4-0-stable
+  specs:
+    actionmailer (4.0.5)
+      actionpack (= 4.0.5)
+      mail (~> 2.5.4)
+    actionpack (4.0.5)
+      activesupport (= 4.0.5)
+      builder (~> 3.1.0)
+      erubis (~> 2.7.0)
+      rack (~> 1.5.2)
+      rack-test (~> 0.6.2)
+    activemodel (4.0.5)
+      activesupport (= 4.0.5)
+      builder (~> 3.1.0)
+    activerecord (4.0.5)
+      activemodel (= 4.0.5)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.5)
+      arel (~> 4.0.0)
+    activesupport (4.0.5)
+      i18n (~> 0.6, >= 0.6.9)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    rails (4.0.5)
+      actionmailer (= 4.0.5)
+      actionpack (= 4.0.5)
+      activerecord (= 4.0.5)
+      activesupport (= 4.0.5)
+      bundler (>= 1.3.0, < 2.0)
+      railties (= 4.0.5)
+      sprockets-rails (~> 2.0)
+    railties (4.0.5)
+      actionpack (= 4.0.5)
+      activesupport (= 4.0.5)
+      rake (>= 0.8.7)
+      thor (>= 0.18.1, < 2.0)
+
+GIT
+  remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
+  revision: a416cb86a3ddc6906892b2c0472deea306989fea
+  specs:
+    bootstrap-sass (3.1.1.1)
+      sass (~> 3.2)
+
+GIT
+  remote: git://github.com/timon/dav4rack.git
+  revision: 734ccbac30d2354bfac9440d2bbc8072531513e0
+  specs:
+    dav4rack (0.3.0)
+      nokogiri (>= 1.4.2)
+      rack (>= 1.1.0)
+      uuidtools (~> 2.1.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activerecord-deprecated_finders (1.0.3)
+    acts_as_list (0.4.0)
+      activerecord (>= 3.0)
+    arel (4.0.2)
+    bcrypt (3.1.7)
+    bootstrap-wysiwyg-rails (0.3.1)
+      actionpack (>= 3.1)
+      railties (>= 3.1)
+    builder (3.1.4)
+    carrierwave (0.10.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      json (>= 1.7)
+      mime-types (>= 1.16)
+    carrierwave_direct (0.0.14)
+      carrierwave
+      fog
+      uuidtools
+    cocoon (1.2.6)
+    coffee-rails (4.0.1)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0, < 5.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.7.0)
+    daemons (1.1.9)
+    devise (3.2.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
+    devise_invitable (1.3.5)
+      actionmailer (>= 3.2.6, < 5)
+      devise (>= 3.2.0)
+    devise_ldap_authenticatable (0.8.1)
+      devise (>= 3.0)
+      net-ldap (>= 0.3.1, < 0.6.0)
+    dotenv (0.7.0)
+    em-synchrony (1.0.3)
+      eventmachine (>= 1.0.0.beta.1)
+    erubis (2.7.0)
+    eventmachine (1.0.3)
+    excon (0.33.0)
+    execjs (2.0.2)
+    faye-websocket (0.7.3)
+      eventmachine (>= 0.12.0)
+      websocket-driver (>= 0.3.1)
+    fog (1.22.0)
+      fog-brightbox
+      fog-core (~> 1.21, >= 1.21.1)
+      fog-json
+      nokogiri (~> 1.5, >= 1.5.11)
+    fog-brightbox (0.0.2)
+      fog-core
+      fog-json
+    fog-core (1.22.0)
+      builder
+      excon (~> 0.33)
+      formatador (~> 0.2)
+      mime-types
+      net-scp (~> 1.1)
+      net-ssh (>= 2.1.3)
+    fog-json (1.0.0)
+      multi_json (~> 1.0)
+    foreman (0.66.0)
+      dotenv (~> 0.7.0)
+      thor (~> 0.19.1)
+    formatador (0.2.4)
+    hike (1.2.3)
+    hiredis (0.5.2)
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    i18n (0.6.9)
+    jquery-hotkeys-rails (0.7.9.1)
+      railties (>= 3.1)
+    jquery-rails (3.1.0)
+      railties (>= 3.0, < 5.0)
+      thor (>= 0.14, < 2.0)
+    jquery-ui-rails (4.2.1)
+      railties (>= 3.2.16)
+    json (1.8.1)
+    libv8 (3.16.14.3)
+    mail (2.5.4)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    mime-types (1.25.1)
+    mini_magick (3.7.0)
+      subexec (~> 0.2.1)
+    mini_portile (0.6.0)
+    minitest (4.7.5)
+    multi_json (1.10.1)
+    multi_xml (0.5.5)
+    net-ldap (0.5.1)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.1)
+    nokogiri (1.6.2.1)
+      mini_portile (= 0.6.0)
+    openbabel (2.3.2.0)
+    orm_adapter (0.5.0)
+    pg (0.17.1)
+    polyglot (0.3.4)
+    protected_attributes (1.0.7)
+      activemodel (>= 4.0.1, < 5.0)
+    pundit (0.2.3)
+      activesupport (>= 3.0.0)
+    rack (1.5.2)
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.2)
+    rails_stdout_logging (0.0.3)
+    rake (10.3.2)
+    redis (3.0.7)
+    redis-objects (0.9.1)
+      redis (>= 3.0.2)
+    ref (1.0.5)
+    rubabel (0.1.0)
+    rubyzip (1.1.3)
+    sass (3.2.19)
+    sass-rails (4.0.3)
+      railties (>= 4.0.0, < 5.0)
+      sass (~> 3.2.0)
+      sprockets (~> 2.8, <= 2.11.0)
+      sprockets-rails (~> 2.0)
+    sprockets (2.11.0)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
+    sprockets-rails (2.1.3)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      sprockets (~> 2.8)
+    subexec (0.2.3)
+    therubyracer (0.12.1)
+      libv8 (~> 3.16.14.0)
+      ref
+    thin (1.6.2)
+      daemons (>= 1.0.9)
+      eventmachine (>= 1.0.0)
+      rack (>= 1.0.0)
+    thor (0.19.1)
+    thread_safe (0.3.3)
+    tilt (1.4.1)
+    treetop (1.4.15)
+      polyglot
+      polyglot (>= 0.3.1)
+    tzinfo (0.3.39)
+    uglifier (2.5.0)
+      execjs (>= 0.3.0)
+      json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.6)
+    uuidtools (2.1.4)
+    warden (1.2.3)
+      rack (>= 1.0)
+    websocket-driver (0.3.3)
+    websocket-rails (0.7.0)
+      em-synchrony
+      faye-websocket
+      hiredis
+      rack
+      rails
+      redis
+      redis-objects
+      thin
+    will_paginate (3.0.5)
+    will_paginate-bootstrap (1.0.0)
+      will_paginate (>= 3.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  actionmailer
+  acts_as_list
+  arel (~> 4.0.0)
+  bootstrap-sass!
+  bootstrap-wysiwyg-rails
+  carrierwave
+  carrierwave_direct
+  chemrails!
+  cocoon
+  coffee-rails
+  dav4rack!
+  devise
+  devise_invitable
+  devise_ldap_authenticatable
+  dial_a_device_node!
+  fog
+  foreman
+  httparty
+  jquery-hotkeys-rails
+  jquery-rails
+  jquery-ui-rails
+  kaitatari!
+  mini_magick
+  noVNC!
+  openbabel
+  openbabel-heroku!
+  pg
+  protected_attributes
+  pundit
+  rails!
+  rails_12factor
+  rails_serve_static_assets
+  rake
+  rubabel
+  rubyzip
+  sass-rails (~> 4.0.0)
+  simple_form!
+  therubyracer
+  thin
+  uglifier
+  unf
+  websocket-rails
+  will_paginate (~> 3.0.5)
+  will_paginate-bootstrap
