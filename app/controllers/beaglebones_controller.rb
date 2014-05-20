@@ -16,7 +16,7 @@ class BeaglebonesController < ApplicationController
 
       @bb = @beaglebones.first
 
-      @devices = Device.where (["beaglebone_id = ?", @bb])
+      @device = Device.where(["beaglebone_id = ?", @bb]).first
 
       if (@bb) then
 
@@ -26,13 +26,13 @@ class BeaglebonesController < ApplicationController
 
         @bb.update_attribute(:external_ip, request.remote_ip)
 
-        if (@devices.last) then
+        if (@device) then
 
           @bb = OpenStruct.new(:id => @bb.id, :serialnumber => @bb.serialnumber)
 
-          @bb.device = @devices.last
+          @bb.device = @device
 
-          @bb.devicetype = @devices.last.devicetype
+          @bb.devicetype = @device.devicetype
         end
 
       end
