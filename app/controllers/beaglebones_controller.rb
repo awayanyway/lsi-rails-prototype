@@ -8,7 +8,7 @@ class BeaglebonesController < ApplicationController
   
   def heartbeat
 
-    @bb = OpenStruct.new
+    @bb = OpenStruct.new(:id => 0, :serialnumber => "nope")
 
     @beaglebones = Beaglebone.where (["serialnumber = ?", params[:serialnumber]])
 
