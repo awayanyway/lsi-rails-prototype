@@ -22,7 +22,11 @@ class BeaglebonesController < ApplicationController
 
         @bb.update_attribute(:last_seen, Time.now)
 
-        @bb.update_attribute(:internal_ip, params[:beaglebone][:ipaddress])
+        if !params[:beaglebone].nil? then
+
+          @bb.update_attribute(:internal_ip, params[:beaglebone][:ipaddress])
+
+        end
 
         @bb.update_attribute(:external_ip, request.remote_ip)
 
