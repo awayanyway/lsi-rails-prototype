@@ -12,7 +12,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   else
      storage :fog
   end
-
+  
+  # Choose whether to process jdx file or not
+  @proc_jdx= true
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -56,7 +58,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image? do
    
      
-    if Rails.env.localserver? or Rails.env.development? then 
+    if @proc_jdx then 
       process :dx_to_ps, :if => :jdx?
     end
     # process :resize_first_page
@@ -106,11 +108,11 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def image?(new_file)
 
-    #if Rails.env.localserver? or Rails.env.development? then
+    if @proc_jdx then
       extensions = %w(jpg jpeg gif png pdf ps dx jdx)
-    #else
-    #  extensions = %w(jpg jpeg gif png pdf ps)
-    #end
+    else
+      extensions = %w(jpg jpeg gif png pdf ps)
+    end
 
     extension = File.extname(new_file.path.to_s).downcase
     extension = extension[1..-1] if extension[0,1] == '.'
