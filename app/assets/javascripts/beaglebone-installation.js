@@ -93,9 +93,9 @@ function ScriptRetrieveStatus(callback) {
     
     +'function checkNPMPackageStatus(callback) {'
     + 'var exec = require ("child_process").exec;'
-    + 'exec ("npm status", '
+    + 'exec ("npm list -g -parseable", '
 
-      +'function(error, stdout, stderr) { status.npmpackagestatus = "not installed"; callback() } ); '
+      +'function(error, stdout, stderr) { if (stdout.indexOf("dial-a-device-node") > -1) { status.npmpackagestatus = "installed"; } else { status.npmpackagestatus = "not installed"; } callback() } ); '
 
     + '}; '
     
@@ -122,7 +122,7 @@ function ScriptRetrieveStatus(callback) {
     + 'var exec = require ("child_process").exec;'
     + 'exec ("ping www.google.com -c 4", '
 
-      +'function(error, stdout, stderr) { status.internetconnection = "connected"; callback() } ); '
+      +'function(error, stdout, stderr) { if (stdout.indexOf("4 received") > -1) { status.internetconnection = "connected"; } else { status.internetconnection = "not connected"; }; callback() } ); '
 
     + '}; '
 
