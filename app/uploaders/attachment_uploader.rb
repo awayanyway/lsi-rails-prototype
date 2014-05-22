@@ -14,7 +14,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
   
   # Choose whether to process jdx file or not
-  @proc_jdx= true
+  #Rails.configuration.jdx_support.cw_thumbnail = true
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -58,7 +58,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image? do
    
      
-    if @proc_jdx then 
+    if Rails.configuration.jdx_support.cw_thumbnail then 
       process :dx_to_ps, :if => :jdx?
     end
     # process :resize_first_page
@@ -108,7 +108,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def image?(new_file)
 
-    if @proc_jdx then
+    if Rails.configuration.jdx_support.cw_thumbnail then
       extensions = %w(jpg jpeg gif png pdf ps dx jdx)
     else
       extensions = %w(jpg jpeg gif png pdf ps)

@@ -271,7 +271,8 @@ class Dataset < ActiveRecord::Base
     #detect jdx
 
       #if (Rails.env.localserver? or Rails.env.development?) && a.folder == "" && a.read_attribute(:file) =~ /j?dx\z/i then
-      if a.folder == "" && a.read_attribute(:file) =~ /j?dx\z/i then
+      
+      if Rails.configuration.jdx_support.detect_jdx  && a.read_attribute(:file) =~ /j?dx\z/i then
         
         ###########################
         # uploader methods to check:  
