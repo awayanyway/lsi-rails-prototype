@@ -327,7 +327,7 @@ end
 
     respond_to do |format|
       if c.save
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully committed.' }
+        format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully committed.' }
         format.json { head :no_content }
       else
         format.html { render action: "show" }
@@ -437,7 +437,7 @@ end
         dsg.save
         dsg.datasets << @dataset
 
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
+        format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully created.' }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
         format.html { render action: "new" }
@@ -486,7 +486,7 @@ end
 
     respond_to do |format|
 
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully forked.' }
+        format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully forked.' }
         format.json { render json: @dataset, status: :created, location: @dataset }
 
     end
@@ -503,7 +503,7 @@ end
 
     respond_to do |format|
       if @dataset.update_attributes(params[:dataset])
-        format.html { redirect_to dataset_path(@dataset.id, :reaction_id => params[:reaction_id], notice: 'Dataset was successfully updated.') }
+        format.html { redirect_to dataset_path(@dataset.id, :reaction_id => params[:reaction_id], :project_id => @project.id, notice: 'Dataset was successfully updated.') }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -522,7 +522,7 @@ end
     @dataset.destroy
 
     respond_to do |format|
-      format.html { redirect_to datasets_url }
+      format.html { redirect_to datasets_path(:project_id => @project.id) }
       format.json { head :no_content }
     end
   end
@@ -566,7 +566,7 @@ end
     end
 
     def set_project
-      if current_user. nil? then 
+      if current_user.nil? then 
         @project = Project.where(["title = ?", "chemotion"]).first
       else
         if params[:project_id].nil? || params[:project_id].empty? then

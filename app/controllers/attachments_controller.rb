@@ -81,7 +81,7 @@ class AttachmentsController < ApplicationController
         version = filename.split("_").first
         filename = filename.split("_")[1..-1].compact.join("_")
 
-        type = "image/png"
+        type = "image/jpeg"
         
       end
 

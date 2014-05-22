@@ -85,9 +85,16 @@ gem 'simple_form', github: "plataformatec/simple_form"
 
 #gem 'websocket-rails', :git => 'git://github.com/DanKnox/websocket-rails.git'
 
-gem 'websocket-rails', '~> 0.6.2'
+gem 'websocket-rails'
 
+# If you want to use dial-a-device-node in a testing environment for developing purpose, clone it into a local directory and point the gem to this copy.
+# Make sure to restart your rails server every time you perform any changes.
+
+# Comment out this line if you want to use a local clone of dial-a-device-node
 gem 'dial_a_device_node', :git => 'git://github.com/Cominch/dial-a-device-node.git'
+
+# Activate the following line and adjust the path information
+# gem 'dial_a_device_node', :path => '/home/user/dial-a-device-node'
 
 gem 'chemrails', :git => 'git://github.com/Cominch/chemrails.git'
 

@@ -8,7 +8,7 @@ class BeaglebonesController < ApplicationController
   
   def heartbeat
 
-    @bb = OpenStruct.new
+    @bb = OpenStruct.new(:id => 0, :serialnumber => "nope")
 
     @beaglebones = Beaglebone.where (["serialnumber = ?", params[:serialnumber]])
 
@@ -16,23 +16,27 @@ class BeaglebonesController < ApplicationController
 
       @bb = @beaglebones.first
 
-      @devices = Device.where (["beaglebone_id = ?", @bb])
+      @device = Device.where(["beaglebone_id = ?", @bb]).first
 
       if (@bb) then
 
         @bb.update_attribute(:last_seen, Time.now)
 
-        @bb.update_attribute(:internal_ip, params[:beaglebone][:ipaddress])
+        if !params[:beaglebone].nil? then
+
+          @bb.update_attribute(:internal_ip, params[:beaglebone][:ipaddress])
+
+        end
 
         @bb.update_attribute(:external_ip, request.remote_ip)
 
-        if (@devices.first) then
+        if (@device) then
 
           @bb = OpenStruct.new(:id => @bb.id, :serialnumber => @bb.serialnumber)
 
-          @bb.device = @devices.first
+          @bb.device = @device
 
-          @bb.devicetype = @devices.first.devicetype
+          @bb.devicetype = @device.devicetype
         end
 
       end

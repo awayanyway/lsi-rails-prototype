@@ -185,7 +185,7 @@ class Dataset < ActiveRecord::Base
       if (at.nil?) then
         # select the best fit
 
-        at = attachments.where(["file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ?", "%jpg", "%pdf", "%gif", "%ps", "%dx", "%jdx"]).first
+        at = attachments.where(["file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ? or file ilike ?", "%jpeg", "%jpg", "%pdf", "%gif", "%ps", "%dx", "%jdx"]).first
       end
     end
 
@@ -269,7 +269,8 @@ class Dataset < ActiveRecord::Base
     attachments.each do |a|
 
     #detect jdx
-    
+
+      #if (Rails.env.localserver? or Rails.env.development?) && a.folder == "" && a.read_attribute(:file) =~ /j?dx\z/i then
       if a.folder == "" && a.read_attribute(:file) =~ /j?dx\z/i then
         
         ###########################
@@ -293,9 +294,10 @@ class Dataset < ActiveRecord::Base
         puts line
         ###########################
         
+
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
-        jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
-       
+
+        jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]      
         
         title = (jdx_data[:"TITLE"] && jdx_data[:"TITLE"][0] ) || "n.d." 
         if jdx_data[:"DATA TYPE"] && jdx_data[:"DATA TYPE"][0] =~ /NMR/

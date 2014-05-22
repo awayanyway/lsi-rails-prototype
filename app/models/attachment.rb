@@ -53,7 +53,7 @@ class Attachment < ActiveRecord::Base
     "url" => file.url,
     "relativePath" => read_attribute(:folder),
     "thumbnailUrl" => file.thumb.url,
-    "deleteUrl" => dataset_attachment_path(:dataset_id => dataset_id, :id => id),
+    "deleteUrl" => dataset_attachment_path(:dataset_id => dataset_id, :id => read_attribute(:id)),
     "deleteType" => "DELETE" 
    }
   end

@@ -6,7 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 37db1a0ef625c8e894f04cd14087477be7bc6154
+
+  revision: 3829fb2638ba0de493d583abf12f92f1fdffbbde
+
   specs:
     dial_a_device_node (0.0.29)
 
@@ -31,7 +33,9 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: 7b8a59dd6cb99c93521a31d8fa8ef90bdc4fb1f2
+
+  revision: 9196efd2562573aa08037034051fc8c924083e10
+
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)
@@ -39,7 +43,9 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 7a1a945e13cb8a05f2d0a57edd7974be215044ab
+
+  revision: bb39fffc5556093243e5b4df5c95bb2df6d6b72a
+
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -224,6 +230,8 @@ GEM
     rails_stdout_logging (0.0.3)
     rake (10.3.2)
     redis (3.0.7)
+    redis-objects (0.9.1)
+      redis (>= 3.0.2)
     ref (1.0.5)
     rest-client (1.6.7)
       mime-types (>= 1.16)
@@ -272,13 +280,14 @@ GEM
     warden (1.2.3)
       rack (>= 1.0)
     websocket-driver (0.3.3)
-    websocket-rails (0.6.2)
+    websocket-rails (0.7.0)
       em-synchrony
       faye-websocket
       hiredis
       rack
       rails
       redis
+      redis-objects
       thin
     will_paginate (3.0.5)
     will_paginate-bootstrap (1.0.0)
@@ -334,6 +343,6 @@ DEPENDENCIES
   thin
   uglifier
   unf
-  websocket-rails (~> 0.6.2)
+  websocket-rails
   will_paginate (~> 3.0.5)
   will_paginate-bootstrap

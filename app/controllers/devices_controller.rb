@@ -81,24 +81,12 @@ def assign
     else
 
       @device.connectiontype = "serial"
-
-      @beaglebones = Beaglebone.where (["serialnumber LIKE ?", params[:beaglebone_serialnumber]])
-
-      if (!@beaglebones.first) then
-
-        @beaglebone = Beaglebone.new()
-        @beaglebone.serialnumber = params[:beaglebone_serialnumber]
-        @beaglebone.save
         
-      end
-
-      @beaglebones = Beaglebone.where (["serialnumber LIKE ?", params[:beaglebone_serialnumber]])
-        
-      @device[:beaglebone_id] = @beaglebones.first[:id]     
+      @device[:beaglebone_id] = params[:beaglebone_id]  
 
       @device.save   
 
-      redirect_to device_path(@device), notice: "Connect device to Beaglebone #"+params[:beaglebone_serialnumber]+"."
+      redirect_to device_path(@device), notice: "Connect device to Beaglebone #"+params[:beaglebone_id]+"."
 
     end
 

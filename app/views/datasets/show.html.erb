@@ -183,22 +183,26 @@ $(document).ajaxSend(function(e, xhr, options) {
 
 </script>
 
-<h1><span class="glyphicon glyphicon-paperclip" /><%= @dataset.method %><% if !@dataset.title.blank? then %> - <%= @dataset.title %><% end %>
-    <%= link_to "/datasets/"+@dataset.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %>
-    <% if @changerights then %>&nbsp;
-    <%= link_to 'Edit metadata', edit_dataset_path(@dataset, :reaction_id => params[:reaction_id]), :class => "btn btn-sm btn-success" %>
-    &nbsp;<%= link_to("Delete", @dataset, :method => :delete, :confirm => "Are you sure?", :title => "Delete Dataset.", :class => "btn btn-sm btn-warning") %>
+
+<h1><span class="glyphicon glyphicon-paperclip" /><%= @dataset.method %><% if !@dataset.title.blank? then %> - <%= @dataset.title %><% end %></h1>
+
+<h2>
+<%= link_to "/datasets/"+@dataset.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %><% if @changerights then %>&nbsp;
+
+    <%= link_to 'Edit metadata', edit_dataset_path(@dataset, :reaction_id => params[:reaction_id], :project_id => @project.id), :class => "btn btn-sm btn-success" %>
+    &nbsp;<%= link_to("Delete", dataset_path(@dataset, :project_id => @project.id), :method => :delete, :confirm => "Are you sure?", :title => "Delete Dataset.", :class => "btn btn-sm btn-warning") %>
+
 
     <% end %>
 
     <% if Commit.exists?(["dataset_id = ?", @dataset.id]) then %>
 
-    <%= link_to "Fork", fork_dataset_url(@dataset), :class => "btn btn-sm btn-warning" %>
+    <%= link_to "Fork", fork_dataset_url(@dataset, :project_id => @project.id), :class => "btn btn-sm btn-warning" %>
     <% else %>
-    <%= link_to "Commit", commit_dataset_url(@dataset), :method => :post,  :class => "btn btn-sm btn-warning" %>
+    <%= link_to "Commit", commit_dataset_url(@dataset, :project_id => @project.id), :method => :post,  :class => "btn btn-sm btn-warning" %>
     <% end %>
 
-    </h1>
+    </h2>
 
 
 <% if !@dataset.description.blank? then %>
@@ -214,12 +218,14 @@ $(document).ajaxSend(function(e, xhr, options) {
 var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
  
 </script>
+
 <div  class="well" id="plotting">
     
       <button id="intplt">interactive plot</button>  
       <div id="preview0" style="display:none;">  </div>  
       <div id="preview1"   >  <%= image_tag(@dataset.preview_url, size: "450x300", alt: "preview") %>      </div> 
     <div id="preview2"   >  </div>
+
 </div>
 <script>
 $(document).ready(function(){
@@ -446,9 +452,9 @@ $(document).ready(function(){
 
 
 <% if params[:reaction_id].nil? then %>
-<%= link_to 'Back to molecule', @dataset.molecule, :class => "btn btn-sm btn-default" %>
+<%= link_to 'Back to molecule', molecule_path(@dataset.sample.molecule, :project_id => @project.id), :class => "btn btn-sm btn-default" %>
 <% else %>
-<%= link_to 'Back to reaction', Reaction.find(params[:reaction_id]), :class => "btn btn-sm btn-default" %>
+<%= link_to 'Back to reaction', reaction_path(Reaction.find(params[:reaction_id]), :project_id => @project.id), :class => "btn btn-sm btn-default" %>
 <% end %>
 
 

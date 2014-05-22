@@ -16,6 +16,8 @@ class MessageController < WebsocketRails::BaseController
 
 	def client_disconnected
 	  	Rails.logger.info ("Client disconnected")
+	  	Rails.logger.info (message.message)
+	  	Rails.logger.info (message.data)
 	end
 
 	def devicereply

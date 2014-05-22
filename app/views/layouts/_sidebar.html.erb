@@ -61,7 +61,7 @@ function detectedSample (sampleid, checkin) {
 
 <% @showtasks = true %>
 
-<% if (@showtasks != nil && @showtasks) then %>
+<% if (@showtasks != nil && @showtasks && !current_user.nil?) then %>
 
 <h4>My Tasks</h4>
 

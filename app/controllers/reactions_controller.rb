@@ -240,7 +240,7 @@ class ReactionsController < ApplicationController
     end
 
     def set_project
-      if current_user. nil? then 
+      if current_user.nil? then 
         @project = Project.where(["title = ?", "chemotion"]).first
       else
         if params[:project_id].nil? || params[:project_id].empty? then
