@@ -106,11 +106,11 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def image?(new_file)
 
-    if Rails.env.localserver? or Rails.env.development? then
+    #if Rails.env.localserver? or Rails.env.development? then
       extensions = %w(jpg jpeg gif png pdf ps dx jdx)
-    else
-      extensions = %w(jpg jpeg gif png pdf ps)
-    end
+    #else
+    #  extensions = %w(jpg jpeg gif png pdf ps)
+    #end
 
     extension = File.extname(new_file.path.to_s).downcase
     extension = extension[1..-1] if extension[0,1] == '.'
