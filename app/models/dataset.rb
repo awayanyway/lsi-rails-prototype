@@ -269,7 +269,30 @@ class Dataset < ActiveRecord::Base
     attachments.each do |a|
 
     #detect jdx
-      if a.folder == "" && a.read_attribute(:file).downcase =~ /j?dx\z/ then
+    
+      if a.folder == "" && a.read_attribute(:file) =~ /j?dx\z/i then
+        
+        ###########################
+        # uploader methods to check:  
+        met=[:inspect, :class, :file , :url, :default_url,:cached?, :path,:current_path, :cache_name, :cache_dir]
+        u=a.file
+        
+        #check outputs before caching
+        line = "\n\n"+"@"*50+"\ninspect BEFORE caching\n"
+        met.each{|meth| line+="\n#{meth}"+" "*(16-meth.size)+":"+eval("u.#{meth}").to_s}
+        line << "\n<path = cache_dir + cache_name> is "+((u.path.to_s ==  File.join(u.cache_dir.to_s,u.cache_name.to_s).to_s && "TRUE\n") || "FALSE\n")+"@"*50+"\n\n"
+        puts line
+        
+        #cache uploader if not cached
+        line << ((u.cached? &&  "already cached") || (u.cache! &&  "now cached") )
+        
+        #check outputs after caching
+        line << "\n\n"+"@"*50+"\ninspect AFTER caching\n"
+        met.each{|meth| line+="\n#{meth}"+" "*(16-meth.size)+":"+eval("u.#{meth}").to_s}
+        line << "\n<path = cache_dir + cache_name> is "+((u.path.to_s == File.join(u.cache_dir.to_s,u.cache_name.to_s).to_s && "TRUE\n") || "FALSE\n")+"@"*50+"\n\n"
+        puts line
+        ###########################
+        
         extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
         jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]
        
@@ -294,11 +317,14 @@ class Dataset < ActiveRecord::Base
 
       end
 
+
+
       if a.folder == "pdata/1/" && a.read_attribute(:file) == "proc" then
 
         self.update_attribute(:recorded_at, a.filechange)
 
         scanfreq = "0"
+        
         a.file.read.each_line do |line|
           key, value = line.split("=")
 
