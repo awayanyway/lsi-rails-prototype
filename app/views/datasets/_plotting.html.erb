@@ -1,0 +1,40 @@
+
+
+<div id="fullspectrum" style="height: 50px; width: 100%;"> </div> 
+    
+<div id="spectrum" style="height: 420px; width: 100%;"> </div>  
+
+
+<script type="text/javascript">
+
+var cont,cont2, data, opt,chipit; 
+cont  =   document.getElementById("spectrum");
+cont2 =  document.getElementById("fullspectrum");
+data =  <%= @plotdx.xy.to_s %>;
+opt = {
+        title: "<%= @plotdx.TITLE %> - <%= @plotdx.TYPE %> ",
+        xaxis: {
+                 title: "<%= @plotdx.SYMBOL[0] %> ( <%= @plotdx.UNITS[0]  %> )",
+                 directionReversed: <%=@plotdx.xaxis_reversed%>,
+               },
+        yaxis: {
+                title: "<%= @plotdx.SYMBOL[1] %> ( <%= @plotdx.UNITS[1] %> )",
+                titleAngle: 90, 
+                autoscale: false     
+               },
+       };
+chipit = {datasetid: <%= @dataset.id%>,
+          page: 0,
+          block: 0,
+          }     ;
+     
+
+dual_mouse_zoom2(cont,cont2, data, opt, chipit);
+
+</script>
+
+
+
+
+
+
