@@ -57,16 +57,16 @@ class AttachmentUploader < CarrierWave::Uploader::Base
        
   version :thumb, :if => :image? do
    
-    Rails.logger("creating thumb: "+current_path)
+    Rails.logger("creating thumb")
      
     if Rails.configuration.jdx_support.cw_thumbnail then 
 
-      Rails.logger("starting dx to ps: "+current_path)
+      Rails.logger("starting dx to ps")
       process :dx_to_ps, :if => :jdx?
     end
     # process :resize_first_page
 
-    Rails.logger("converting to jpg: "+current_path)
+    Rails.logger("converting to jpg")
 
     process :convert => :jpg
 
