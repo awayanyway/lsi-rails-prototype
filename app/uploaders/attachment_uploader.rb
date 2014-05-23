@@ -99,10 +99,20 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   def dx_to_ps
 
     Rails.logger("dx to ps: "+current_path)
-   
-    Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
 
-    Rails.logger("dx to ps successful: "+current_path)
+    begin
+   
+      Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
+
+      Rails.logger("dx to ps successful: "+current_path)
+
+    catch
+
+      Rails.logger("dx to ps fails: "+current_path)
+
+    end
+
+    
   end
 
 
