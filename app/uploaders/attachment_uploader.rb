@@ -57,11 +57,16 @@ class AttachmentUploader < CarrierWave::Uploader::Base
        
   version :thumb, :if => :image? do
    
+    Rails.logger("creating thumb: "+current_path)
      
     if Rails.configuration.jdx_support.cw_thumbnail then 
+
+      Rails.logger("starting dx to ps: "+current_path)
       process :dx_to_ps, :if => :jdx?
     end
     # process :resize_first_page
+
+    Rails.logger("converting to jpg: "+current_path)
 
     process :convert => :jpg
 
@@ -137,7 +142,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def jdx?(new_file)
 
-    extensions = %w(jdx dx)
+    extensions = %w(jdx dx, jcamp, jcampdx)
 
     extension = File.extname(new_file.path.to_s).downcase
     extension = extension[1..-1] if extension[0,1] == '.'
