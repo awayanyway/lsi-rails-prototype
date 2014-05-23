@@ -31,12 +31,12 @@ $(document).ready(function(){
 
         function getInstallationStatus() {
 
-            is = setInterval (function cs() {
+            is = setTimeout (function cs() {
 
                 checkStatus();
                 
 
-            },1000);
+            },500);
 
         
         };
@@ -87,7 +87,7 @@ $(document).ready(function(){
             }
             function disconnected() {
                 if(connectState == 'connected') {
-                    clearInterval(is);
+                    // clearInterval(is);
 
                     console.log('Bonescript: disconnected');
                     $('#connect-status').replaceWith(statusDisconnected);

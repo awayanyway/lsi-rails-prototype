@@ -91,7 +91,7 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'function opkgify(p) { return "opkg status "+p };'
     +' var execstring = ospackages.map(opkgify).join(" && ");'
     + 'exec (execstring, '
-    +   'function(error, stdout, stderr) { var linearray = stdout.split("\\n"); for (var i = 0; i < linearray.length; i++) { if (linearray[i].split(":")[0] == "Package") { status.ospackages.push(linearray[i].split(":")[1].trim()) } }; if (status.ospackages.length == 3) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
+    +   'function(error, stdout, stderr) { if ((stdout.indexOf("python-multiprocessing") > -1) && (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1)) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
 
     + '};'
 
@@ -237,7 +237,9 @@ var installationaction = false;
 
 function cancel() {
 
-  counter = 999;
+  counter = 1;
+
+  checking = false;
 
 }
 
@@ -304,8 +306,6 @@ function checkAgainStatus() {
 
       installationaction = false;
 
-      setUIInitializationNeeded();
-
       if (status.ospackagestatus == "not installed") {
 
         if (status.internetconnection != "connected") {
@@ -314,7 +314,11 @@ function checkAgainStatus() {
 
           otheraction = true;
 
-        } 
+        } else {
+
+          setUIOSInstallationNeeded();
+
+        }
       }
 
       if (status.npmpackagestatus == "not installed") {
@@ -325,7 +329,27 @@ function checkAgainStatus() {
 
           otheraction = true;
 
-        } 
+        } else {
+
+          setUINPMInstallationNeeded();
+
+        }
+
+      }
+
+      if (status.dadinstallationstatus == "not installed") {
+
+        if (status.internetconnection != "connected") {
+
+          setUIInternetconnectionNeeded();
+
+          otheraction = true;
+
+        } else {
+
+          setUINPMInstallationNeeded();
+
+        }
 
       }
 
@@ -337,6 +361,8 @@ function checkAgainStatus() {
 
         installationaction = true;
 
+        checkStatus();
+
       }
 
       if (status.npmpackageinstallationstatus == "installing") {
@@ -347,9 +373,13 @@ function checkAgainStatus() {
 
         installationaction = true;
 
+        checkStatus();
+
       }
 
       if (status.ospackagestatus == "installed" && status.npmpackagestatus == "installed" && status.dadinstallationstatus == "installed") {
+
+        bbSetServer();
 
         setUISuccess();        
 
@@ -391,7 +421,7 @@ function checkAgainStatus() {
 
 function setUISuccess() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/greencheck.png' >&nbsp;Dial-a-device is installed on this BeagleBone.&nbsp;"+ "<button onclick='install()' class='btn btn-success'>Reinstall</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/greencheck.png' >&nbsp;Dial-a-device is installed on this BeagleBone.&nbsp;"+ "<button onclick='uninstall()' class='btn btn-danger'>Uninstall</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success";
 
@@ -415,19 +445,30 @@ function setUIStatusCheckOngoing() {
 
 function setUIInstallationOngoing() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/ajax-violet.gif' >&nbsp;The installation is ongoing and will take 5-10 min depending upon network connection.&nbsp;<button onclick='cancel()' class='btn btn-warning'>Cancel</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/ajax-violet.gif' >&nbsp;The installation is ongoing...";
 
   document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
 
-function setUIInitializationNeeded() {
+function setUIOSInstallationNeeded() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Dial-a-device needs to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install()' class='btn btn-success'>Install</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;OS Packages need to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install(\"os\")' class='btn btn-success'>Install OS packages</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
+
+function setUINPMInstallationNeeded() {
+
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Dial-a-device needs to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install(\"dad\")' class='btn btn-success'>Install</button>";
+
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
+
+}
+
+
+
 
 function setUIInternetconnectionNeeded() {
 
@@ -438,16 +479,41 @@ function setUIInternetconnectionNeeded() {
 }
 
 
+function uninstall() {
 
-function install() {
+  console.log ("uninstall");
+
+  var b = require('bonescript');
+
+    file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
+    b.writeTextFile(file, "", function(x) {
+
+      otheraction = false;
+
+      file = '/var/lib/cloud9/autorun/removenpmpackages.js';
+      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('npm remove -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log && rm /var/lib/cloud9/autorun/removenpmpackages.js', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+
+        console.log (x);
+        checkStatus();
+
+
+      });
+
+
+    });
+
+
+}
+
+function install(what) {
 
   var status = global_status;
 
-  if (status.ospackageinstallationstatus === "not installing" && status.ospackagestatus === "not installed") {
+  if (what == "os") {
 
     // install ospackages
 
-    cancel();
+    installationaction = true;
 
     console.log ("install os packages");
 
@@ -459,33 +525,16 @@ function install() {
       otheraction = true;
       setUIInstallationOngoing();
 
+      checkStatus();
+
 
     });
 
-  } else if (status.ospackageinstallationstatus == "not installing" && status.ospackagestatus == "installed" && status.npmpackageinstallationstatus == "not installing" && status.npmpackagestatus == "not installed") {
+  } else if (what == "dad") {
 
     // install npmpackages
 
-    cancel();
-
-    console.log ("install npm packages");
-
-    var b = require('bonescript');
-
-    file = '/var/lib/cloud9/autorun/installnpmpackages.js';
-    b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('npm update && npm install dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log && rm /var/lib/cloud9/autorun/installnpmpackages.js', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
-
-      otheraction = true;
-      setUIInstallationOngoing();
-
-
-    });
-
-  } else if (status.ospackageinstallationstatus == "not installing" && status.ospackagestatus == "installed" && status.npmpackageinstallationstatus == "not installing" && status.npmpackagestatus == "installed") {
-
-    cancel();
-    
-    console.log ("install dial-a-device");
+    installationaction = true;
 
     bbSetServer();
 
@@ -496,16 +545,27 @@ function install() {
     file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
     b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
 
-      otheraction = false;
+      otheraction = true;
+
       setUIInstallationOngoing();
+
+      file = '/var/lib/cloud9/autorun/installnpmpackages.js';
+      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('npm update && npm install dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log && rm /var/lib/cloud9/autorun/installnpmpackages.js', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+
+        otheraction = true;
+
+        setUIInstallationOngoing();
+
+        checkStatus();
+
+
+      });
 
 
     });
 
-  
-  }  
 
-  checkStatus();
+  } 
 
 }
 
