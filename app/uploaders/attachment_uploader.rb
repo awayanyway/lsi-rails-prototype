@@ -110,9 +110,11 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
       Rails.logger.info ("dx to ps successful: "+current_path)
 
-    catch
+    rescue
 
       Rails.logger.info ("dx to ps fails: "+current_path)
+
+    ensure
 
     end
 
