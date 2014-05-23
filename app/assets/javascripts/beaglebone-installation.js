@@ -54,11 +54,15 @@ function ScriptRemoveStatus(callback) {
 function ScriptRetrieveStatus(callback, mini) {
 
   console.log ("initating the status query...");
-  if (mini) { console.log ("only mini check..."); }
+  if (mini == true ) { console.log ("only mini check..."); }
 
   var b = require('bonescript');
 
-  b.writeTextFile('/var/lib/cloud9/autorun/writestatus.js', 'var b = require("bonescript"); '
+  var minitext = "";
+
+  if (mini == true) { minitext = "var mini = true; " } else { minitext = "var mini = false; " }
+
+  b.writeTextFile('/var/lib/cloud9/autorun/writestatus.js', minitext+'var b = require("bonescript"); '
 
     +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing"];'
 
@@ -80,23 +84,29 @@ function ScriptRetrieveStatus(callback, mini) {
     +'}; '
 
     +'function checkOSPackageStatus(callback) {'
+
+    + 'if (mini == true) { status.ospackagestatus = "not checked"; callback(); } else {'
+
     + 'var exec = require ("child_process").exec;'
-
     + 'function opkgify(p) { return "opkg status "+p };'
-
     +' var execstring = ospackages.map(opkgify).join(" && ");'
+    + 'exec (execstring, '
+    +   'function(error, stdout, stderr) { var linearray = stdout.split("\\n"); for (var i = 0; i < linearray.length; i++) { if (linearray[i].split(":")[0] == "Package") { status.ospackages.push(linearray[i].split(":")[1].trim()) } }; if (status.ospackages.length == 3) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
 
-      + 'exec (execstring, '
-
-      +'function(error, stdout, stderr) { var linearray = stdout.split("\\n"); for (var i = 0; i < linearray.length; i++) { if (linearray[i].split(":")[0] == "Package") { status.ospackages.push(linearray[i].split(":")[1].trim()) } }; if (status.ospackages.length == 3) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
+    + '};'
 
     + '}; '
     
     +'function checkNPMPackageStatus(callback) {'
+
+    + 'if (mini == true) { status.npmpackagestatus = "not checked"; callback(); } else {'
+
     + 'var exec = require ("child_process").exec;'
     + 'exec ("npm list -g -parseable", '
 
       +'function(error, stdout, stderr) { if (stdout.indexOf("dial-a-device-node") > -1) { status.npmpackagestatus = "installed"; } else { status.npmpackagestatus = "not installed"; } callback() } ); '
+
+    + '};'
 
     + '}; '
     
@@ -120,20 +130,31 @@ function ScriptRetrieveStatus(callback, mini) {
     + '}; '
 
     +'function checkInternetconnection(callback) {'
-    + 'var exec = require ("child_process").exec;'
-    + 'exec ("ping www.google.com -c 4", '
 
-      +'function(error, stdout, stderr) { if (stdout.indexOf("4 received") > -1) { status.internetconnection = "connected"; } else { status.internetconnection = "not connected"; }; callback() } ); '
+    + 'if (mini == true) { status.internetconnection = "not checked"; callback(); } else {'
+
+    + 'var exec = require ("child_process").exec;'
+    + 'exec ("ping www.google.com -c 2", '
+
+      +'function(error, stdout, stderr) { if (stdout.indexOf("2 received") > -1) { status.internetconnection = "connected"; } else { status.internetconnection = "not connected"; }; callback() } ); '
 
     + '}; '
 
+    + '};'
+
     +'function checkServerconnection(callback) {'
+
+    + 'if (mini == true) { status.internetconnection = "not checked"; callback(); } else {'
+
     + 'var exec = require ("child_process").exec;'
-    + 'exec ("ping www.google.com -c 4", '
+    + 'exec ("ping www.google.com -c 1", '
 
       +'function(error, stdout, stderr) { status.serverconnection = "connected"; callback() } ); '
 
     + '}; '
+
+    + '};'
+
 
     +'function lastStep() {'
 
@@ -148,11 +169,15 @@ function ScriptRetrieveStatus(callback, mini) {
     
     +   'status.ospackageinstallationstatus = "installing"; checkOSPackageStatus(function() {bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
     
-    +       'status.npmpackageinstallationstatus = "installing"; checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
+    +       'status.npmpackageinstallationstatus = "installing"; '
+
+    +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
 
     +   '}, function() {'
     
-    +       'status.npmpackageinstallationstatus = "not installing"; checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
+    +       'status.npmpackageinstallationstatus = "not installing"; '
+
+    +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
     
     +   '})});'
     
@@ -207,6 +232,8 @@ var checking = false;
 
 var otheraction = false;
 
+var installationaction = false;
+
 
 function cancel() {
 
@@ -223,14 +250,14 @@ function checkStatus() {
 
     counter = 1;
 
-    mini = false;
+    var mini = false;
 
 
     if (otheraction == false) {
 
       setUIStatusCheckOngoing();
 
-      mini = true
+      
     }
 
     console.log ("checking status...");
@@ -246,7 +273,7 @@ function checkStatus() {
 
           }, 1000);
 
-        }, mini);
+        }, installationaction);
 
        
       });
@@ -274,6 +301,8 @@ function checkAgainStatus() {
       checking = false;
 
       otheraction = true;
+
+      installationaction = false;
 
       setUIInitializationNeeded();
 
@@ -306,6 +335,8 @@ function checkAgainStatus() {
 
         otheraction = true;
 
+        installationaction = true;
+
       }
 
       if (status.npmpackageinstallationstatus == "installing") {
@@ -313,6 +344,8 @@ function checkAgainStatus() {
         setUIInstallationOngoing();
 
         otheraction = true;
+
+        installationaction = true;
 
       }
 
@@ -349,7 +382,7 @@ function checkAgainStatus() {
 
     console.log ("sorry, no status available.");
 
-    setUIFailed();
+    // setUIFailed();
 
   }
 
@@ -360,7 +393,7 @@ function setUISuccess() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/greencheck.png' >&nbsp;Dial-a-device is installed on this BeagleBone.&nbsp;"+ "<button onclick='install()' class='btn btn-success'>Reinstall</button>";
 
-  document.getElementById("submitbutton").class = "btn btn-success";
+  document.getElementById("submitbutton").className = "btn btn-success";
 
 }
 
@@ -368,7 +401,7 @@ function setUIFailed() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Check failed.&nbsp;"+ "<button onclick='checkStatus()' class='btn btn-warning'>Check again</button>";
 
-  document.getElementById("submitbutton").class = "btn btn-success disabled";
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
 
@@ -376,7 +409,7 @@ function setUIStatusCheckOngoing() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/ajax-violet.gif' >&nbsp;Checking installation status, please wait...&nbsp;";
 
-  document.getElementById("submitbutton").class = "btn btn-success disabled";
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
 
@@ -384,7 +417,7 @@ function setUIInstallationOngoing() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/ajax-violet.gif' >&nbsp;The installation is ongoing and will take 5-10 min depending upon network connection.&nbsp;<button onclick='cancel()' class='btn btn-warning'>Cancel</button>";
 
-  document.getElementById("submitbutton").class = "btn btn-success disabled";
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
 
@@ -392,7 +425,7 @@ function setUIInitializationNeeded() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Dial-a-device needs to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install()' class='btn btn-success'>Install</button>";
 
-  document.getElementById("submitbutton").class = "btn btn-success disabled";
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
 
@@ -400,7 +433,7 @@ function setUIInternetconnectionNeeded() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;The BeagleBone needs to be connected to the internet via ethernet cable to install required packages.&nbsp;"+ "<button onclick='checkStatus()' class='btn btn-warning'>Check again</button>";
 
-  document.getElementById("submitbutton").class = "btn btn-success disabled";
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
 
 }
 
@@ -410,10 +443,11 @@ function install() {
 
   var status = global_status;
 
-
   if (status.ospackageinstallationstatus === "not installing" && status.ospackagestatus === "not installed") {
 
     // install ospackages
+
+    cancel();
 
     console.log ("install os packages");
 
@@ -432,6 +466,8 @@ function install() {
 
     // install npmpackages
 
+    cancel();
+
     console.log ("install npm packages");
 
     var b = require('bonescript');
@@ -447,6 +483,7 @@ function install() {
 
   } else if (status.ospackageinstallationstatus == "not installing" && status.ospackagestatus == "installed" && status.npmpackageinstallationstatus == "not installing" && status.npmpackagestatus == "installed") {
 
+    cancel();
     
     console.log ("install dial-a-device");
 
