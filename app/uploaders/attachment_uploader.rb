@@ -56,17 +56,12 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
        
   version :thumb, :if => :image? do
-   
-    Rails.logger.info ("creating thumb")
-     
+      
     if Rails.configuration.jdx_support.cw_thumbnail then 
 
-      Rails.logger.info ("starting dx to ps")
       process :dx_to_ps, :if => :jdx?
     end
     # process :resize_first_page
-
-    Rails.logger.info ("converting to jpg")
 
     process :convert => :jpg
 
@@ -102,6 +97,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def dx_to_ps
+
+    cache_stored_file! if !cached?
 
     Rails.logger.info ("dx to ps: "+current_path)
 
