@@ -296,7 +296,7 @@ class ProjectsController < ApplicationController
 
               newattachment.folder = att["folder"]
 
-              if Rails.env.localserver? then 
+              if Rails.env.localserver? or Rails.env.development? then 
 
                 localpath = LsiRailsPrototype::Application.config.datasetroot + "datasets/#{dataset.id}/#{att["folder"]}#{att["filename"]}"
 

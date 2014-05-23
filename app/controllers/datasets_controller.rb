@@ -1,17 +1,21 @@
 class DatasetsController < ApplicationController
   
+  helper DatasetsHelper
+  
+  
    
   require 'zip'
 
   before_filter :authenticate_user!, except: [:show, :filter, :find, :finalize]
 
-  before_action :set_dataset, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :commit, :zip]
+  before_action :set_dataset, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :commit, :zip, :plotpoint]
 
   before_action :set_project
 
   before_action :set_project_dataset, only: [:show, :edit, :update, :destroy, :assign, :commit, :zip]
 
   before_action :set_empty_project_dataset, only: [:create, :create_direct, :new, :assign_do]
+  
 
   # GET /datasets
   # GET /datasets.json
@@ -169,37 +173,95 @@ class DatasetsController < ApplicationController
 
   # GET /datasets/1
   # GET /datasets/1.json
-
+  
+  
+ def munch
+     puts "munch it!"
+     @dataset =  Dataset.where(["id = ?",params[:dataset_id]]).first
+      puts "nice dataset"
+     if (file=@dataset.jdx_file)
+       puts "monic says U r dumb!"
+        @kumara=Rails.cache.fetch("#{file}", :expires_in => 5.minutes){ 
+        puts " spoon !  " 
+        opt=":file "+file.to_s+" :tab all :process header spec param data point raw first_page " 
+        dx_data=Kai.new(opt).flotr2_data 
+       if dx_data.is_a?(Switchies::Ropere) 
+          puts "\nhello Kumara! \n"
+          kumara=dx_data.to_kumara
+       else  
+         nil
+       end  
+      }
+      else puts "spacehead!"
+     end
+     kumara= @kumara #||Rails.cache.read("kumara")
+     puts kumara.inspect.slice(0..100)
+      block ||= (params[:block] && params[:block].to_i) || 0
+      page  ||= (params[:page]  && params[:page].to_i)  || 0
+      limit ||= (params[:limit] && params[:limit].to_i) || 2048
+     if kumara.is_a?(Switchies::Kumara)
+     puts "I can't grab your ghost chips!"
+     else
+     kumara=Switchies::Kumara.blank 
+     end
+    
+     if params[:r0] && params[:r1]
+        r0=params[:r0].to_f
+        r1=params[:r1].to_f  
+        k= (kumara.xy && kumara.xy[block] && kumara.xy[block][page]) || [[0,0],[0,0]] 
+        puts "inspect xy: #{puts k.inspect.slice(0..100)}\n"
+        step=( k[-1][0] - k[0][0] )/(k.size - 1)
+        r0= ( (r0 - k[0][0]) / step).to_i
+        r1= ( (r1 - k[0][0]) / step).to_i 
+        r0,r1=r1,r0  if r0 > r1
+        r0 -= 1 if r0>0
+        r1 += 1  
+     else r0,r1=0,-1 
+     end
+     r     ||= params[:r]    || r0..r1
+    
+     puts "munch it with <r0..r1:#{r0}..#{r1}> <r:#{r}> <block:#{block}> <page:#{page}> <limit:#{limit}>"
+      @plotdx=kumara.chip_it(r,block,page,limit)
+     #puts [k.trim_point(r,limit)].to_s.slice(0..100)
+     
+     
+     render :json => (k && [k.trim_point(r,limit)]) || nil
+     #render :json => @plotdx || nil
+   
+end
+ 
+  
   def plotpoint
      @dataset =  Dataset.where(["id = ?",params[:dataset_id]]).first
-     puts "nice dataset"
-     #authorize @dataset
-     file=@dataset.jdx_file
- 
-     #file=params[:jdxfile] 
-     dx_data=Kai.new(":file #{file} :tab all :process header spec param data point raw first_page ").flotr2_data 
-     if dx_data.is_a?(Switchies::Ropere) 
-        kumara=dx_data.to_kumara
-        puts "\nhello Kumara! \n" 
-        @plotdx=kumara.chip_it #chip_it(abscissa range in point unit=0..-1,block=0,page=0,limit of point to be plotted=2048)
-      else
-        puts "\nno strawberry!!\n"
-        @plotdx=Switchies::Kumara.blank.chip_it
+      if Kai.test_file(@dataset.jdx_file)
+       file=@dataset.jdx_file 
+        puts "nice dataset @<#{file}>"
+        @kumara=Rails.cache.fetch("#{file}", :expires_in => 5.minutes){ 
+                puts " spoon !  " 
+                opt=":file "+file.to_s+" :tab all :process header spec param data point raw first_page " 
+                dx_data=Kai.new(opt).flotr2_data 
+               if dx_data.is_a?(Switchies::Ropere) 
+                  puts "\nhello Kumara! \n"
+                  kumara=dx_data.to_kumara
+               else  
+                  puts "\nwanna chips? Bro'  \n"
+                 nil
+               end  
+          }
       end
-      ##TODO have ajax request to update chip_it argument (to increase resolution while zooming)
-      
-       @plotdx||=Switchies::Kumara.blank.chip_it
-    
-      # render :partial => 'plot', :plotdx => @plotdx
+       
+      if !@kumara
+        @kumara=Switchies::Kumara.blank
+      end         
+       @plotdx=@kumara.chip_it   
     respond_to do |format|
-     
-      format.html { render action: "plot" }
-      format.json { render json: @dataset }
+      format.html { render partial: 'plotting' , locals: {dataset: @dataset} }
+      #format.html { render action: "plot" }
+      #format.json { render json: @dataset }
     end
-    
-    
+
   end
-  
+    
 
   def show
     authorize @project_dataset
@@ -212,12 +274,13 @@ class DatasetsController < ApplicationController
     if Commit.exists?(["dataset_id = ?", @dataset.id]) then @changerights = false end
 
     @attachment = Attachment.new(:dataset => @dataset)
-
-    @plotdx=Switchies::Kumara.blank.chip_it
-    # if Kai.test_file(@dataset.jdx_file)
-       # puts"plotpoin"
-      # plotpoint
-    # end
+    ####
+    puts "~~~~~~~~~~~~~\nGeorge is pretty drunk"
+    @kumara=Switchies::Kumara.blank
+    @plotdx=@kumara.chip_it
+    puts @plotdx.inspect.slice(0..100)
+    puts "~~~~~~~~~~~~~~~~"
+    
     respond_to do |format|
       if !(Commit.exists?(["dataset_id = ?", @dataset.id])) then flash.now[:notice] = 'Dataset is in editing mode. Commit your changes after you\'re done.' end
 
@@ -526,6 +589,5 @@ class DatasetsController < ApplicationController
     def set_project_dataset
       @project_dataset = ProjectDataset.where(["project_id = ? AND dataset_id = ?", @project.id, @dataset.id]).first
     end
-
 
 end

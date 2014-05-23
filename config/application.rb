@@ -62,6 +62,13 @@ module LsiRailsPrototype
     config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 
     config.action_mailer.default_url_options = { :host => 'localhost:3000'}
-
+    
+    ## jdx file support through kaitatari
+    config.jdx_support = ActiveSupport::OrderedOptions.new 
+    ## jdx file support through kaitatari : options
+    #config.jdx_support.cw_thumbnail     = true      #carrierwave thumbnail creation   in uploaders/attachment_uploader
+    config.jdx_support.detect_jdx       = true      # detect file extension jdx and  parameters in model/dataset::detect_parameters  
+    #config.jdx_support.interactive_plot = true      #interactive plot of the jdx data in view/datasets/show 
+    
   end
 end

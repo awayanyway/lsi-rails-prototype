@@ -45,11 +45,18 @@ group :production do
 
 	gem 'rails_12factor'
 
-	gem 'thin'
+  gem 'thin'
 end
 
-group :development, :localserver do
+group :development, :localserver ,:developments3 do
 	gem 'openbabel'
+end
+
+group :developments3 do
+  gem 'fakes3'
+  gem 'aws-s3'
+  gem 'rest-client'
+  gem 'right_aws'  
 end
 
 gem 'rubabel'
@@ -125,4 +132,4 @@ gem 'will_paginate-bootstrap'
 
 gem 'rubyzip'
 
-gem 'kaitatari', :git => 'git://github.com/awayanyway/kaitatari.git' # :branch => "ntuple"
+gem 'kaitatari', :git => 'git://github.com/awayanyway/kaitatari.git' # :branch => "ntuple" # :path => ""
