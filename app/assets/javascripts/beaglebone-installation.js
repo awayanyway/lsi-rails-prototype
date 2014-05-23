@@ -51,9 +51,10 @@ function ScriptRemoveStatus(callback) {
 
 }
 
-function ScriptRetrieveStatus(callback) {
+function ScriptRetrieveStatus(callback, mini) {
 
   console.log ("initating the status query...");
+  if (mini) { console.log ("only mini check..."); }
 
   var b = require('bonescript');
 
@@ -222,11 +223,14 @@ function checkStatus() {
 
     counter = 1;
 
+    mini = false;
+
 
     if (otheraction == false) {
 
       setUIStatusCheckOngoing();
 
+      mini = true
     }
 
     console.log ("checking status...");
@@ -242,7 +246,7 @@ function checkStatus() {
 
           }, 1000);
 
-        });
+        }, mini);
 
        
       });

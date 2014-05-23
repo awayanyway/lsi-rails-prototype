@@ -8,7 +8,7 @@ lsi-rails-prototype
 
   heroku labs:enable user-env-compile
 
-  heroku config:set BUNDLE_WITHOUT="development:test:localserver"
+  heroku config:set BUNDLE_WITHOUT="development:developments3:test:localserver"
 
   heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi
 
