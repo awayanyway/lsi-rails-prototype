@@ -12,7 +12,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   else
      storage :fog
   end
-
+  
+  # Choose whether to process jdx file or not
+  #Rails.configuration.jdx_support.cw_thumbnail = true
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -56,7 +58,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image? do
    
      
-    if Rails.env.localserver? or Rails.env.development? then 
+    if Rails.configuration.jdx_support.cw_thumbnail then 
       process :dx_to_ps, :if => :jdx?
     end
     # process :resize_first_page
@@ -95,11 +97,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def dx_to_ps
-  # j=Jcampdx.load_jdx(":file #{current_path} :return_as ps :output  ps  :output_file #{current_path}")
-  # j=Jcampdx.new(":file #{current_path} :process extract TITLE, DATA TYPE, param data point raw first")
-  # j.processor
-  # j.output_cw
-  Jcampdx.load_jdx4cw(":file #{current_path} :process x_all extract TITLE,OWNER, DATA TYPE, param data point raw first")
+   
+   Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
   end
 
 
@@ -109,7 +108,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def image?(new_file)
 
-    if Rails.env.localserver? or Rails.env.development? then
+    if Rails.configuration.jdx_support.cw_thumbnail then
       extensions = %w(jpg jpeg gif png pdf ps dx jdx)
     else
       extensions = %w(jpg jpeg gif png pdf ps)

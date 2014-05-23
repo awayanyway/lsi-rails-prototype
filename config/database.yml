@@ -21,6 +21,15 @@ development:
   password: lsirailsprototype
   host: localhost
 
+developments3:
+  adapter: postgresql
+  encoding: unicode
+  database: lsi-rails-prototype_developments3
+  pool: 5
+  username: lsirailsprototype
+  password: lsirailsprototype
+  host: localhost
+
 localserver:
   adapter: postgresql
   encoding: unicode

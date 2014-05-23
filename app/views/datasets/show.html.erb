@@ -142,7 +142,7 @@
     <div class="navbar navbar-fixed-left col-xs-12 col-sm-2 col-md-2 bs-sidebar">
 
 
-      <div class="well">
+    <div class="well">
 
         <% @currentitem = "datasets" %>
 
@@ -152,7 +152,7 @@
 
 <%= render 'layouts/databasemenu', :category => "datasets", :project_id => @project.id %>
 
-        <%= render 'layouts/projectsmenu', :category => "datasets", :project_id => @project.id %>
+<%= render 'layouts/projectsmenu', :category => "datasets", :project_id => @project.id %>
 
 
 
@@ -183,6 +183,7 @@ $(document).ajaxSend(function(e, xhr, options) {
 
 </script>
 
+
 <h1><span class="glyphicon glyphicon-paperclip" /><%= @dataset.method %><% if !@dataset.title.blank? then %> - <%= @dataset.title %><% end %></h1>
 
 <h2>
@@ -190,6 +191,7 @@ $(document).ajaxSend(function(e, xhr, options) {
 
     <%= link_to 'Edit metadata', edit_dataset_path(@dataset, :reaction_id => params[:reaction_id], :project_id => @project.id), :class => "btn btn-sm btn-success" %>
     &nbsp;<%= link_to("Delete", dataset_path(@dataset, :project_id => @project.id), :method => :delete, :confirm => "Are you sure?", :title => "Delete Dataset.", :class => "btn btn-sm btn-warning") %>
+
 
     <% end %>
 
@@ -216,15 +218,32 @@ $(document).ajaxSend(function(e, xhr, options) {
 var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
  
 </script>
-<div id="plotting">  
-    <%if Kai.test_file(@dataset.jdx_file) %>
-          <%= button_to "interactive plot",{ action: "plotpoint",:dataset_id => @dataset.id}, :class => "btn btn-xs btn-default" %>
-    <%end%>
 
-    <%= image_tag(@dataset.preview_url, size: "450x300", alt: "preview") %> 
+<div  class="well" id="plotting">
+    <%if Rails.configuration.jdx_support.interactive_plot%>
+      <button id="intplt">interactive plot</button> 
+      <%end%> 
+      <div id="preview0" style="display:none;">  </div>  
+      <div id="preview1"   >  <%= image_tag(@dataset.preview_url, size: "450x300", alt: "preview") %>      </div> 
+    <div id="preview2"   >  </div>
+
 </div>
-
-
+<script>
+$(document).ready(function(){
+  $("button#intplt").click(function(){
+    var   url =       '/datasets/plot',    //'/datasets/munch',
+       ajdata = { 
+                  dataset_id: <%=@dataset.id %>,
+                  id: <%=@dataset.id %>,
+                 } ,
+    getnewdata2 = $.ajax({ type: "POST", url: url,  data: ajdata   }) ;   
+    //$.ajax({ type: "POST", url: url,  data: ajdata   }); 
+  $.when(getnewdata2).done(function(msg){  $( "#preview0" ).html( msg ); } );
+    $("div#preview0").toggle();
+    $("div#preview1").toggle(); 
+     });
+});
+</script>
 <br>
 <br>
 <div>
@@ -301,10 +320,13 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
                 <!-- The extended global progress information -->
                 <div class="progress-extended">&nbsp;</div>
             </div>
+    
+   
     </form>
 
 </div>
-
+ 
+ 
 <br/>
 
 <!-- The template to display files available for upload -->
@@ -349,11 +371,14 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
         <td>
+             {% if (file.thumbnailUrl) { %}
             <span class="preview">
-                {% if (file.thumbnailUrl) { %}
+               
                     <a href="{%=file.url%}" target="_blank" title="{%=file.name%}" download="{%=file.name%}" ><img src="{%=file.thumbnailUrl%}" height="40px"></a>
-                {% } %}
+                
             </span>
+            
+                {% } %}
         </td>
         <td>
             <span>{%=file.relativePath%}</span><p class="name">
@@ -388,9 +413,11 @@ var uploadurl = "<%= dataset_path(@dataset) %>/attachments";
         </td>
     </tr>
 {% } %}
+
 </script>
 
 <script src="/js/vendor/jquery.ui.widget.js"></script>
+
 
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="/js/tmpl.min.js"></script>
