@@ -97,8 +97,12 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def dx_to_ps
+
+    Rails.logger("dx to ps: "+current_path)
    
-   Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
+    Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
+
+    Rails.logger("dx to ps successful: "+current_path)
   end
 
 
@@ -109,7 +113,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   def image?(new_file)
 
     if Rails.configuration.jdx_support.cw_thumbnail then
-      extensions = %w(jpg jpeg gif png pdf ps dx jdx)
+      extensions = %w(jpg jpeg gif png pdf ps dx jdx, jcamp, jcampdx)
     else
       extensions = %w(jpg jpeg gif png pdf ps)
     end
