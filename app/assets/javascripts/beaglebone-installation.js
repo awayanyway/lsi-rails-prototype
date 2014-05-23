@@ -319,9 +319,7 @@ function checkAgainStatus() {
           setUIOSInstallationNeeded();
 
         }
-      }
-
-      if (status.npmpackagestatus == "not installed") {
+      } else if (status.npmpackagestatus == "not installed") {
 
         if (status.internetconnection != "connected") {
 
@@ -335,9 +333,7 @@ function checkAgainStatus() {
 
         }
 
-      }
-
-      if (status.dadinstallationstatus == "not installed") {
+      } else if (status.dadinstallationstatus == "not installed") {
 
         if (status.internetconnection != "connected") {
 
@@ -351,9 +347,7 @@ function checkAgainStatus() {
 
         }
 
-      }
-
-      if (status.ospackageinstallationstatus == "installing") {
+      } else if (status.ospackageinstallationstatus == "installing") {
 
         setUIInstallationOngoing();
 
@@ -363,9 +357,7 @@ function checkAgainStatus() {
 
         checkStatus();
 
-      }
-
-      if (status.npmpackageinstallationstatus == "installing") {
+      } else if (status.npmpackageinstallationstatus == "installing") {
 
         setUIInstallationOngoing();
 
@@ -375,13 +367,15 @@ function checkAgainStatus() {
 
         checkStatus();
 
-      }
-
-      if (status.ospackagestatus == "installed" && status.npmpackagestatus == "installed" && status.dadinstallationstatus == "installed") {
+      } else if (status.ospackagestatus == "installed" && status.npmpackagestatus == "installed" && status.dadinstallationstatus == "installed") {
 
         bbSetServer();
 
         setUISuccess();        
+
+      } else {
+
+        checkStatus();
 
       }
 
