@@ -308,7 +308,7 @@ function checkAgainStatus() {
 
       if (status.ospackagestatus == "not installed") {
 
-        if (status.internetconnection != "connected") {
+        if (status.internetconnection == "not connected") {
 
           setUIInternetconnectionNeeded();
 
@@ -321,7 +321,7 @@ function checkAgainStatus() {
         }
       } else if (status.npmpackagestatus == "not installed") {
 
-        if (status.internetconnection != "connected") {
+        if (status.internetconnection == "not connected") {
 
           setUIInternetconnectionNeeded();
 
@@ -335,7 +335,7 @@ function checkAgainStatus() {
 
       } else if (status.dadinstallationstatus == "not installed") {
 
-        if (status.internetconnection != "connected") {
+        if (status.internetconnection == "not connected") {
 
           setUIInternetconnectionNeeded();
 
