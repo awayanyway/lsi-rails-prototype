@@ -316,7 +316,21 @@ function checkAgainStatus() {
 
         } else {
 
-          setUIOSInstallationNeeded();
+          if (status.ospackageinstallationstatus != "not installing") {
+
+            setUIInstallationOngoing();
+
+            otheraction = true;
+
+            installationaction = true;
+
+            checkStatus();
+
+          } else {
+
+            setUIOSInstallationNeeded();
+
+          }
 
         }
       } else if (status.npmpackagestatus == "not installed") {
@@ -329,7 +343,21 @@ function checkAgainStatus() {
 
         } else {
 
-          setUINPMInstallationNeeded();
+          if (status.npmpackageinstallationstatus != "not installing") {
+
+            setUIInstallationOngoing();
+
+            otheraction = true;
+
+            installationaction = true;
+
+            checkStatus();
+
+          } else {
+
+            setUINPMInstallationNeeded();
+
+          }
 
         }
 
@@ -343,29 +371,23 @@ function checkAgainStatus() {
 
         } else {
 
-          setUINPMInstallationNeeded();
+          if (status.npmpackageinstallationstatus != "not installing") {
+
+            setUIInstallationOngoing();
+
+            otheraction = true;
+
+            installationaction = true;
+
+            checkStatus();
+
+          } else {
+
+            setUINPMInstallationNeeded();
+
+          }
 
         }
-
-      } else if (status.ospackageinstallationstatus == "installing") {
-
-        setUIInstallationOngoing();
-
-        otheraction = true;
-
-        installationaction = true;
-
-        checkStatus();
-
-      } else if (status.npmpackageinstallationstatus == "installing") {
-
-        setUIInstallationOngoing();
-
-        otheraction = true;
-
-        installationaction = true;
-
-        checkStatus();
 
       } else if (status.ospackagestatus == "installed" && status.npmpackagestatus == "installed" && status.dadinstallationstatus == "installed") {
 
@@ -406,7 +428,7 @@ function checkAgainStatus() {
 
     console.log ("sorry, no status available.");
 
-    // setUIFailed();
+    checkStatus();
 
   }
 
