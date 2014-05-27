@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 260ce939886d07c55481650a80085cd736e8a0c4
+  revision: 091cb8faa24c4f7c59480d5f56c8bb99f2e93715
   specs:
-    dial_a_device_node (0.0.42)
+    dial_a_device_node (0.0.43)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -132,6 +132,11 @@ GEM
       execjs
     coffee-script-source (1.7.0)
     daemons (1.1.9)
+    delayed_job (4.0.1)
+      activesupport (>= 3.0, < 4.2)
+    delayed_job_active_record (4.0.1)
+      activerecord (>= 3.0, < 4.2)
+      delayed_job (>= 3.0, < 4.1)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -307,6 +312,7 @@ DEPENDENCIES
   cocoon
   coffee-rails
   dav4rack!
+  delayed_job_active_record
   devise
   devise_invitable
   devise_ldap_authenticatable
