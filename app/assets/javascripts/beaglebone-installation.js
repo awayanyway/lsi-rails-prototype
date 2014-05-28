@@ -447,19 +447,19 @@ function checkAgainStatus() {
 
         }
 
-      } else if (status.nodejsversion == "v0.8.22") {
+//      } else if (status.nodejsversion == "v0.8.22") {
 
-        if (status.internetconnection == "not connected") {
+//        if (status.internetconnection == "not connected") {
 
-          setUIInternetconnectionNeeded();
+//          setUIInternetconnectionNeeded();
 
-          otheraction = true;
+//          otheraction = true;
 
-        } else {
+//        } else {
 
-          setUINodeJSInstallationNeeded();
+//          setUINodeJSInstallationNeeded();
 
-        }
+//        }
 
       } else if (status.npmpackagestatus == "not installed") {
 
