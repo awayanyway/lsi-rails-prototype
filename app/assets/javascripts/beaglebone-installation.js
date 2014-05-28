@@ -69,7 +69,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'var npmpackages = ["getmac", "serialport", "bonescript", "websocket", "dial-a-device-node"];'
 
-    +'var status = { nodeversion: "unknown", ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", '
+    +'var status = { ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], nodejspackageinstallationstatus: "unknown", nodejsversion: "unknown", npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", '
     
     +'dadinstallationstatus: "unknown", dadserver: "unknown", serverconnection: "unknown", internetconnection: "unknown" }; '
 
@@ -106,7 +106,7 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'var exec = require ("child_process").exec;'
     + 'exec ("node -v", '
 
-      +'function(error, stdout, stderr) {  status.nodeversion = stdout.split("\\n")[0]; callback() } ); '
+      +'function(error, stdout, stderr) {  status.nodejsversion = stdout.split("\\n")[0]; callback() } ); '
 
     + '};'
 
@@ -174,6 +174,43 @@ function ScriptRetrieveStatus(callback, mini) {
 
     + '};'
 
+    +'function checkfromNPM (callback) {'
+
+    +'bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
+    
+    +       'status.npmpackageinstallationstatus = "installing"; mini = true; '
+
+    +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(callback)})})}); '
+
+    +   '}, function() {'
+    
+    +       'status.npmpackageinstallationstatus = "not installing"; '
+
+    +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(callback)})})}); '
+    
+    +   '});'
+
+    +'}'
+
+
+    +'function checkNodeJSInstallation(callback) {'
+
+    +'bbFileExists("/var/lib/cloud9/autorun/installnodejspackages.js", function() {'
+    
+    +       'status.nodejspackageinstallationstatus = "installing"; mini = true; '
+
+    +       'callback();'
+
+    +   '}, function() {'
+    
+    +       'status.nodejspackageinstallationstatus = "not installing"; '
+
+    +       'callback();'
+    
+    +   '});'
+
+    +'}'
+
 
     +'function lastStep() {'
 
@@ -186,31 +223,11 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'bbFileExists("/var/lib/cloud9/autorun/installospackages.js", function() { '
     
-    +   'status.ospackageinstallationstatus = "installing"; mini = true; checkOSPackageStatus(function() { checkNodeVersion(function(){ bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
-    
-    +       'status.npmpackageinstallationstatus = "installing"; '
-
-    +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
-
-    +   '}, function() {'
-    
-    +       'status.npmpackageinstallationstatus = "not installing"; '
-
-    +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
-    
-    +   '})})});'
+    +   'status.ospackageinstallationstatus = "installing"; mini = true; checkOSPackageStatus(function() { checkNodeVersion(function(){ checkNodeJSInstallation(function() { checkfromNPM(lastStep); })})});'
     
     +'}, function() { '
     
-    +   'status.ospackageinstallationstatus = "not installing"; checkOSPackageStatus(function() {checkNodeVersion(function(){ bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
-    
-    +       'status.npmpackageinstallationstatus = "installing"; mini = true;  checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
-
-    +   '}, function() {'
-    
-    +       'status.npmpackageinstallationstatus = "not installing"; checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
-    
-    +   '})})});'
+    +   'status.ospackageinstallationstatus = "not installing"; checkOSPackageStatus(function() {checkNodeVersion(function(){ checkNodeJSInstallation(function() { checkfromNPM(lastStep); })})});'
     
     +'});'
 
@@ -406,6 +423,16 @@ function checkAgainStatus() {
             installationaction = true;
 
             checkInstallationStatus("npm");
+      } else if (status.nodejspackageinstallationstatus == "installing") {
+
+        setUIInstallationOngoing();
+
+            otheraction = true;
+
+            installationaction = true;
+
+            checkInstallationStatus("nodejs");
+
       } else if (status.ospackagestatus == "not installed") {
 
         if (status.internetconnection == "not connected") {
@@ -417,6 +444,20 @@ function checkAgainStatus() {
         } else {
 
           setUIOSInstallationNeeded();
+
+        }
+
+      } else if (status.nodejsversion == "v0.8.22") {
+
+        if (status.internetconnection == "not connected") {
+
+          setUIInternetconnectionNeeded();
+
+          otheraction = true;
+
+        } else {
+
+          setUINodeJSInstallationNeeded();
 
         }
 
@@ -538,6 +579,14 @@ function setUIOSInstallationNeeded() {
 
 }
 
+function setUINodeJSInstallationNeeded() {
+
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Node.js needs to be updated on this BeagleBone.&nbsp;"+ "<button onclick='install(\"nodejs\")' class='btn btn-success'>Install Node.js</button>";
+
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
+
+}
+
 function setUINPMInstallationNeeded() {
 
   document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;NPM packages need to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install(\"npm\")' class='btn btn-success'>Install NPM packages</button>";
@@ -617,6 +666,63 @@ function install(what) {
 
     });
 
+    } else if (what == "nodejs") {
+
+    // install npmpackages
+
+    installationaction = true;
+
+    setUIInstallationOngoing();
+    
+
+    // install dad in autorun
+
+    var b = require('bonescript');
+
+      otheraction = true;
+
+      
+
+      file = '/var/lib/cloud9/autorun/installnodejspackages.js';
+      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('"
+
+        +"rm /var/lib/cloud9/installnodejspackages.log; "
+
+        +"echo -n \"installing\" > /var/lib/cloud9/installnodejspackages.status; "
+
+        +"wget http://nodejs.org/dist/v0.10.24/node-v0.10.24.tar.gz &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"tar -zxvf node-v0.10.24.tar.gz  &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"cd node-v0.10.24  &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"./configure --without-snapshot  &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"make  &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"make install &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"cd .. &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"rm node-v0.10.24.tar.gz &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"rm -r node-v0.10.24 &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"rm /var/lib/cloud9/autorun/installnodejspackages.js; "
+
+        +"echo -n \"completed\" > /var/lib/cloud9/installnodejspackages.status "
+
+        +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+
+        otheraction = true;
+
+        setUIInstallationOngoing();
+
+        checkInstallationStatus(what);
+
+      });
+
+
   } else if (what == "npm") {
 
     // install npmpackages
@@ -657,7 +763,7 @@ function install(what) {
     b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
 
       setUIInstallationOngoing();
-      
+
       checkStatus();
 
     });  
