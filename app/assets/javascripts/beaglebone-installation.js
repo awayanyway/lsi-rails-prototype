@@ -65,7 +65,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
   b.writeTextFile('/var/lib/cloud9/autorun/writestatus.js', minitext+'var b = require("bonescript"); '
 
-    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing", "python-distutils", "python-setuptools", "python-simplejson"];'
+    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing", "python-distutils", "python-setuptools", "python-simplejson", "openssl-misc"];'
 
     +'var npmpackages = ["getmac", "serialport", "bonescript", "websocket", "dial-a-device-node"];'
 
@@ -93,7 +93,7 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'function opkgify(p) { return "opkg status "+p };'
     +' var execstring = ospackages.map(opkgify).join(" && ");'
     + 'exec (execstring, '
-    +   'function(error, stdout, stderr) { if ((stdout.indexOf("python-multiprocessing") > -1) && (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-distutils") > -1) && (stdout.indexOf("python-setuptools") > -1) && (stdout.indexOf("python-simplejson") > -1)) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
+    +   'function(error, stdout, stderr) { if ((stdout.indexOf("python-multiprocessing") > -1) && (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-distutils") > -1) && (stdout.indexOf("python-setuptools") > -1) && (stdout.indexOf("python-simplejson") > -1) && (stdout.indexOf("openssl-misc") > -1)) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
 
     + '};'
 
@@ -299,7 +299,7 @@ function checkInstallationStatus(what) {
 
           checkInstallationStatus(what);
 
-        }, 5000);
+        }, 3000);
 
         b.readTextFile ("/var/lib/cloud9/install"+what+"packages.log", function(y) {
 
@@ -328,9 +328,9 @@ function checkInstallationStatus(what) {
 
         checktimer = setTimeout (function cs() {
 
-          checkStatus(what);
+          checkStatus();
 
-        }, 2000);
+        }, 3000);
 
       } 
 
@@ -541,7 +541,7 @@ function checkAgainStatus() {
 
 function setUISuccess() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/greencheck.png' >&nbsp;Dial-a-device is installed on this BeagleBone.&nbsp;"+ "<button onclick='uninstall()' class='btn btn-danger'>Uninstall</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/greencheck.png' >&nbsp;Dial-a-device is installed.&nbsp;"+ "<button onclick='uninstall()' class='btn btn-danger'>Uninstall</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success";
 
@@ -573,7 +573,7 @@ function setUIInstallationOngoing() {
 
 function setUIOSInstallationNeeded() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;OS Packages need to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install(\"os\")' class='btn btn-success'>Install OS packages</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;OS Packages need to be installed.&nbsp;"+ "<button onclick='install(\"os\")' class='btn btn-success'>Install OS packages</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success disabled";
 
@@ -581,7 +581,7 @@ function setUIOSInstallationNeeded() {
 
 function setUINodeJSInstallationNeeded() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Node.js needs to be updated on this BeagleBone.&nbsp;"+ "<button onclick='install(\"nodejs\")' class='btn btn-success'>Install Node.js</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;A newer version of Node.js needs to be installed.&nbsp;"+ "<button onclick='install(\"nodejs\")' class='btn btn-success'>Upgrade</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success disabled";
 
@@ -589,7 +589,7 @@ function setUINodeJSInstallationNeeded() {
 
 function setUINPMInstallationNeeded() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;NPM packages need to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install(\"npm\")' class='btn btn-success'>Install NPM packages</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;NPM packages need to be installed.&nbsp;"+ "<button onclick='install(\"npm\")' class='btn btn-success'>Install NPM packages</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success disabled";
 
@@ -597,7 +597,7 @@ function setUINPMInstallationNeeded() {
 
 function setUIDADInstallationNeeded() {
 
-  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Dial-a-device needs to be installed on this BeagleBone.&nbsp;"+ "<button onclick='install(\"dad\")' class='btn btn-success'>Install</button>";
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;Dial-a-device needs to be installed.&nbsp;"+ "<button onclick='install(\"dad\")' class='btn btn-success'>Install</button>";
 
   document.getElementById("submitbutton").className = "btn btn-success disabled";
 
@@ -656,7 +656,34 @@ function install(what) {
     var b = require('bonescript');
 
     file = '/var/lib/cloud9/autorun/installospackages.js';
-    b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('rm /var/lib/cloud9/installospackages.log; echo -n \"installing\" > /var/lib/cloud9/installospackages.status; opkg update && opkg install python-compiler && opkg install python-misc && opkg install python-multiprocessing && opkg install python-distutils && opkg install python-setuptools && opkg install python-simplejson &> /var/lib/cloud9/installospackages.log; rm /var/lib/cloud9/autorun/installospackages.js; echo -n \"completed\" > /var/lib/cloud9/installospackages.status', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+    b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('"
+
+
+      +"rm /var/lib/cloud9/installospackages.log; "
+
+      +"echo -n \"installing\" > /var/lib/cloud9/installospackages.status; "
+
+      +"opkg update &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install python-compiler &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install python-misc &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install python-multiprocessing &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install python-distutils &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install python-setuptools &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install python-simplejson &> /var/lib/cloud9/installospackages.log; "
+
+      +"opkg install openssl-misc &> /var/lib/cloud9/installospackages.log; "
+
+      +"rm /var/lib/cloud9/autorun/installospackages.js; "
+
+      +"echo -n \"completed\" > /var/lib/cloud9/installospackages.status "
+
+      +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
       otheraction = true;
       setUIInstallationOngoing();
@@ -690,23 +717,26 @@ function install(what) {
 
         +"echo -n \"installing\" > /var/lib/cloud9/installnodejspackages.status; "
 
-        +"wget http://nodejs.org/dist/v0.10.24/node-v0.10.24.tar.gz &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"wget http://nodejs.org/dist/v0.10.24/node-v0.10.24.tar.gz &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"tar -zxvf node-v0.10.24.tar.gz  &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"tar -zxvf node-v0.10.24.tar.gz  &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"cd node-v0.10.24  &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"cd node-v0.10.24  &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"./configure --without-snapshot  &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"./configure --without-snapshot  &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"make  &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"make  &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"make install &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"make install &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"cd .. &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"cd .. &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"rm node-v0.10.24.tar.gz &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"rm node-v0.10.24.tar.gz &> /var/lib/cloud9/installnodejspackages.log; "
 
-        +"rm -r node-v0.10.24 &> /var/lib/cloud9/installnodejspackages.log; "
+        // +"rm -r node-v0.10.24 &> /var/lib/cloud9/installnodejspackages.log; "
+
+        +"opkg update && opkg upgrade &> /var/lib/cloud9/installnodejspackages.log; "
+
 
         +"rm /var/lib/cloud9/autorun/installnodejspackages.js; "
 
@@ -741,7 +771,17 @@ function install(what) {
       
 
       file = '/var/lib/cloud9/autorun/installnpmpackages.js';
-      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('rm /var/lib/cloud9/installnpmpackages.log; echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g getmac && npm install -g serialport && npm install -g coffee-script && npm install -g websocket && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; rm /var/lib/cloud9/autorun/installnpmpackages.js; echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('rm /var/lib/cloud9/installnpmpackages.log; "
+
+        +"echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; "
+
+        +"npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g getmac && npm install -g serialport && npm install -g coffee-script && npm install -g websocket && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; "
+
+        +"rm /var/lib/cloud9/autorun/installnpmpackages.js; "
+
+        +"echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status "
+
+        +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
         otheraction = true;
 
