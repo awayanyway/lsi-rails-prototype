@@ -65,11 +65,11 @@ function ScriptRetrieveStatus(callback, mini) {
 
   b.writeTextFile('/var/lib/cloud9/autorun/writestatus.js', minitext+'var b = require("bonescript"); '
 
-    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing"];'
+    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing", "python-distutils", "python-setuptools", "python-simplejson"];'
 
-    +'var npmpackages = ["dial-a-device-node", "python-misc", "python-multiprocessing"];'
+    +'var npmpackages = ["getmac", "serialport", "bonescript", "websocket", "dial-a-device-node"];'
 
-    +'var status = { ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", '
+    +'var status = { nodeversion: "unknown", ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", '
     
     +'dadinstallationstatus: "unknown", dadserver: "unknown", serverconnection: "unknown", internetconnection: "unknown" }; '
 
@@ -89,10 +89,24 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'if (mini == true) { status.ospackagestatus = "not checked"; callback(); } else {'
 
     + 'var exec = require ("child_process").exec;'
+
     + 'function opkgify(p) { return "opkg status "+p };'
     +' var execstring = ospackages.map(opkgify).join(" && ");'
     + 'exec (execstring, '
-    +   'function(error, stdout, stderr) { if ((stdout.indexOf("python-multiprocessing") > -1) && (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1)) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
+    +   'function(error, stdout, stderr) { if ((stdout.indexOf("python-multiprocessing") > -1) && (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-distutils") > -1) && (stdout.indexOf("python-setuptools") > -1) && (stdout.indexOf("python-simplejson") > -1)) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
+
+    + '};'
+
+    + '}; '
+
+    +'function checkNodeVersion(callback) {'
+
+    + 'if (mini == true) { status.nodeversion = "not checked"; callback(); } else {'
+
+    + 'var exec = require ("child_process").exec;'
+    + 'exec ("node -v", '
+
+      +'function(error, stdout, stderr) {  status.nodeversion = stdout.split("\\n")[0]; callback() } ); '
 
     + '};'
 
@@ -172,7 +186,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'bbFileExists("/var/lib/cloud9/autorun/installospackages.js", function() { '
     
-    +   'status.ospackageinstallationstatus = "installing"; mini = true; checkOSPackageStatus(function() {bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
+    +   'status.ospackageinstallationstatus = "installing"; mini = true; checkOSPackageStatus(function() { checkNodeVersion(function(){ bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
     
     +       'status.npmpackageinstallationstatus = "installing"; '
 
@@ -184,11 +198,11 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +       'checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
     
-    +   '})});'
+    +   '})})});'
     
     +'}, function() { '
     
-    +   'status.ospackageinstallationstatus = "not installing"; checkOSPackageStatus(function() {bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
+    +   'status.ospackageinstallationstatus = "not installing"; checkOSPackageStatus(function() {checkNodeVersion(function(){ bbFileExists("/var/lib/cloud9/autorun/installnpmpackages.js", function() {'
     
     +       'status.npmpackageinstallationstatus = "installing"; mini = true;  checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
 
@@ -196,7 +210,7 @@ function ScriptRetrieveStatus(callback, mini) {
     
     +       'status.npmpackageinstallationstatus = "not installing"; checkNPMPackageStatus(function() {checkDADStatus(function(){checkInternetconnection(function(){checkServerconnection(lastStep)})})}); '
     
-    +   '})});'
+    +   '})})});'
     
     +'});'
 
@@ -231,7 +245,7 @@ function ScriptReadStatus(callback_yes, callback_no) {
 
 var counter = 1;
 
-var waitseconds = 40;
+var waitseconds = 60;
 
 var global_status;
 
@@ -240,6 +254,8 @@ var checking = false;
 var otheraction = false;
 
 var installationaction = false;
+
+var checktimer;
 
 
 function cancel() {
@@ -271,12 +287,20 @@ function checkInstallationStatus(what) {
         b.readTextFile ("/var/lib/cloud9/install"+what+"packages.log", function(y) {
 
 
-
+          if (y.data != null) {
           var lines = y.data.split("\n");
 
           document.getElementById("installationlog").style.display = "";
 
           document.getElementById("installationlog").innerHTML = lines.slice(Math.max(lines.length - 5, 1)).join("<br>");
+
+          } else {
+
+            document.getElementById("installationlog").style.display = "";
+
+            document.getElementById("installationlog").innerHTML = "waiting for log file...";
+
+          }
 
 
         });
@@ -285,7 +309,7 @@ function checkInstallationStatus(what) {
 
         document.getElementById("installationlog").style.display = "none";
 
-        is = setTimeout (function cs() {
+        checktimer = setTimeout (function cs() {
 
           checkStatus(what);
 
@@ -326,7 +350,7 @@ function checkStatus() {
 
         ScriptRetrieveStatus(function() {
 
-          is = setTimeout (function cs() {
+          checktimer = setTimeout (function cs() {
 
             checkAgainStatus();      
 
@@ -449,7 +473,7 @@ function checkAgainStatus() {
 
       counter = counter + 1;
 
-      is = setTimeout (function cs() {
+      checktimer = setTimeout (function cs() {
 
           checkAgainStatus();      
 
@@ -462,6 +486,8 @@ function checkAgainStatus() {
   if (counter >= waitseconds) {
 
     console.log ("sorry, no status available.");
+
+    clearTimeout(checktimer);
 
     checking = false;
 
@@ -581,7 +607,7 @@ function install(what) {
     var b = require('bonescript');
 
     file = '/var/lib/cloud9/autorun/installospackages.js';
-    b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('echo -n \"installing\" > /var/lib/cloud9/installospackages.status; opkg update && opkg install python-compiler && opkg install python-misc && opkg install python-multiprocessing &> /var/lib/cloud9/installospackages.log; rm /var/lib/cloud9/autorun/installospackages.js; echo -n \"completed\" > /var/lib/cloud9/installospackages.status', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+    b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('rm /var/lib/cloud9/installospackages.log; echo -n \"installing\" > /var/lib/cloud9/installospackages.status; opkg update && opkg install python-compiler && opkg install python-misc && opkg install python-multiprocessing && opkg install python-distutils && opkg install python-setuptools && opkg install python-simplejson &> /var/lib/cloud9/installospackages.log; rm /var/lib/cloud9/autorun/installospackages.js; echo -n \"completed\" > /var/lib/cloud9/installospackages.status', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
       otheraction = true;
       setUIInstallationOngoing();
@@ -609,7 +635,7 @@ function install(what) {
       
 
       file = '/var/lib/cloud9/autorun/installnpmpackages.js';
-      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g getmac && npm install -g serialport && npm install -g coffee-script && npm install -g websocket && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; rm /var/lib/cloud9/autorun/installnpmpackages.js; echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('rm /var/lib/cloud9/installnpmpackages.log; echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g getmac && npm install -g serialport && npm install -g coffee-script && npm install -g websocket && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; rm /var/lib/cloud9/autorun/installnpmpackages.js; echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
         otheraction = true;
 
@@ -630,6 +656,8 @@ function install(what) {
     file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
     b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
 
+      setUIInstallationOngoing();
+      
       checkStatus();
 
     });  

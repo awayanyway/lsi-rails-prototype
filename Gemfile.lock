@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 800a30f8b4e1a828ecbc046fcbdc4919e215059c
+  revision: dae6c40a8e7ce4fed20a9615ffeac1496a6d0426
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -155,7 +155,7 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.3)
     excon (0.33.0)
-    execjs (2.0.2)
+    execjs (2.1.0)
     fakes3 (0.1.5.2)
       builder
       thor
@@ -266,7 +266,7 @@ GEM
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
     thor (0.19.1)
-    thread_safe (0.3.3)
+    thread_safe (0.3.4)
     tilt (1.4.1)
     treetop (1.4.15)
       polyglot

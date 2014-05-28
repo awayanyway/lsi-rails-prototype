@@ -12,6 +12,8 @@ gem 'rake'
 
 gem 'pg'
 
+gem 'protected_attributes'
+
 gem 'delayed_job_active_record'
 
 # Gems used only for assets and not required
@@ -116,8 +118,6 @@ gem 'bootstrap-sass', github: 'thomas-mcdonald/bootstrap-sass'
 gem 'bootstrap-wysiwyg-rails'
 
 gem 'httparty'
-
-gem 'protected_attributes'
 
 gem 'dav4rack', github: 'timon/dav4rack'
 
