@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 08d17c23250034976cf1c5cfdd0980d742928b6c
+  revision: bc377dfb61e01d3574d559cd328085b469794fad
   specs:
-    dial_a_device_node (0.0.46)
+    dial_a_device_node (0.0.55)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 3026f428ca4aefeb88843dd21130e96266c32df7
+  revision: b9c8dec017070af82cb451c59f83e0fffeb6b66e
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -154,7 +154,7 @@ GEM
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.33.0)
+    excon (0.34.0)
     execjs (2.1.0)
     fakes3 (0.1.5.2)
       builder

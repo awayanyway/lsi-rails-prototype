@@ -775,7 +775,7 @@ function install(what) {
 
         +"echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; "
 
-        +"npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g getmac && npm install -g serialport && npm install -g coffee-script && npm install -g websocket && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; "
+        +"npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; "
 
         +"rm /var/lib/cloud9/autorun/installnpmpackages.js; "
 
