@@ -806,13 +806,13 @@ function install(what) {
       file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
       b.writeTextFile(file, "forever = require ('forever-monitor');"
 
-        +"var child = new (forever.Monitor)('start.js', {"
-        +"  silent: false,"
-        +"  sourceDir: '/var/lib/cloud9',"
-        *"  killTree: true,"
-        *"  outFile: '/var/lib/cloud9/dial-a-device-node.log',"
-        +"  options: []"
-        +"});"
+        +"var child = new (forever.Monitor)('start.js', { "
+        +"  silent: false, "
+        +"  sourceDir: '/var/lib/cloud9', "
+        *"  killTree: true, "
+        *"  outFile: '/var/lib/cloud9/dial-a-device-node.log', "
+        +"  options: [] "
+        +" }); "
         +"child.start();"
 
         +"", function(x) {
