@@ -8,31 +8,10 @@ class MessageController < WebsocketRails::BaseController
 		Rails.logger.info (message)
 	end
 
-	def mymessage
-		Rails.logger.info ("mymessage")
-		Rails.logger.info (message)
-		WebsocketRails["channel_dev_2"].trigger :mymessage, "hey back"
-	end
-
 	def client_disconnected
 	  	Rails.logger.info ("Client disconnected")
 	  	Rails.logger.info (message.message)
 	  	Rails.logger.info (message.data)
-	end
-
-	def devicereply
-		Rails.logger.info ("Reply: ")
-		Rails.logger.info (message[1])
-	end
-
-	def devicecommand
-		Rails.logger.info ("Command: ")
-    	Rails.logger.info (message)
-	end
-
-	def devicestatus
-		Rails.logger.info ("Status: ")
-    	Rails.logger.info (message)
 	end
 
 	def devicelog
