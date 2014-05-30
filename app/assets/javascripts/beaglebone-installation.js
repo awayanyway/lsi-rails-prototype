@@ -775,7 +775,7 @@ function install(what) {
 
         +"echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; "
 
-        +"npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; "
+        +"npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g forever-monitor && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; "
 
         +"rm /var/lib/cloud9/autorun/installnpmpackages.js; "
 
@@ -799,12 +799,28 @@ function install(what) {
 
     var b = require('bonescript');
 
-    file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
+    file = '/var/lib/cloud9/start.js';
     b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
 
-      setUIInstallationOngoing();
 
-      checkStatus();
+      file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
+      b.writeTextFile(file, "forever = require ('forever-monitor');"
+
+        +"var child = new (forever.Monitor)('start.js', {"
+        +"  silent: false,"
+        +"  sourceDir: '/var/lib/cloud9',"
+        *"  killTree: true,"
+        *"  outFile: '/var/lib/cloud9/dial-a-device-node.log',"
+        +"  options: []"
+        +"});"
+        +"child.start();"
+
+        +"", function(x) {
+        setUIInstallationOngoing();
+
+        checkStatus();
+
+      });
 
     });  
 
