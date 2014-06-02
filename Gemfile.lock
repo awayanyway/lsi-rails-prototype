@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 98de93ac402054e991a17a1a18f2e98335fc2a5a
+  revision: 2042d2239659e00413017ad5b6dff31cfd157f73
   specs:
-    dial_a_device_node (0.0.62)
+    dial_a_device_node (0.0.63)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
