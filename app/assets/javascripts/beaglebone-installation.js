@@ -65,11 +65,15 @@ function ScriptRetrieveStatus(callback, mini) {
 
   b.writeTextFile('/var/lib/cloud9/autorun/writestatus.js', minitext+'var b = require("bonescript"); '
 
-    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing", "python-distutils", "python-setuptools", "python-simplejson", "openssl-misc"];'
+//    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing", "python-distutils", "python-setuptools", "python-simplejson", "openssl-misc"];'
 
-    +'var npmpackages = ["getmac", "serialport", "bonescript", "websocket", "dial-a-device-node"];'
+    +'var ospackages = ["python-compiler", "python-misc", "python-multiprocessing"];'
 
-    +'var status = { ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], nodejspackageinstallationstatus: "unknown", nodejsversion: "unknown", npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", '
+    +'var npmpackages = ["forever-monitor", "dial-a-device-node"];'
+
+    +'var status = { ospackageerror: "", ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], nodejspackageinstallationstatus: "unknown", nodejsversion: "unknown", '
+
+    +'npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", npmpackageerror: "", '
     
     +'dadinstallationstatus: "unknown", dadserver: "unknown", serverconnection: "unknown", internetconnection: "unknown" }; '
 
@@ -93,9 +97,17 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'function opkgify(p) { return "opkg status "+p };'
     +' var execstring = ospackages.map(opkgify).join(" && ");'
     + 'exec (execstring, '
-    +   'function(error, stdout, stderr) { if ((stdout.indexOf("python-multiprocessing") > -1) && (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-distutils") > -1) && (stdout.indexOf("python-setuptools") > -1) && (stdout.indexOf("python-simplejson") > -1) && (stdout.indexOf("openssl-misc") > -1)) { status.ospackagestatus = "installed"; } else {status.ospackagestatus = "not installed";}; callback() } ); '
+    +   'function(error, stdout, stderr) { '
+
+    +'  if (((stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-multiprocessing") > -1))) '
+
+    +'{ status.ospackagestatus = "installed"; } '
+
+    +' else {status.ospackagestatus = "not installed";}; callback() } ); '
 
     + '};'
+
+    +' status.ospackageerror = stderror;'
 
     + '}; '
 
@@ -119,7 +131,13 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'var exec = require ("child_process").exec;'
     + 'exec ("npm list -g -parseable", '
 
-      +'function(error, stdout, stderr) { if (stdout.indexOf("dial-a-device-node") > -1) { status.npmpackagestatus = "installed"; } else { status.npmpackagestatus = "not installed"; } callback() } ); '
+      +'function(error, stdout, stderr) { '
+
+
+        +'if (((stdout.indexOf("dial-a-device-node") > -1) && ((stdout.indexOf("forever-monitor") > -1)) { status.npmpackagestatus = "installed"; } else { status.npmpackagestatus = "not installed"; }; status.npmpackageerror = stderr; callback(); '
+
+
+      +'} ); '
 
     + '};'
 
@@ -671,13 +689,13 @@ function install(what) {
 
       +"opkg install python-multiprocessing &> /var/lib/cloud9/installospackages.log; "
 
-      +"opkg install python-distutils &> /var/lib/cloud9/installospackages.log; "
+//      +"opkg install python-distutils &> /var/lib/cloud9/installospackages.log; "
 
-      +"opkg install python-setuptools &> /var/lib/cloud9/installospackages.log; "
+//      +"opkg install python-setuptools &> /var/lib/cloud9/installospackages.log; "
 
-      +"opkg install python-simplejson &> /var/lib/cloud9/installospackages.log; "
+//      +"opkg install python-simplejson &> /var/lib/cloud9/installospackages.log; "
 
-      +"opkg install openssl-misc &> /var/lib/cloud9/installospackages.log; "
+//      +"opkg install openssl-misc &> /var/lib/cloud9/installospackages.log; "
 
       +"rm /var/lib/cloud9/autorun/installospackages.js; "
 
