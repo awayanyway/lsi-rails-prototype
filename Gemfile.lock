@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: e0ffb37cdfa0e8f650ab7716e5edf4938f259ec2
+  revision: 27367a9f75dcefc60887ecdaa898c3b353978543
   specs:
-    dial_a_device_node (0.0.57)
+    dial_a_device_node (0.0.58)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: f02216793a045a614e5c0ef7e7c2fb25fea7584b
+  revision: e8660478f924fc7fd685b6600f05e4626c7f9583
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: c17c04f638caa2b901f86c294a992f72dd828593
+  revision: 268304f5cb1777cf1d5575becfc7441413703401
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -162,10 +162,11 @@ GEM
     faye-websocket (0.7.3)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.3.1)
-    fog (1.22.0)
+    fog (1.22.1)
       fog-brightbox
-      fog-core (~> 1.21, >= 1.21.1)
+      fog-core (~> 1.22)
       fog-json
+      ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
     fog-brightbox (0.0.2)
       fog-core
@@ -189,6 +190,7 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.6.9)
+    ipaddress (0.8.0)
     jquery-hotkeys-rails (0.7.9.1)
       railties (>= 3.1)
     jquery-rails (3.1.0)
@@ -241,7 +243,7 @@ GEM
       right_http_connection (>= 1.2.5)
     right_http_connection (1.4.0)
     rubabel (0.1.0)
-    rubyzip (1.1.3)
+    rubyzip (1.1.4)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
