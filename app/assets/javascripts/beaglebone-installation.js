@@ -107,7 +107,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
     + '};'
 
-    +' status.ospackageerror = stderror;'
+    +' status.ospackageerror = stderr;'
 
     + '}; '
 
@@ -279,12 +279,10 @@ function ScriptRetrieveStatus(callback, mini) {
 
          +'} ); '
 
-      + '}; '
+   + '}; '
 
     +'};'
 
-
-    +'};'
 
 
     +'function main() { '
