@@ -90,7 +90,11 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'function checkOSPackageStatus(callback) {'
 
-    + 'if (mini == true) { status.ospackagestatus = "not checked"; callback(); } else {'
+    +'if ( status.osrelease != "Angstrom") {'
+
+    + ' status.ospackagestatus = "installed"; callback(); '
+
+    + '} else if (mini == true) { status.ospackagestatus = "not checked"; callback(); } else {'
 
     + 'var exec = require ("child_process").exec;'
 
@@ -469,11 +473,13 @@ function checkAgainStatus() {
 
       installationaction = false;
 
-      if (status.osrelease != "Angstrom") {
+//      if (status.osrelease != "Angstrom") {
 
-        setUIOSNotSupported();
+//        setUIOSNotSupported();
 
-      } else if (status.ospackageinstallationstatus == "installing") {
+//      } else 
+
+      if (status.ospackageinstallationstatus == "installing") {
 
         setUIInstallationOngoing();
 
