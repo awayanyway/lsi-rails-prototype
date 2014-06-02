@@ -99,7 +99,7 @@ function ScriptRetrieveStatus(callback, mini) {
     + 'exec (execstring, '
     +   'function(error, stdout, stderr) { '
 
-    +'  if (((stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-multiprocessing") > -1))) '
+    +'  if ( (stdout.indexOf("python-compiler") > -1) && (stdout.indexOf("python-misc") > -1) && (stdout.indexOf("python-multiprocessing") > -1) ) '
 
     +'{ status.ospackagestatus = "installed"; } '
 
@@ -134,7 +134,7 @@ function ScriptRetrieveStatus(callback, mini) {
       +'function(error, stdout, stderr) { '
 
 
-        +'if (((stdout.indexOf("dial-a-device-node") > -1) && ((stdout.indexOf("forever-monitor") > -1))) { status.npmpackagestatus = "installed"; } else { status.npmpackagestatus = "not installed"; }; status.npmpackageerror = stderr; callback(); '
+        +'if ( (stdout.indexOf("dial-a-device-node") > -1) && (stdout.indexOf("forever-monitor") > -1) ) { status.npmpackagestatus = "installed"; } else { status.npmpackagestatus = "not installed"; }; status.npmpackageerror = stderr; callback(); '
 
 
       +'} ); '
