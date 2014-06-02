@@ -71,7 +71,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'var npmpackages = ["forever-monitor", "dial-a-device-node"];'
 
-    +'var status = { osversion: "", ospackageerror: "", ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], nodejspackageinstallationstatus: "unknown", nodejsversion: "unknown", '
+    +'var status = { osrelease: "", ospackageerror: "", ospackageinstallationstatus: "unknown", ospackagestatus: "unknown", ospackages: [], nodejspackageinstallationstatus: "unknown", nodejsversion: "unknown", '
 
     +'npmpackageinstallationstatus: "unknown", npmpackagestatus: "unknown", npmpackageerror: "", '
     
@@ -256,7 +256,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'function checkOSrelease(callback) {'
 
-    + 'if (mini == true) { status.osversion = "not checked"; callback(); } else {'
+    + 'if (mini == true) { status.osrelease = "not checked"; callback(); } else {'
 
       + 'var exec = require ("child_process").exec;'
       + 'exec ("cat /etc/*-release", '
@@ -264,15 +264,17 @@ function ScriptRetrieveStatus(callback, mini) {
          +'function(error, stdout, stderr) {  '
 
 
-         +'status.osversion = "unknown"; '
+           +'status.osrelease = "unknown"; '
 
-         +'linearray = stdout.split("\\n"); '
+           +'linearray = stdout.split("\\n"); '
 
-         +'for (index = 0; index < linearray.length; ++index) { '
+           +'for (index = 0; index < linearray.length; ++index) { '
 
-         +' entry = linearray[index]; key = entry.split("=")[0]; value = entry.split("=")[1]; if (key == "NAME") { status.osversion = value.replace(\'"\', \'\'); } }; callback(); '
+           +' entry = linearray[index]; key = entry.split("=")[0]; value = entry.split("=")[1]; if (key == "NAME") { status.osrelease = value.replace(\'"\', \'\'); }; '
 
-         +'};'
+           +'};'
+
+           +' callback();'
 
 
          +'} ); '
@@ -467,7 +469,7 @@ function checkAgainStatus() {
 
       installationaction = false;
 
-      if (status.osversion != "Angstrom") {
+      if (status.osrelease != "Angstrom") {
 
         setUIOSNotSupported();
 
