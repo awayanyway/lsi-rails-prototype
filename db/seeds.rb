@@ -12,3 +12,4 @@ Devicetype.create :deviceclass_id => 2, :showcase => true, :name => "heidolph", 
 Devicetype.create :deviceclass_id => 3, :showcase => true, :name => "kern", :displayname => "Kern Balance", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "1200"
 Devicetype.create :deviceclass_id => 4, :showcase => false, :name => "legacy_vnc", :displayname => "Legacy via VNC", :porttype => "vnc", :portname => "", :portbaud => ""
 Devicetype.create :deviceclass_id => 5, :showcase => false, :name => "purebeaglebone", :displayname => "BeagleBone", :porttype => "serial", :portname => "", :portbaud => ""
+Devicetype.create :deviceclass_id => 6, :showcase => false, :name => "weathercape", :displayname => "BeagleBone", :porttype => "serial", :portname => "", :portbaud => ""
