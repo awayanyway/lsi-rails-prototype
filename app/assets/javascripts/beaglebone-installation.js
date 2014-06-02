@@ -395,7 +395,7 @@ function checkInstallationStatus(what) {
 
           checkStatus();
 
-        }, 3000);
+        }, 10000);
 
       } 
 
