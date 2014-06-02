@@ -258,15 +258,31 @@ function ScriptRetrieveStatus(callback, mini) {
 
     + 'if (mini == true) { status.osversion = "not checked"; callback(); } else {'
 
-    + 'var exec = require ("child_process").exec;'
-    + 'exec ("cat /etc/*-release", '
+      + 'var exec = require ("child_process").exec;'
+      + 'exec ("cat /etc/*-release", '
 
-    +'function(error, stdout, stderr) {  status.osversion = "unknown"; linearray = stdout.split("\\n"); for (index = 0; index < linearray.length; ++index) { entry = linearray[index]; key = entry.split("=")[0]; value = entry.split("=")[1]; if (key == "NAME") { status.osversion = value.replace(\'"\', \'\'); } }; callback() } ); '
-
-    + '}; '
+         +'function(error, stdout, stderr) {  '
 
 
-    +'}';
+         +'status.osversion = "unknown"; '
+
+         +'linearray = stdout.split("\\n"); '
+
+         +'for (index = 0; index < linearray.length; ++index) { '
+
+         +' entry = linearray[index]; key = entry.split("=")[0]; value = entry.split("=")[1]; if (key == "NAME") { status.osversion = value.replace(\'"\', \'\'); } }; callback(); '
+
+         +'};'
+
+
+         +'} ); '
+
+      + '}; '
+
+    +'};'
+
+
+    +'};'
 
 
     +'function main() { '
@@ -451,7 +467,11 @@ function checkAgainStatus() {
 
       installationaction = false;
 
-      if (status.ospackageinstallationstatus == "installing") {
+      if (status.osversion != "Angstrom") {
+
+        setUIOSNotSupported();
+
+      } else if (status.ospackageinstallationstatus == "installing") {
 
         setUIInstallationOngoing();
 
@@ -585,6 +605,14 @@ function checkAgainStatus() {
 
 }
 
+
+function setUIOSNotSupported() {
+
+  document.getElementById("install-status").innerHTML = "<img src='/assets/error.png' >&nbsp;This version of Linux on your BeagleBone is not yet supported.&nbsp;"+ "<button onclick='checkStatus()' class='btn btn-warning'>Check again</button>";
+
+  document.getElementById("submitbutton").className = "btn btn-success disabled";
+
+}
 
 function setUISuccess() {
 
