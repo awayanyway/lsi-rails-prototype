@@ -823,7 +823,7 @@ function install(what) {
 
         +"rm /var/lib/cloud9/autorun/installnodejspackages.js; "
 
-        +"echo -n \"completed\" > /var/lib/cloud9/installnodejspackages.status "
+        +"echo -n \"completed\" > /var/lib/cloud9/installnodejspackages.status; "
 
         +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
@@ -854,17 +854,24 @@ function install(what) {
       
 
       file = '/var/lib/cloud9/autorun/installnpmpackages.js';
-      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('rm /var/lib/cloud9/installnpmpackages.log; "
+      b.writeTextFile(file, "var exec = require ('child_process').exec; "
+
+
+        +"var environment = process.env;"
+
+        +"environment.HOME = \"/root\";"
+
+        +"exec ('rm /var/lib/cloud9/installnpmpackages.log; "
 
         +"echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; "
 
-        +"npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g forever-monitor && npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; "
+        +"npm update >> /var/lib/cloud9/installnpmpackages.log 2>&1; npm install -g forever-monitor >> /var/lib/cloud9/installnpmpackages.log 2>&1; npm install -g dial-a-device-node >> /var/lib/cloud9/installnpmpackages.log 2>&1; "
 
         +"rm /var/lib/cloud9/autorun/installnpmpackages.js; "
 
-        +"echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status "
+        +"echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status; "
 
-        +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+        +"', { env: environment }, function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
         otheraction = true;
 
