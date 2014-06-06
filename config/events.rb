@@ -18,6 +18,7 @@ WebsocketRails::EventMap.describe do
 
   namespace :device do
     subscribe :log,     :to => MessageController, :with_method => :devicelog
+
   end
 
 end

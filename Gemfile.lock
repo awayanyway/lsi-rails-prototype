@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 2ffb9a2d29b297681648c7f84f95cc1258283a80
+  revision: b90f7592e84159d69f4f723b33a928190094797a
   specs:
-    dial_a_device_node (0.0.65)
+    dial_a_device_node (0.0.66)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: e8660478f924fc7fd685b6600f05e4626c7f9583
+  revision: 122ac3b252f6d953c5e4e4856b95a63e6fd83f5a
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)
@@ -39,12 +39,12 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 268304f5cb1777cf1d5575becfc7441413703401
+  revision: f5a24bec0cf9645bf75d678b7c6940b527d689b0
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
       actionpack (= 4.0.5)
-      mail (~> 2.5.4)
+      mail (~> 2.5, >= 2.5.4)
     actionpack (4.0.5)
       activesupport (= 4.0.5)
       builder (~> 3.1.0)
@@ -81,7 +81,7 @@ GIT
 
 GIT
   remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
-  revision: 72e267449424736028f7439a5a1b66e857bcd460
+  revision: b0f052e0a68d27a9d1714ef0fea47417bc289d45
   specs:
     bootstrap-sass (3.1.1.1)
       autoprefixer-rails (~> 1.1)
@@ -103,7 +103,7 @@ GEM
     acts_as_list (0.4.0)
       activerecord (>= 3.0)
     arel (4.0.2)
-    autoprefixer-rails (1.1.20140523)
+    autoprefixer-rails (1.1.20140605)
       execjs
     aws-s3 (0.6.3)
       builder
@@ -156,8 +156,8 @@ GEM
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.34.0)
-    execjs (2.1.0)
+    excon (0.36.0)
+    execjs (2.2.0)
     fakes3 (0.1.5.2)
       builder
       thor
@@ -202,10 +202,9 @@ GEM
       railties (>= 3.2.16)
     json (1.8.1)
     libv8 (3.16.14.3)
-    mail (2.5.4)
-      mime-types (~> 1.16)
-      treetop (~> 1.4.8)
-    mime-types (1.25.1)
+    mail (2.6.0)
+      mime-types (>= 1.16, < 3)
+    mime-types (2.3)
     mini_magick (3.7.0)
       subexec (~> 0.2.1)
     mini_portile (0.6.0)
@@ -221,7 +220,6 @@ GEM
     openbabel (2.3.2.0)
     orm_adapter (0.5.0)
     pg (0.17.1)
-    polyglot (0.3.5)
     protected_attributes (1.0.7)
       activemodel (>= 4.0.1, < 5.0)
     pundit (0.2.3)
@@ -235,7 +233,7 @@ GEM
     rails_serve_static_assets (0.0.2)
     rails_stdout_logging (0.0.3)
     rake (10.3.2)
-    redis (3.0.7)
+    redis (3.1.0)
     redis-objects (0.9.1)
       redis (>= 3.0.2)
     ref (1.0.5)
@@ -272,9 +270,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
-    treetop (1.4.15)
-      polyglot
-      polyglot (>= 0.3.1)
     tzinfo (0.3.39)
     uglifier (2.5.0)
       execjs (>= 0.3.0)

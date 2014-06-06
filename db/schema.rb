@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140527113245) do
+ActiveRecord::Schema.define(version: 20140604221925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,7 @@ ActiveRecord::Schema.define(version: 20140527113245) do
     t.integer  "molecule_id"
     t.string   "samplename"
     t.integer  "reaction_id"
+    t.integer  "sample_id"
   end
 
   create_table "molecule_samples", force: true do |t|
@@ -247,7 +248,7 @@ ActiveRecord::Schema.define(version: 20140527113245) do
     t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "fp",           limit: nil
+    t.string   "fp"
   end
 
   create_table "organization_departments", force: true do |t|
@@ -372,6 +373,17 @@ ActiveRecord::Schema.define(version: 20140527113245) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "description"
+  end
+
+  create_table "runs", force: true do |t|
+    t.integer  "location_id"
+    t.integer  "measurement_id"
+    t.integer  "user_id"
+    t.datetime "started_at"
+    t.datetime "stopped_at"
+    t.boolean  "finished",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sample_citations", force: true do |t|

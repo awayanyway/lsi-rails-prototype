@@ -89,7 +89,9 @@
     </td>
 
     <td>
+      <% if !sample.target_amount.nil? && !sample.unit.nil? && !sample.weight.nil? then %>
       <%= sample.target_amount.to_s+" "+sample.unit %>  <small> (<%= sample.weight.to_s+" "+sample.unit %>) </small>
+      <% end %>
     </td>
 
     <td><span class="glyphicon glyphicon-paperclip" /> <%= sample.datasets.length %></td>

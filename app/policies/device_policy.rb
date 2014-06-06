@@ -10,7 +10,7 @@ class DevicePolicy < Struct.new(:user, :device)
   end
 
   def control?
-    user.devicecontroller_of?(device)
+    user.deviceviewer_of?(device)
   end
 
   def create?

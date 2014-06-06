@@ -10,9 +10,35 @@ class MessageController < WebsocketRails::BaseController
 
 	def client_disconnected
 	  	Rails.logger.info ("Client disconnected")
-	  	Rails.logger.info (message.message)
-	  	Rails.logger.info (message.data)
+	  	Rails.logger.info ("Code: "+message.code.to_s + " Reason:"+message.reason.to_s)
 	end
+
+	def device_startrun
+
+		Rails.logger.info ("Start run: ")
+    	Rails.logger.info (message)
+
+		msg = message[0]
+
+	    mi = msg[:metainfo]
+	    data = msg[:data]
+
+	end
+
+	def device_stoprun
+
+		Rails.logger.info ("Stop run: ")
+    	Rails.logger.info (message)
+
+		msg = message[0]
+
+	    mi = msg[:metainfo]
+	    data = msg[:data]
+
+	    @device = Device.find(mi[:deviceid])
+
+	end
+
 
 	def devicelog
 
@@ -24,11 +50,18 @@ class MessageController < WebsocketRails::BaseController
 	    mi = msg[:metainfo]
 	    data = msg[:data]
 
-	    
-
 	    @locations = Device.find(mi[:deviceid]).locations
 
 	    @locations.each do |location|
+
+
+	    	# find open measurement for this device id and sample id
+
+	    	# attach readout to open dataset
+
+
+
+	    	# if sample is checked in, perform further actions e.g. write weight into database
 
 	    	if (mi[:devicetype] == "kern") then
 
