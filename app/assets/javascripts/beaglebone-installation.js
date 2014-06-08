@@ -262,7 +262,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
     +'function checkOSrelease(callback) {'
 
-    + 'if (mini == true) { status.osrelease = "not checked"; callback(); } else {'
+    // + 'if (mini == true) { status.osrelease = "not checked"; callback(); } else {'
 
       + 'var exec = require ("child_process").exec;'
       + 'exec ("cat /etc/*-release", '
@@ -285,7 +285,7 @@ function ScriptRetrieveStatus(callback, mini) {
 
          +'} ); '
 
-   + '}; '
+   //+ '}; '
 
     +'};'
 
@@ -856,22 +856,40 @@ function install(what) {
       file = '/var/lib/cloud9/autorun/installnpmpackages.js';
       b.writeTextFile(file, "var exec = require ('child_process').exec; "
 
+        +"var osrelease = '"+status.osrelease+"'; "
 
-        +"var environment = process.env;"
+        +"var environment = process.env; "
 
-        +"environment.HOME = \"/root\";"
+        +"if ( osrelease != 'Angstrom') { "
 
-        +"exec ('rm /var/lib/cloud9/installnpmpackages.log; "
+          +"environment.HOME = \"/root\";"
 
-        +"echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; "
+        +"}; "
 
-        +"npm update >> /var/lib/cloud9/installnpmpackages.log 2>&1; npm install -g forever-monitor >> /var/lib/cloud9/installnpmpackages.log 2>&1; npm install -g dial-a-device-node >> /var/lib/cloud9/installnpmpackages.log 2>&1; "
+        +"execstring = '"
 
-        +"rm /var/lib/cloud9/autorun/installnpmpackages.js; "
+        +"rm /var/lib/cloud9/installnpmpackages.log; "
+
+        +"echo -n \"installing\" > /var/lib/cloud9/installnpmpackages.status; ';"
+
+
+        +"if ( osrelease != 'Angstrom') { "
+
+          +"execstring = execstring + 'npm update >> /var/lib/cloud9/installnpmpackages.log 2>&1; npm install -g forever-monitor >> /var/lib/cloud9/installnpmpackages.log 2>&1; npm install -g dial-a-device-node >> /var/lib/cloud9/installnpmpackages.log 2>&1; ';"
+
+        +"} else {"
+
+          +"execstring = execstring + 'npm update &> /var/lib/cloud9/installnpmpackages.log; npm install -g forever-monitor &> /var/lib/cloud9/installnpmpackages.log; npm install -g dial-a-device-node &> /var/lib/cloud9/installnpmpackages.log; ';"
+
+        +"}; "
+
+        +"execstring = execstring + 'rm /var/lib/cloud9/autorun/installnpmpackages.js; "
 
         +"echo -n \"completed\" > /var/lib/cloud9/installnpmpackages.status; "
 
-        +"', { env: environment }, function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+        +"'; "
+
+        +"exec(execstring, { env: environment }, function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
         otheraction = true;
 

@@ -35,10 +35,10 @@
 <% @beaglebones.each do |beaglebone| %>
   <tr>
     <td><%= beaglebone.serialnumber %></td>
-    <td><%= link_to Device.where(["beaglebone_id = ?", beaglebone]).first.name, Device.where(["beaglebone_id = ?", beaglebone]).first %></td>
+    <td><% if Device.where(["beaglebone_id = ?", beaglebone]).first.nil? then %>No device.<% else %><%= link_to Device.where(["beaglebone_id = ?", beaglebone]).first.name, Device.where(["beaglebone_id = ?", beaglebone]).first %><% end %></td>
     <td><%= if (beaglebone.last_seen) then distance_of_time_in_words_to_now(beaglebone.last_seen)+" ago" else "never" end %></td>
 
-    <td><%= link_to beaglebone.external_ip, "http://"+beaglebone.external_ip+":3000" %></td>
+    <td><%= link_to beaglebone.external_ip, "http://"+beaglebone.external_ip+":3000", :target => "_blank" %></td>
     <td><%= link_to 'Edit', edit_beaglebone_path(beaglebone) %></td>
     <td><%= link_to 'Destroy', beaglebone, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
