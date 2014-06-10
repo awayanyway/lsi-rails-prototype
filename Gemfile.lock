@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 001fb068bb2707029c2c03edb62da56db2a6cf69
+  revision: 809ce1e3974f622de57a79b2e2900aa7367c1729
   specs:
-    dial_a_device_node (0.0.70)
+    dial_a_device_node (0.0.71)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: f5a24bec0cf9645bf75d678b7c6940b527d689b0
+  revision: 438a1bd3b5dc4464a93cc6b14e4886b7d8081e6c
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -81,7 +81,7 @@ GIT
 
 GIT
   remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
-  revision: b0f052e0a68d27a9d1714ef0fea47417bc289d45
+  revision: 380fb83045f8417c23c6b6ad9310e545621032b7
   specs:
     bootstrap-sass (3.1.1.1)
       autoprefixer-rails (~> 1.1)
@@ -156,7 +156,7 @@ GEM
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.36.0)
+    excon (0.37.0)
     execjs (2.2.0)
     fakes3 (0.1.5.2)
       builder
