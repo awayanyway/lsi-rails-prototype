@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140604221925) do
+ActiveRecord::Schema.define(version: 20140612111626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,6 +174,12 @@ ActiveRecord::Schema.define(version: 20140604221925) do
     t.integer  "deviceclass_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "portdatabits",   default: 8
+    t.string   "portparity",     default: "none"
+    t.integer  "portstopbits",   default: 1
+    t.string   "portlinebreak",  default: "0A"
+    t.string   "portprefix",     default: ""
+    t.string   "portsuffix",     default: ""
   end
 
   create_table "folder_watchers", force: true do |t|
