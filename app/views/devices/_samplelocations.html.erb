@@ -1,9 +1,12 @@
 <% if (@locations != nil) then %>
     <% @locations.each do |location| %>
+
+    <%if !location.nil? then %>
+
       <li>
 
 
-        <% if ((location != nil) && (location.sample_id != nil)) then %>
+        <% if (location.sample_id != nil) then %>
 
         <% sample = Sample.find(location.sample_id) %>
 
@@ -23,6 +26,7 @@
 
         <% end %>
 
+
         <% if location.runs.where(["finished = ?", false]).length == 0 then %>
 
         <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/startrun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-success">Start run</a>
@@ -34,7 +38,11 @@
         <% end %>
 
 
+
+
       </li>
+
+      <% end %>
 
     <% end %>
 
