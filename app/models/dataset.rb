@@ -473,7 +473,7 @@ class Dataset < ActiveRecord::Base
 
     self.add_attachment(newattachment)
 
-    add_to_project(measurement.user.rootproject_id, measurement.user)
+    # add_to_project(measurement.user.rootproject_id, measurement.user)
 
   end
 

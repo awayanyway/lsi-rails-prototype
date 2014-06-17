@@ -80,14 +80,6 @@ GIT
       thor (>= 0.18.1, < 2.0)
 
 GIT
-  remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
-  revision: f9af31710f660abea648229504daad7ce259ee70
-  specs:
-    bootstrap-sass (3.1.1.1)
-      autoprefixer-rails (~> 1.1)
-      sass (~> 3.2)
-
-GIT
   remote: git://github.com/timon/dav4rack.git
   revision: 734ccbac30d2354bfac9440d2bbc8072531513e0
   specs:
@@ -103,13 +95,13 @@ GEM
     acts_as_list (0.4.0)
       activerecord (>= 3.0)
     arel (4.0.2)
-    autoprefixer-rails (1.2.0.20140609)
-      execjs
     aws-s3 (0.6.3)
       builder
       mime-types
       xml-simple
     bcrypt (3.1.7)
+    bootstrap-sass (3.1.1.1)
+      sass (~> 3.2)
     bootstrap-wysiwyg-rails (0.3.1)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -303,7 +295,7 @@ DEPENDENCIES
   acts_as_list
   arel (~> 4.0.0)
   aws-s3
-  bootstrap-sass!
+  bootstrap-sass (~> 3.1.1)
   bootstrap-wysiwyg-rails
   carrierwave
   carrierwave_direct

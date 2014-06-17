@@ -113,7 +113,7 @@ gem 'mini_magick'
 
 gem 'carrierwave_direct'
 
-gem 'bootstrap-sass', github: 'thomas-mcdonald/bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.1.1'
 
 gem 'bootstrap-wysiwyg-rails'
 
