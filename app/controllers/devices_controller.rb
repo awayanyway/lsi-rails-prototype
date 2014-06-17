@@ -146,30 +146,28 @@ def assign
 
     location = Location.find(params[:location_id])
 
-    if location.sample_id.nil? then
+#    if location.sample_id.nil? then
 
-      s = Sample.new
+#      s = Sample.new
 
-      s.save
+#      s.save
 
-      @project.add_sample(s, current_user)
+#      @project.add_sample(s, current_user)
 
-      location.sample_id = s.id
-      location.save
+#      location.sample_id = s.id
+#      location.save
 
-    else
-      s = Sample.find(location.sample_id)
-    end
+#    end
 
 
     @dataset = Dataset.new
 
     # @dataset.molecule_id = params[:molecule_id]
 
-    @dataset.sample_id = s.id
+    #@dataset.sample_id = s.id
 
-    @dataset.title = "no title"
-    @dataset.method = "no method"
+    @dataset.title = "Measurement"
+    @dataset.method = @device.devicetype.displayname
     @dataset.description = ""
     @dataset.details = ""
 
@@ -183,10 +181,7 @@ def assign
 
     
 
-    @project.add_dataset(@dataset, current_user)
-
-
-    s.add_dataset(@dataset, current_user)
+    # @project.add_dataset(@dataset, current_user)
 
 
     dsg = Datasetgroup.new
@@ -200,9 +195,9 @@ def assign
            measurement.user_id = current_user.id
            measurement.device_id = @device.id
            measurement.dataset_id = @dataset.id
-           measurement.sample_id =  s.id
-           #run.location_id = params[:location_id]
-           #run.active = true;
+           # measurement.sample_id =  s.id
+           # run.location_id = params[:location_id]
+           # run.active = true;
     measurement.save
 
         r = Run.new
@@ -232,6 +227,10 @@ def assign
             measurement.samplename = "finished"
             measurement.save
     run.save
+
+
+    measurement.dataset.collect_datapoints
+
     
     WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.stoprun", @device
 

@@ -55,6 +55,8 @@
       
     <% end %>
 
+    <% if !@dataset.sample.nil? then %>
+
     <% if @dataset.sample.reactions.length > 0 then %>
         <% content_for :sidebar_switch do @showsidebar = true end %>
 
@@ -67,6 +69,8 @@
               </div>
             </div>
       
+    <% end %>
+
     <% end %>
 
 
@@ -453,7 +457,11 @@ $(document).ready(function(){
 
 
 <% if params[:reaction_id].nil? then %>
-<%= link_to 'Back to molecule', molecule_path(@dataset.sample.molecule, :project_id => @project.id), :class => "btn btn-sm btn-default" %>
+    <% if !@dataset.sample.nil? then %>
+        <%= link_to 'Back to molecule', molecule_path(@dataset.sample.molecule, :project_id => @project.id), :class => "btn btn-sm btn-default" %>
+    <% else %>
+        <%= link_to 'Back', datasets_path(:project_id => @project.id), :class => "btn btn-sm btn-default" %>
+    <% end %>
 <% else %>
 <%= link_to 'Back to reaction', reaction_path(Reaction.find(params[:reaction_id]), :project_id => @project.id), :class => "btn btn-sm btn-default" %>
 <% end %>

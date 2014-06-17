@@ -1,11 +1,13 @@
 class Measurement < ActiveRecord::Base
-  attr_accessible :dataset_id, :device_id, :sample_id, :recorded_at
+  attr_accessible :dataset_id, :device_id, :sample_id, :recorded_at, :reaction_id, :molecule_id
 
-  attr_accessible :user_id, :reaction_id, :molecule_id, :confirmed, :samplename
+  attr_accessible :user_id, :confirmed, :samplename
 
   belongs_to :dataset
   belongs_to :device
   belongs_to :sample
+
+  belongs_to :user
 
 
   has_many :runs

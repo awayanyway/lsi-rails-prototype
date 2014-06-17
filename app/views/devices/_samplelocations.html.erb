@@ -6,34 +6,52 @@
       <li>
 
 
-        <% if (location.sample_id != nil) then %>
-
-        <% sample = Sample.find(location.sample_id) %>
-
-        <a href="#">
-        <span class="glyphicon glyphicon-glass" /><%=  sample.longname %>&nbsp; <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/checkout?sample_id=<%= sample.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Check out</a>
-
-        <script>
-          // alert ("<%= location.sample_id %>");
-            if (typeof detectedSample == 'function') {
-              detectedSample ('<%= location.sample_id %>', false);
-            }
-        </script>
-
-        <% else %>
-
-          <a href="/devices/<%= @device.id %>/checkinselect" class="btn btn-xs btn-success">Check in sample</a>
-
-        <% end %>
-
-
         <% if location.runs.where(["finished = ?", false]).length == 0 then %>
 
-        <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/startrun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-success">Start run</a>
+
+
+            <% if (location.sample_id != nil) then %>
+
+            <% sample = Sample.find(location.sample_id) %>
+
+            <a href="#">
+            <span class="glyphicon glyphicon-glass" /><%=  sample.longname %></a> &nbsp; <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/checkout?sample_id=<%= sample.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Check out</a>
+
+            <script>
+              // alert ("<%= location.sample_id %>");
+                if (typeof detectedSample == 'function') {
+                  detectedSample ('<%= location.sample_id %>', false);
+                }
+            </script>
+
+            <% else %>
+
+              <a href="">No sample.</a>
+
+              <a href="/devices/<%= @device.id %>/checkinselect" class="btn btn-xs btn-success">Check in sample</a>
+
+            <% end %>
+
+
+            <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/startrun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-success">Start measurement</a>
 
         <% else %>
 
-        <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/stoprun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Stop run</a>
+        <% if (location.sample_id != nil) then %>
+
+            <% sample = Sample.find(location.sample_id) %>
+
+              <a href="#">
+            <span class="glyphicon glyphicon-glass" /><%=  sample.longname %></a> 
+
+            <% else %>
+
+              <a href="">No sample.</a>
+
+            <% end %>
+
+
+        <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/stoprun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Stop measurement</a>
 
         <% end %>
 

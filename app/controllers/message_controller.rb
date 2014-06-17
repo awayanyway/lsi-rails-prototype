@@ -1,4 +1,4 @@
-class MessageController < WebsocketRails::BaseController
+    class MessageController < WebsocketRails::BaseController
 	def initialize_session
 		@message_count = 0
 	end
@@ -33,7 +33,7 @@ class MessageController < WebsocketRails::BaseController
 		msg = message[0]
 
 	    mi = msg[:metainfo]
-	    data = msg[:data]
+	    data = msg[:model]
 
 	    @device = Device.find(mi[:deviceid])
 
@@ -45,20 +45,22 @@ class MessageController < WebsocketRails::BaseController
 		Rails.logger.info ("Snapshot: ")
     	Rails.logger.info (message)
 
-		msg = message[0]
-
-	    mi = msg[:metainfo]
-	    data = msg[:data]
+	    mi = message[:device_info]
+	    data = message[:model]
 
 	    @locations = Device.find(mi[:deviceid]).locations
 
 	    @locations.each do |location|
 
 
-	    	# find open measurement for this device id and sample id
+	    	# find open measurement for this device id
 
-	    	# attach readout to open dataset
+	    	if !location.runningmeasurement.nil? then
 
+	    		Rails.logger.info ("Measurement: "+location.runningmeasurement.id.to_s)
+
+	    		location.runningmeasurement.dataset.add_datapoint(data)
+	    	end
 
 
 	    	# if sample is checked in, perform further actions e.g. write weight into database

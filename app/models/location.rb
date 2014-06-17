@@ -7,4 +7,10 @@ class Location < ActiveRecord::Base
   has_many :devices,
     :through => :device_locations, :dependent => :destroy
 
+  def runningmeasurement
+
+  	runs.where(["finished = ?", false]).last.measurement
+
+  end
+
 end

@@ -444,4 +444,47 @@ class Dataset < ActiveRecord::Base
     super(:include => [:attachments => {:methods => [:filename, :filesize]}])
   end
 
+
+  def collect_datapoints
+
+    tempfile = Rails.root.join('tmp').join("datapoints_"+self.id.to_s+".list")
+
+    newattachment = Attachment.new(:dataset => self)
+
+    newattachment.folder = ""
+
+    if Rails.env.localserver? or Rails.env.development? then 
+
+      old_path = tempfile
+
+      new_path = LsiRailsPrototype::Application.config.datasetroot + "datasets/#{self.id}/recording.txt"
+
+
+      FileUtils.mkdir_p(File.dirname(new_path))
+      FileUtils.cp(old_path, new_path)
+
+      newattachment.file = File.new(new_path)
+
+    else
+      newattachment.file = File.new(tempfile)
+    end      
+
+    newattachment.save
+
+    self.add_attachment(newattachment)
+
+    add_to_project(measurement.user.rootproject_id, measurement.user)
+
+  end
+
+  def add_datapoint(model)
+
+    tempfile = Rails.root.join('tmp').join("datapoints_"+self.id.to_s+".list")
+
+    File.open(tempfile, "a+") do |f|
+      f.write (model)
+    end
+
+  end
+
 end

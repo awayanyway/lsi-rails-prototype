@@ -36,10 +36,18 @@
   <% @measurements.each do |m| %>
     <tr>
       <td>
+        <% if m.device.nil? then %>
+          Not assigned.
+        <% else %>
           <%= m.device.name %>
+        <% end %>
       </td>
 
         <td>
+          <% if m.runs.last.nil? then %>
+
+            No Dataset.
+          <% else %>
         <% if (m.runs.last.finished) then %>
 
           <b><%= m.dataset.method %></b>&nbsp;-&nbsp;<%= m.dataset.title %>
@@ -49,11 +57,13 @@
           Acquisition Ongoing...
 
         <% end %>
+
+        <% end %>
       </td>
 
       <td>
 
-        <% if !m.runs.last.nil? then %>
+        <% if !m.runs.last.nil? && !m.sample.nil? then %>
 
         <%= Sample.find(m.sample_id).name %>
 

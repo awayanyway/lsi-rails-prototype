@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: c3ab189851545147f60ed888404388a325f914f5
+  revision: 2950d96a7ef4be7c88b8fcfd34046eedc5998b6c
   specs:
-    dial_a_device_node (0.0.85)
+    dial_a_device_node (0.0.86)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: c1c32ae2fcb48855599bbb098e1370f805b45181
+  revision: 1c2f52175008ffd4c31338138f5b11bff677123b
   branch: 4-0-stable
   specs:
     actionmailer (4.0.5)
@@ -81,7 +81,7 @@ GIT
 
 GIT
   remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
-  revision: 08c7527a732988518fd823e99a9d201b075ac525
+  revision: f9af31710f660abea648229504daad7ce259ee70
   specs:
     bootstrap-sass (3.1.1.1)
       autoprefixer-rails (~> 1.1)
@@ -220,7 +220,7 @@ GEM
     openbabel (2.3.2.0)
     orm_adapter (0.5.0)
     pg (0.17.1)
-    protected_attributes (1.0.7)
+    protected_attributes (1.0.8)
       activemodel (>= 4.0.1, < 5.0)
     pundit (0.2.3)
       activesupport (>= 3.0.0)
@@ -271,7 +271,7 @@ GEM
     thread_safe (0.3.4)
     tilt (1.4.1)
     tzinfo (0.3.39)
-    uglifier (2.5.0)
+    uglifier (2.5.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unf (0.1.4)
