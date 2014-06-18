@@ -13,10 +13,17 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.all
-//= require_tree .
+//= require_directory .
 //= require bootstrap
 //= require cocoon
 //= require bootstrap-wysiwyg
 //= require websocket_rails/main
 //= require jquery-hotkeys
-
+//= require ./external/events.js
+//= require ./external/flotr2.js
+//= require ./external/jquery.formvalidator.min.js
+//= require ./external/justgage.1.0.1.min.js
+//= require ./external/numerous-2.1.1.min.js
+//= require ./external/processing-1.3.6.min.js
+//= require ./external/raphael-min.js
+//= require ./external/typeahead.js
