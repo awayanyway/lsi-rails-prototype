@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 2950d96a7ef4be7c88b8fcfd34046eedc5998b6c
+  revision: e7c735ee17f15e6a1a809df82c93ae755ecf506c
   specs:
-    dial_a_device_node (0.0.86)
+    dial_a_device_node (0.0.87)
 
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: 122ac3b252f6d953c5e4e4856b95a63e6fd83f5a
+  revision: dd95122aeec173273982c5d13f16742564364672
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)

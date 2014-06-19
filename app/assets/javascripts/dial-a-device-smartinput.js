@@ -1,4 +1,4 @@
-function smartinput (div_id, callbackfn) {
+function smartinput (div_id, callbackfn, caption) {
 
         var smartinputdiv = document.getElementById (div_id);
 
@@ -9,7 +9,7 @@ function smartinput (div_id, callbackfn) {
         var smartinputdec_id = div_id + "_dec";
 
 
-        smartinputdiv.innerHTML = '<input id="'+ smartinputfield_id +'" type="text"><button class="btn" type="button" id="'+ smartinputinc_id +'"><i class="icon-plus"></i></button><button class="btn" type="button" id="'+ smartinputdec_id +'"><i class="icon-minus"></i></button>';
+        smartinputdiv.innerHTML = '<div class="input-group"><span class="input-group-addon">'+caption+'</span><input id="'+ smartinputfield_id +'" type="text" class="form-control"><span class="input-group-btn"><button class="btn" type="button" id="'+ smartinputinc_id +'"><span class="glyphicon glyphicon-plus"></span></button></span><span class="input-group-btn"><button class="btn" type="button" id="'+ smartinputdec_id +'"><span class="glyphicon glyphicon-minus"></span></button></span>';
 
 
         smartinputdiv.className += " input-append";
