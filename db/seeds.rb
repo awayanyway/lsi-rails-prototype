@@ -10,7 +10,7 @@
 if (!Devicetype.exists?(:deviceclass_id => 1)) then
 	Devicetype.create :deviceclass_id => 1, :showcase => true, :name => "knf_sc920", :displayname => "KNF SC920", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "115200", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D"
 else
-	Devicetype.where(["deviceclass_id = ?", 1]).first.update_attributes(:showcase => true, :name => "knf_sc920", :displayname => "KNF SC920", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "115200", :portlinebreak => "0A", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0A")
+	Devicetype.where(["deviceclass_id = ?", 1]).first.update_attributes(:showcase => true, :name => "knf_sc920", :displayname => "KNF SC920", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "115200", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D")
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 2)) then
