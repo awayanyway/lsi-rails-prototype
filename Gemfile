@@ -44,7 +44,7 @@ gem 'uglifier'
 # gem 'debugger'
 
 group :production do 
-	gem 'openbabel-heroku', :git => 'git://github.com/Cominch/openbabel-heroku-gem.git'
+	gem 'openbabel-heroku'
 
 	gem 'rails_12factor'
 
