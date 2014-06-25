@@ -101,8 +101,6 @@ LsiRailsPrototype::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.action_mailer.default_url_options = { :host => 'lsi-rails-prototype.herokuapp.com'}
-
   config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" 
 
   # Jdx file support through kaitatari : options

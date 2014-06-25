@@ -43,7 +43,7 @@ LsiRailsPrototype::Application.configure do
 
   config.eager_load = true
 
-  config.action_mailer.default_url_options = { :host => 'localhost:3000'}
+  config.action_mailer.default_url_options = { :host => 'localhost:5000'}
 
   config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 
