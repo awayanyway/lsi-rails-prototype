@@ -14,18 +14,6 @@ end
 
 end
 
-module LsiRailsPrototype
-  class Application < Rails::Application
-  	if ENV['SMTP_HOST_LINK'].blank? then
-  	    config.action_mailer.default_url_options = { :host => 'lsi-rails-prototype.herokuapp.com'}
-  	else
-  		config.action_mailer.default_url_options = { :host => ENV['SMTP_HOST_LINK']}
-  	end
-
-  end
-end
-
-
 Devise.setup do |config|
 
   if ENV['SMTP_SENDER'].blank? then
