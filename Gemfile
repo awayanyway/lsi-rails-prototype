@@ -125,7 +125,7 @@ gem 'rails_serve_static_assets'
 
 gem 'acts_as_list'
 
-gem 'foreman'
+gem 'foreman', '0.63'
 
 gem 'will_paginate', '~> 3.0.5'
 
