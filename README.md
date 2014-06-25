@@ -2,7 +2,7 @@ lsi-rails prototype application with dial-a-device
 =============
 
 
-## set up your own dial-a-device server on Ubuntu > 13.04 64bit for development
+## set up your own application on Ubuntu > 13.04 64bit for development
 
 
 * Install Ruby on Rails environment
