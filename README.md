@@ -1,4 +1,4 @@
-dial-a-device
+lsi-rails prototype application with dial-a-device
 =============
 
 
