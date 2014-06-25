@@ -59,15 +59,9 @@ lsi-rails prototype application with dial-a-device
 		
 ## deploy on your local server
 
-* Customize parameters
+* Customize your parameters (mail server, ldap, storage) in:
 
-	host name etc. in
-
-		config/initializers/x-customization.rb
-
-	mail server in
-		
-		config/environments/localserver.rb
+		localserver.env
 
 * Create the background service
 
@@ -114,39 +108,16 @@ lsi-rails prototype application with dial-a-device
 		heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi
 
 		heroku config:add LD_LIBRARY_PATH=/app/vendor/openbabel/lib
+		
+		heroku config:add SMTP_SENDER=me@yourappname.herokuapp.com
+		
+		heroku config:add SMTP_HOST_LINK=yourappname.herokuapp.com
 
 		git push heroku master
 
 		heroku run rake db:migrate
 
 		heroku run rake db:seed
-
-
-## (incomplete) instant setup on heroku from windows
-
-* Install Heroku Toolbelt
-
-		https://toolbelt.heroku.com/windows
-		
-* Open a command shell
-		
-		git clone https://github.com/Cominch/lsi-rails-prototype
-		
-		cd dial-a-device
-		
-		heroku login
-
-		heroku create
-		
-		heroku ...
-		
-		git push heroku master
-
-		heroku ps:scale worker=1
-		
-* Open a web browser
-
-		http://yourappname.herokuapp.com
 
 
 
