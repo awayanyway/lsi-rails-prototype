@@ -471,7 +471,7 @@ end
 
     authorize @olddataset, :show?
 
-    @dataset = @olddataset.transfer_to_sample(@olddataset.sample)
+    @dataset = @olddataset.transfer_to_sample(@olddataset.sample, current_user)
 
     @olddataset.transfer_attachments_to_dataset(@dataset)
 

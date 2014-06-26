@@ -16,7 +16,7 @@ class Measurement < ActiveRecord::Base
   def complete?
 
     res = false
-    if !(self.reaction_id.nil?) && !(self.molecule_id.nil?) then res = true end
+    if !(self.sample_id.nil?) then res = true end
 
     res
   end
@@ -43,6 +43,46 @@ class Measurement < ActiveRecord::Base
 
   end
 
+  def guess_user_sample_name(user)
+
+    if !dataset.nil? then
+
+      nr = self.dataset.title.scan(/\d+/)
+
+      self.update_attribute(:samplename, nr.join("-"))
+
+      nr.join("-")
+
+    else ""
+
+    end
+
+  end
+
+  def guess_user_sample_id(user)
+
+    if !dataset.nil? then
+
+    nr = self.dataset.title.scan(/\d+/)
+
+    if !nr.first.nil? then
+
+    r = user.samples.where(["name ilike ?", "%"+user.sign+"-"+nr.first+"%"]).first
+
+    if !r.nil? then r.id.to_s
+    else
+      ""
+    end
+
+    else ""
+    end
+
+    else ""
+
+    end
+
+  end
+
   def guess_samplename
 
     nr = self.dataset.title.scan(/\d+/)
@@ -65,7 +105,13 @@ class Measurement < ActiveRecord::Base
 
     nr = self.dataset.title.scan(/\d+/)
 
+    if !nr.first.nil? then
+
     user.sign+"-"+nr.first
+
+    else ""
+
+    end
 
   end
 
@@ -73,11 +119,16 @@ class Measurement < ActiveRecord::Base
 
     nr = self.dataset.title.scan(/\d+/)
 
+    if !nr.first.nil? then
+
     r = user.reactions.where(["name ilike ?", "%"+user.sign+"-"+nr.first+"%"]).first
 
     if !r.nil? then r.id.to_s
     else
       ""
+    end
+
+    else ""
     end
 
   end

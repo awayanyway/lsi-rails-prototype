@@ -76,11 +76,11 @@ class SamplesController < ApplicationController
 
     targetproject = nil
 
-    newsample = @sample.transfer_to_project(targetproject)
+    newsample = @sample.transfer_to_project(targetproject, current_user)
 
     @sample.datasets.each do |ds|
 
-      newdataset = ds.transfer_to_sample(newsample)
+      newdataset = ds.transfer_to_sample(newsample, current_user)
       ds.transfer_attachments_to_dataset(newdataset)
 
     end

@@ -2,6 +2,54 @@
 <h1>Import measurement <%= link_to "Back", measurements_path, :class => "btn btn-default" %><% if @measurement.complete? then %><%= link_to "Confirm", confirm_measurement_path(@measurement), :class => "btn btn-success" %><% end %></h1>
 
 
+    <% if @measurement.sample_id.nil? then %>
+
+        <h2>Assign to existing sample</h2>
+
+
+        <%= form_tag(assign_sample_measurement_path, method: "post") do |f| %>
+
+          <%= select_tag(:sample_id, options_for_select(current_user.samples.collect{ |r| [r.name, r.id] }, @measurement.guess_user_sample_id(current_user))) %>
+          <%= submit_tag("Assign to sample", :class => "btn btn-success") %>
+     
+        <% end %>
+
+
+
+        <h2>Create a new sample</h2>
+
+        <%= form_tag(assign_sample_measurement_path, method: "post") do |f| %>
+
+        <% name = @measurement.guess_user_sample_name(current_user) %>
+
+        <% if name.nil? then name = current_user.sign+"-new" end %>
+          <%= text_field_tag(:sample_name, name) %>
+          <%= submit_tag("Create sample", :class => "btn btn-success") %>
+     
+        <% end %>
+
+    <% else %>
+
+        <h2>Assign sample</h2>
+
+        <p><% r = Sample.find_by(:id => @measurement.sample_id) %>
+        <%= if !r.nil? then r.name else "No sample." end %></p>
+
+
+        <%= form_tag(assign_sample_measurement_path, method: "post") do |f| %>
+
+          
+          <%= hidden_field_tag(:sample_id) %>
+
+          <%= submit_tag("Remove from sample", :class => "btn btn-warning") %>
+     
+        <% end %>
+
+
+    <% end %>
+
+
+<!--
     <% if !(@measurement.reaction_id.nil?) then %>
 
         <h2>Assign reaction</h2>
@@ -24,50 +72,45 @@
 
         <% if !(@measurement.molecule_id.nil?) then %>
 
-        <h2>Assign molecule</h2>
+            <h2>Assign molecule</h2>
 
-        <% mol = Molecule.find_by(:id => @measurement.molecule_id) %>
-        <%= if !mol.nil? then mol.title else "No molecule." end %>
+            <% mol = Molecule.find_by(:id => @measurement.molecule_id) %>
+            <%= if !mol.nil? then mol.title else "No molecule." end %>
 
-        <%= form_tag(assign_molecule_measurement_path, method: "post") do |f| %>
+            <%= form_tag(assign_molecule_measurement_path, method: "post") do |f| %>
 
-          
-          <%= hidden_field_tag(:molecule_id) %>
+              
+              <%= hidden_field_tag(:molecule_id) %>
 
-          <%= submit_tag("Remove from molecule", :class => "btn btn-warning") %>
-     
-        <% end %>
+              <%= submit_tag("Remove from molecule", :class => "btn btn-warning") %>
+         
+            <% end %>
 
 
         <% else %>
 
 
-        <h2>Assign to existing molecule</h2>
+            <h2>Assign to existing molecule</h2>
 
 
-        <% if r.products.length == 0 then %>
+            <% if r.products.length == 0 then %>
 
-        <p>You have to add at least one product to the reaction: <%= link_to("Edit "+r.name, edit_reaction_path(r)) %><p>
+                <p>You have to add at least one product to the reaction: <%= link_to("Edit "+r.name, edit_reaction_path(r)) %><p>
 
-        <% else %>
+            <% else %>
 
 
-        <%= form_tag(assign_molecule_measurement_path, method: "post") do |f| %>
+                <%= form_tag(assign_molecule_measurement_path, method: "post") do |f| %>
 
-          <%= select_tag(:molecule_id, options_for_select(r.products.collect{ |s| [s.molecule.title, s.molecule.id] })) %>
-          <%= submit_tag("Assign to molecule", :class => "btn btn-success") %>
+                  <%= select_tag(:molecule_id, options_for_select(r.products.collect{ |s| [s.molecule.title, s.molecule.id] })) %>
+                  <%= submit_tag("Assign to molecule", :class => "btn btn-success") %>
+
+                <% end %>
+
+            <% end %>
+
 
         <% end %>
-
-        <% end %>
-
-
-        <% end %>
-
-  
-
-
-
 
     <% else %>
 
@@ -96,7 +139,7 @@
 
 
     <% end %>
-
+-->
 
 
 <div id="moleculemodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">

@@ -23,13 +23,13 @@ class Dataset < ActiveRecord::Base
   has_many :commits, :dependent => :destroy
 
   # acts_as_list scope: :datasetgroup_dataset
-  def transfer_to_sample(sample)
+  def transfer_to_sample(sample, user)
 
     newdataset = self.dup
 
     newdataset.save
 
-    sample.add_dataset(newdataset)
+    sample.add_dataset(newdataset, user)
 
     return newdataset
 

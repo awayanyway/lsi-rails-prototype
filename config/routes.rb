@@ -96,6 +96,7 @@ LsiRailsPrototype::Application.routes.draw do
 
     post 'assign_molecule', on: :member
     post 'assign_reaction', on: :member
+    post 'assign_sample', on: :member
   end
 
   controller :datasets do
