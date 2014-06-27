@@ -35,8 +35,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def url(options={})
-    "thumb?"
-    puts options
+    
+    
      if Rails.env.localserver? or Rails.env.development? then 
        "/datasets/#{model.dataset_id}/#{model.folder}#{[version_name, File.basename(model.file.path.to_s)].compact.join('_')}"
      else
@@ -46,31 +46,32 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Process files as they are uploaded:
   # process :scale => [200, 300]
-  #
-  # def scale(width, height)
-  #   # do something
-  # end
-
-  # Create different versions of your uploaded files:
-  
-
-       
-  version :thumb, :if => :image? do
-   
-     
-    if Rails.configuration.jdx_support.cw_thumbnail then 
-      process :dx_to_ps, :if => :jdx?
-    end
-    # process :resize_first_page
-
-    process :convert => :jpg
-
-    process :resize_to_fit => [450, 300]
-
-    process :set_content_type
-  end
-     
  
+  # Create different versions of your uploaded files:
+     
+     h1={:if => :image?} 
+     h2={:if => :jdx?,  :from_version => :dummy}
+     h3={:if => :image?,:from_version => :dummy}
+     
+     
+     version(:dummy, h1){ process :dx4lsi, :if => :jdx?}
+    
+     
+     version(:jdx,h2)
+     #process :resize_first_page
+     version(:thumb,h3){
+     
+     process :dx_2_ps, :if => :jdx?
+     
+     process :convert => :jpg
+# 
+     process :resize_to_fit => [450, 300]
+# 
+     process :set_content_type
+     }
+  
+     
+
  
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
@@ -80,11 +81,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
-  #def filename   
-  # if original_filename.extname =~ /^dx/  
-  #  #super.chomp(File.extname(super)) + '.jdx'
-  # end
-  #end
+
 
   protected
 
@@ -96,11 +93,14 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     end
   end
 
-  def dx_to_ps
-   
-   Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
+  
+  def dx4lsi
+    Jcampdx.load_jdx(":file #{current_path} :process  point raw :output lsi :output_file #{current_path} ")
   end
-
+  
+  def dx_2_ps
+     Jcampdx.load_yaml_2_ps(":file #{current_path} ")
+  end
 
   def set_content_type(*args)
     self.file.instance_variable_set(:@content_type, "image/jpeg")
@@ -109,7 +109,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   def image?(new_file)
 
     if Rails.configuration.jdx_support.cw_thumbnail then
-      extensions = %w(jpg jpeg gif png pdf ps dx jdx)
+       extensions = %w(jpg jpeg gif png pdf ps dx jdx)
     else
       extensions = %w(jpg jpeg gif png pdf ps)
     end
@@ -122,14 +122,15 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def jdx?(new_file)
+   if Rails.configuration.jdx_support.cw_thumbnail then
+     extensions = %w(jdx dx)
+     extension = File.extname(new_file.path.to_s).downcase
+     extension = extension[1..-1] if extension[0,1] == '.'
 
-    extensions = %w(jdx dx)
-
-    extension = File.extname(new_file.path.to_s).downcase
-    extension = extension[1..-1] if extension[0,1] == '.'
-
-    extensions.include?(extension)
-
+     extensions.include?(extension)
+   else
+     false
+   end
   end
 
 end
