@@ -53,10 +53,12 @@ class MeasurementsController < ApplicationController
        #   s.add_to_project(current_user.rootproject_id)
        # end
 
-      @sample.add_to_project(current_user.rootproject_id)
+      @sample.add_to_project_recursive(current_user.rootproject_id, current_user)
 
 
       @measurement.update_attribute(:sample_id, @sample.id)
+
+      @measurement.sample.add_dataset(@measurement.dataset, current_user)
 
 
       redirect_to import_measurement_path(@measurement), notice: "Measurement was assigned to new sample." 
