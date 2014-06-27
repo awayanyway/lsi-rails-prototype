@@ -10,7 +10,7 @@
 var cont,cont2, data, opt,chipit; 
 cont  =   document.getElementById("spectrum");
 cont2 =  document.getElementById("fullspectrum");
-data =  <%= @plotdx.xy.to_s %>;
+data =  <%= @plotdx.xy %>;
 opt = {
         title: "<%= @plotdx.TITLE %> - <%= @plotdx.TYPE %> ",
         xaxis: {
@@ -22,6 +22,17 @@ opt = {
                 titleAngle: 90, 
                 autoscale: false     
                },
+        spreadsheetJdx: { 
+                          show: true,
+                          tickFormatter: function(e) {return e + '';},
+                          ldrS: {'Headers' : <%= @plotdx.ldr.to_json.html_safe %> }//{'Headers' : {'TITLE': 'notitle','OWNER': 'nobody'},}         
+                              },
+        // spreadsheetJdx: {ldrSeries: {'Headers' : {'TITLE': 'notitle','OWNER': 'nobody'},
+                                     // 'Sample info' : {},
+                                     // 'Spectral parameters' :  {'NPOINTS': '1024','SYMBOL': 'X,N'},
+                                     // 'Specific parameters' :  {}, 
+                                   // },
+                     //   },     
        };
 chipit = {datasetid: <%= @dataset.id%>,
           page: 0,
