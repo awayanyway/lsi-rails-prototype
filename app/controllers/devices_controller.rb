@@ -195,6 +195,7 @@ def assign
            measurement.user_id = current_user.id
            measurement.device_id = @device.id
            measurement.dataset_id = @dataset.id
+           measurement.recorded_at = DateTime.now
            # measurement.sample_id =  s.id
            # run.location_id = params[:location_id]
            # run.active = true;
@@ -225,6 +226,7 @@ def assign
     measurement = run.measurement
 
             measurement.samplename = "finished"
+            measurement.recorded_end_at = DateTime.now
             measurement.save
     run.save
 

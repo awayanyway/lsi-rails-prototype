@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140612111626) do
+ActiveRecord::Schema.define(version: 20140627125249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -227,11 +227,12 @@ ActiveRecord::Schema.define(version: 20140612111626) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.boolean  "confirmed",   default: false
+    t.boolean  "confirmed",       default: false
     t.integer  "molecule_id"
     t.string   "samplename"
     t.integer  "reaction_id"
     t.integer  "sample_id"
+    t.datetime "recorded_end_at"
   end
 
   create_table "molecule_samples", force: true do |t|

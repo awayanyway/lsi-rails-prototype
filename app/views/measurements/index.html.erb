@@ -23,6 +23,7 @@
 <thead>
 
 	<th>Device</th>
+  <th>Time</th>
   <th>Dataset</th>
   <th>Sample</th>
 
@@ -33,7 +34,7 @@
 
 <tbody>
 
-  <% @measurements.each do |m| %>
+  <% @measurements.order("created_at DESC").each do |m| %>
     <tr>
       <td>
         <% if m.device.nil? then %>
@@ -41,6 +42,11 @@
         <% else %>
           <%= link_to m.device.name, m.device %>
         <% end %>
+      </td>
+
+      <td>
+        <% if !m.recorded_at.nil? then %><%= m.recorded_at.strftime('%Y-%m-%d %H:%M:%S %Z') %><br><% end %>
+        <% if !m.recorded_end_at.nil? then %>Duration: <%= (m.recorded_end_at - m.recorded_at).round(1) %> s<% end %>
       </td>
 
         <td>
