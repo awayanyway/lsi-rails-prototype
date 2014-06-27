@@ -61,7 +61,11 @@ module LsiRailsPrototype
 
     config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 
-    config.action_mailer.default_url_options = { :host => 'localhost:3000'}
+    if ENV['SMTP_HOST_LINK'].blank? then
+        config.action_mailer.default_url_options = { :host => 'lsi-rails-prototype.herokuapp.com'}
+    else
+        config.action_mailer.default_url_options = { :host => ENV['SMTP_HOST_LINK']}
+    end
     
     ## jdx file support through kaitatari
     config.jdx_support = ActiveSupport::OrderedOptions.new 

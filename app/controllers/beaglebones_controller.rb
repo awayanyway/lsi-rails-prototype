@@ -120,7 +120,7 @@ class BeaglebonesController < ApplicationController
 
         @beaglebone.add_to_project(current_user.rootproject_id, current_user)
 
-        format.html { redirect_to @beaglebone, notice: 'Beaglebone was successfully created.' }
+        format.html { redirect_to beaglebones_path, notice: 'Beaglebone was successfully registered.' }
         format.json { render json: @beaglebone, status: :created, location: @beaglebone }
       else
         format.html { render action: "new" }

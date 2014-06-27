@@ -12,6 +12,9 @@ gem 'rake'
 
 gem 'pg'
 
+gem 'protected_attributes'
+
+gem 'delayed_job_active_record'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -41,7 +44,7 @@ gem 'uglifier'
 # gem 'debugger'
 
 group :production do 
-	gem 'openbabel-heroku', :git => 'git://github.com/Cominch/openbabel-heroku-gem.git'
+	gem 'openbabel-heroku'
 
 	gem 'rails_12factor'
 
@@ -105,13 +108,11 @@ gem 'mini_magick'
 
 gem 'carrierwave_direct'
 
-gem 'bootstrap-sass', github: 'thomas-mcdonald/bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.1.1'
 
 gem 'bootstrap-wysiwyg-rails'
 
 gem 'httparty'
-
-gem 'protected_attributes'
 
 gem 'dav4rack', github: 'timon/dav4rack'
 
@@ -119,7 +120,7 @@ gem 'rails_serve_static_assets'
 
 gem 'acts_as_list'
 
-gem 'foreman'
+gem 'foreman', '0.63'
 
 gem 'will_paginate', '~> 3.0.5'
 

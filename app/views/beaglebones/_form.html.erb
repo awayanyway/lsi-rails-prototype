@@ -1,21 +1,22 @@
-<p>During the initialization process, an additional ethernet connection for your BeagleBone is required.</p>
 <div id="connect-status"></div>
 <div id="board-info"></div>
 <div id="install-status"></div>
 <div id="step-status"></div>
+<br>
+<small><div id="installationlog" style="display: none;" class="well"></div></small>
 
 <br/>
 
 <%= simple_form_for(@beaglebone) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
+  <div class="form-inputs" style="display:none;">
     <%= f.input :serialnumber %>
   </div>
 
   <br/>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.button :submit, :id => "submitbutton", :class => "btn btn-success disabled" %>
   </div>
 <% end %>

@@ -70,8 +70,9 @@ LsiRailsPrototype::Application.routes.draw do
     get 'checkin', on: :member, as: :checkin_sample_to
     get 'checkout', on: :member, as: :checkout_sample_to
 
-    post 'startrun', on: :member, as: :startrun_at
-    post 'stoprun', on: :member, as: :stoprun_at
+    get 'startrun', on: :member, as: :startrun_at
+    get 'stoprun', on: :member, as: :stoprun_at
+
     get 'samplelocations', on: :member, as: :samplelocations_at
   end
 
@@ -95,6 +96,7 @@ LsiRailsPrototype::Application.routes.draw do
 
     post 'assign_molecule', on: :member
     post 'assign_reaction', on: :member
+    post 'assign_sample', on: :member
   end
 
   controller :datasets do

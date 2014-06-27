@@ -35,7 +35,7 @@ class Sample < ActiveRecord::Base
 
   end
   
-  def cleanup_projects
+  def cleanup_localprojects
 
     self.projects.each do |p|
 

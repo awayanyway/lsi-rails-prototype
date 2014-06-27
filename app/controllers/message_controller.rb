@@ -1,4 +1,4 @@
-class MessageController < WebsocketRails::BaseController
+    class MessageController < WebsocketRails::BaseController
 	def initialize_session
 		@message_count = 0
 	end
@@ -8,36 +8,14 @@ class MessageController < WebsocketRails::BaseController
 		Rails.logger.info (message)
 	end
 
-	def mymessage
-		Rails.logger.info ("mymessage")
-		Rails.logger.info (message)
-		WebsocketRails["channel_dev_2"].trigger :mymessage, "hey back"
-	end
-
 	def client_disconnected
 	  	Rails.logger.info ("Client disconnected")
-	  	Rails.logger.info (message.message)
-	  	Rails.logger.info (message.data)
+	  	Rails.logger.info ("Code: "+message.code.to_s + " Reason:"+message.reason.to_s)
 	end
 
-	def devicereply
-		Rails.logger.info ("Reply: ")
-		Rails.logger.info (message[1])
-	end
+	def device_startrun
 
-	def devicecommand
-		Rails.logger.info ("Command: ")
-    	Rails.logger.info (message)
-	end
-
-	def devicestatus
-		Rails.logger.info ("Status: ")
-    	Rails.logger.info (message)
-	end
-
-	def devicelog
-
-		Rails.logger.info ("Snapshot: ")
+		Rails.logger.info ("Start run: ")
     	Rails.logger.info (message)
 
 		msg = message[0]
@@ -45,11 +23,47 @@ class MessageController < WebsocketRails::BaseController
 	    mi = msg[:metainfo]
 	    data = msg[:data]
 
-	    
+	end
+
+	def device_stoprun
+
+		Rails.logger.info ("Stop run: ")
+    	Rails.logger.info (message)
+
+		msg = message[0]
+
+	    mi = msg[:metainfo]
+	    data = msg[:model]
+
+	    @device = Device.find(mi[:deviceid])
+
+	end
+
+
+	def devicelog
+
+		Rails.logger.info ("Snapshot: ")
+    	Rails.logger.info (message)
+
+	    mi = message[:device_info]
+	    data = message[:model]
 
 	    @locations = Device.find(mi[:deviceid]).locations
 
 	    @locations.each do |location|
+
+
+	    	# find open measurement for this device id
+
+	    	if !location.runningmeasurement.nil? then
+
+	    		Rails.logger.info ("Measurement: "+location.runningmeasurement.id.to_s)
+
+	    		location.runningmeasurement.dataset.add_datapoint(data)
+	    	end
+
+
+	    	# if sample is checked in, perform further actions e.g. write weight into database
 
 	    	if (mi[:devicetype] == "kern") then
 

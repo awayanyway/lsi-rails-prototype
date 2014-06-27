@@ -22,9 +22,10 @@
 <table class="table table-condensed" >
 <thead>
 
-	<th>Dataset</th>
-	<th>Molecule</th>
-	<th>Reaction</th>
+	<th>Device</th>
+  <th>Dataset</th>
+  <th>Sample</th>
+
 	<th>Action</th>
 
 
@@ -35,25 +36,42 @@
   <% @measurements.each do |m| %>
     <tr>
       <td>
-      	<b><%= m.dataset.method %></b>&nbsp;-&nbsp;<%= m.dataset.title %>
+        <% if m.device.nil? then %>
+          Not assigned.
+        <% else %>
+          <%= m.device.name %>
+        <% end %>
+      </td>
+
+        <td>
+          <% if m.runs.last.nil? then %>
+
+            No Dataset.
+          <% else %>
+        <% if (m.runs.last.finished) then %>
+
+          <b><%= m.dataset.method %></b>&nbsp;-&nbsp;<%= m.dataset.title %>
+
+        <% else %>
+
+          Acquisition Ongoing...
+
+        <% end %>
+
+        <% end %>
       </td>
 
       <td>
-      	<% if !(m.molecule_id.nil?) then %>
-      	<% mol = Molecule.find_by(:id => m.molecule_id) %>
-        <%= if !mol.nil? then mol.title else "No molecule." end %>
-      	<% else %>
-      	No molecule.
-      	<% end %>
-      </td>
 
-      <td>
-      	<% if !(m.reaction_id.nil?) then %>
-      	<% r = Reaction.find_by(:id => m.reaction_id) %>
-        <%= if !r.nil? then r.name else "No reaction." end %>
-      	<% else %>
-      	No reaction/sample.
-      	<% end %>
+        <% if !m.runs.last.nil? && !m.sample.nil? then %>
+
+        <%= Sample.find(m.sample_id).name %>
+
+        <% else %>
+
+        No sample
+
+        <% end %>
       </td>
 
       <td>

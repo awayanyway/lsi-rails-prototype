@@ -95,8 +95,9 @@
   <span class="glyphicon glyphicon-glass" /><%=  sample.longname %>&nbsp;<%= link_to "/samples/"+sample.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %>
 </h1>
 
+<% if !sample.target_amount.nil? && !sample.unit.nil? && !sample.weight.nil? then %>
 <h3><%= sample.target_amount.to_s+" "+sample.unit %>  <small> (<%= sample.weight.to_s+" "+sample.unit %>) </small></h3>
-
+<% end %>
 
       <% if !sample.reactions.first.nil? then %><br><% sample.reactions.each do |r| %><em> <%= sample.role %> in </em> <%= link_to reaction_path(r, :project_id => @project.id) do %><span class="glyphicon glyphicon-flash" /><%= r.name %><% end %><% end %><% end %>
 
@@ -114,8 +115,9 @@
 
 </td>
 
+<% if !sample.molecule.nil?  then %>
 <td>Molecule: <%= link_to sample.molecule.title, molecule_path(sample.molecule, :project_id => @project.id) %></td>
-
+<% end %>
 
 </tr>
 

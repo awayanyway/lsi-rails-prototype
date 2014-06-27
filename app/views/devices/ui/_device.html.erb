@@ -17,30 +17,30 @@
     var channel_name = "channel_dev_" + device_id;
     var run_id = "<%= if (@run != nil) then @run.id end%>"
 
-    var ev = new EventEmitter({wildcard: true});
+    var eventbus = new EventEmitter();
 
-    systemstatus.init (ev);
+    systemstatus.init (eventbus);
 
-    webconnection.init (ev, false);
+    webconnection.init (eventbus, false);
     
-    ev.emit ("device.announce.deviceid", [device_id]);
-    ev.emit ("device.announce.operationid", [operation_id]);
-    ev.emit ("device.announce.devicetype", [devicetype]);
+    eventbus.emit ("device.announce.deviceid", device_id);
+    eventbus.emit ("device.announce.operationid", operation_id);
+    eventbus.emit ("device.announce.devicetype", devicetype);
 
-    ev.emit ("webconnection.set.url", [window.location.host+"/websocket"]);
-    ev.emit ("webconnection.set.channelname", [channel_name]);
+    eventbus.emit ("webconnection.set.url", window.location.host+"/websocket");
+    eventbus.emit ("webconnection.set.channelname", channel_name);
 
-    device.init (ev);
-    ui.init (ev);
+    device.init (eventbus);
+    ui.init (eventbus);
     if (connectiontype == "simulation") {
-      simulator.init (ev);
+      simulator.init (eventbus);
     }
-    consolelogger.init (ev);
+    consolelogger.init (eventbus);
 
 
-    ev.emit ("webconnection.connect");
+    eventbus.emit ("webconnection.connect");
 
-    ev.on ("ui.status", function (model) {
+    eventbus.on ("ui.status", function (model) {
 
         if (model.devicesimulation) {
             $("#connstatus").text ("Simulation mode");

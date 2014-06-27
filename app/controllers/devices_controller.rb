@@ -70,7 +70,7 @@ def assign
 
       redirect_to device_path(@device), notice: "Device connected via VNC."
 
-    elsif (params[:beaglebone_serialnumber] == "") then
+    elsif (params[:simulation] == "true") then
 
       @device.connectiontype = "simulation"
 
@@ -110,6 +110,8 @@ def assign
     l.sample_id = @sample.id
     l.save
 
+    WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.checkinsample", @sample
+
     redirect_to samplelocations_at_device_path(@device)
   end
 
@@ -121,6 +123,117 @@ def assign
     l.sample_id = nil
     l.save
 
+    WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.checkoutsample", @sample
+
+    redirect_to samplelocations_at_device_path(@device)
+  end
+
+  def startrun
+    authorize @device, :control?
+
+    if params[:project_id].nil? then
+
+          @project = current_user.rootproject
+
+    else
+
+          @project = Project.find(params[:project_id])
+
+    end
+
+
+
+
+    location = Location.find(params[:location_id])
+
+#    if location.sample_id.nil? then
+
+#      s = Sample.new
+
+#      s.save
+
+#      @project.add_sample(s, current_user)
+
+#      location.sample_id = s.id
+#      location.save
+
+#    end
+
+
+    @dataset = Dataset.new
+
+    # @dataset.molecule_id = params[:molecule_id]
+
+    #@dataset.sample_id = s.id
+
+    @dataset.title = "Measurement"
+    @dataset.method = @device.devicetype.displayname
+    @dataset.description = ""
+    @dataset.details = ""
+
+    if !@dataset.molecule.nil? then 
+
+      assign_version_to_dataset @dataset, @dataset.molecule
+
+    end
+
+    @dataset.save
+
+    
+
+    # @project.add_dataset(@dataset, current_user)
+
+
+    dsg = Datasetgroup.new
+    dsg.save
+    dsg.datasets << @dataset
+
+
+
+    
+    measurement = Measurement.new
+           measurement.user_id = current_user.id
+           measurement.device_id = @device.id
+           measurement.dataset_id = @dataset.id
+           # measurement.sample_id =  s.id
+           # run.location_id = params[:location_id]
+           # run.active = true;
+    measurement.save
+
+        r = Run.new
+
+    r.location = location
+    r.measurement = measurement
+    r.user_id = current_user.id
+
+    r.save
+    
+    WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.startrun", @device
+
+    redirect_to samplelocations_at_device_path(@device)
+  end
+
+  def stoprun
+    authorize @device, :control?
+
+    location = Location.find(params[:location_id])
+
+    run = Run.where(["location_id = ? and finished = ?", location.id, false]).first
+
+    run.finished = true
+
+    measurement = run.measurement
+
+            measurement.samplename = "finished"
+            measurement.save
+    run.save
+
+
+    measurement.dataset.collect_datapoints
+
+    
+    WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.stoprun", @device
+
     redirect_to samplelocations_at_device_path(@device)
   end
 
@@ -131,46 +244,9 @@ def assign
 
     @locations = @device.locations
 
-    @locations.each do |location|
-        
-    end
-
     render 'devices/samplelocations', :layout => false
   end
 
-  def startrun
-
-    Run.create! do |run|
-           run.user_id = current_user.id
-           run.device_id = @device.id
-           run.location_id = params[:location_id]
-           run.active = true;
-        end
-
-    redirect_to device_path(@device), notice: "Run started."
-  end
-
-  def stoprun
-
-    Rails.logger.info (params)
-
-    @locations = Location.where (["device_id = ?", params[:id]])
-
-    @locations.each do |location|
-        @runs = Run.where (["location_id = ?", location.id])
-
-        @runs.each do |therun|
-
-          if therun.active
-            therun.active = false
-            therun.save
-          end
-
-        end
-    end
-
-    redirect_to device_path(@device), notice: "Run stopped."
-  end  
 
   # GET /devices/1
   # GET /devices/1.json

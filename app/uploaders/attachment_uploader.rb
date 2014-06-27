@@ -70,7 +70,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
      process :set_content_type
      }
   
-     
+
 
  
   # Add a white list of extensions which are allowed to be uploaded.
@@ -93,6 +93,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     end
   end
 
+
   
   def dx4lsi
     Jcampdx.load_jdx(":file #{current_path} :process  point raw :output lsi :output_file #{current_path} ")
@@ -100,6 +101,31 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   
   def dx_2_ps
      Jcampdx.load_yaml_2_ps(":file #{current_path} ")
+
+  end
+  
+  def dx_to_ps
+
+    Rails.logger.info ("dx to ps before cache: "+current_path)
+
+    cache_stored_file! if !cached?
+
+    Rails.logger.info ("dx to ps: "+current_path)
+
+    begin
+   
+      Jcampdx.load_jdx4cw(":file #{current_path} :process  param data point raw first")
+
+      Rails.logger.info ("dx to ps successful: "+current_path)
+
+    rescue
+
+      Rails.logger.info ("dx to ps fails: "+current_path)
+
+    ensure
+
+    end
+
   end
 
   def set_content_type(*args)
@@ -109,7 +135,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   def image?(new_file)
 
     if Rails.configuration.jdx_support.cw_thumbnail then
-       extensions = %w(jpg jpeg gif png pdf ps dx jdx)
+
+      extensions = %w(jpg jpeg gif png pdf ps dx jdx jcamp jcampdx)
+
     else
       extensions = %w(jpg jpeg gif png pdf ps)
     end
@@ -122,8 +150,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def jdx?(new_file)
+
    if Rails.configuration.jdx_support.cw_thumbnail then
-     extensions = %w(jdx dx)
+     extensions = %w(jdx dx jcamp jcampdx)
      extension = File.extname(new_file.path.to_s).downcase
      extension = extension[1..-1] if extension[0,1] == '.'
 
@@ -131,6 +160,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
    else
      false
    end
+
   end
 
 end

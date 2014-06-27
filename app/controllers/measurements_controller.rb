@@ -35,6 +35,58 @@ class MeasurementsController < ApplicationController
 
   end
 
+  def assign_sample
+    @measurement = Measurement.find(params[:id])
+
+    if !params[:sample_name].blank? then 
+
+      # creation mode
+
+      @sample = Sample.new(:name => params[:sample_name])
+
+      @sample.save
+
+
+      #@reaction.samples.each do |s|          
+
+       #   s.molecule.add_to_project(current_user.rootproject_id) 
+       #   s.add_to_project(current_user.rootproject_id)
+       # end
+
+      @sample.add_to_project(current_user.rootproject_id)
+
+
+      @measurement.update_attribute(:sample_id, @sample.id)
+
+
+      redirect_to import_measurement_path(@measurement), notice: "Measurement was assigned to new sample." 
+
+    else
+
+      # assign mode
+
+      if params[:sample_id].empty? then 
+
+        @measurement.update_attribute(:sample_id, nil)
+
+        redirect_to import_measurement_path(@measurement), notice: "Measurement was removed from sample." 
+
+      else
+
+      @measurement.update_attribute(:sample_id, params[:sample_id])
+
+      @measurement.sample.add_dataset(@measurement.dataset, current_user)
+
+      redirect_to import_measurement_path(@measurement), notice: "Measurement was assigned to sample." 
+
+      end
+
+    end
+
+
+    
+  end
+
   def assign_reaction
     @measurement = Measurement.find(params[:id])
 
@@ -141,24 +193,10 @@ class MeasurementsController < ApplicationController
 
     if @measurement.complete? then
 
-      @ds = @measurement.dataset
-
-      @r = Reaction.find(@measurement.reaction_id)
-
-      @r.projects.each do |p|
-        @ds.add_to_project (p.id)
-      end
-
-      @ds.update_attribute(:molecule_id,  @measurement.molecule_id)
+      # @ds.update_attribute(:molecule_id,  @measurement.molecule_id)
 
 
       # assign_version_to_dataset @dataset, Molecule.find(@measurement.molecule_id)
-
-
-      dm = ReactionDataset.new
-      dm.reaction_id = @measurement.reaction_id
-      dm.dataset_id = @ds.id
-      dm.save
 
       @measurement.update_attribute(:confirmed, true)
       

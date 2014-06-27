@@ -190,7 +190,11 @@ class Project < ActiveRecord::Base
 
     ProjectSample.new(:project_id => self.id, :sample_id => sample.id, :user_id => user.id).save unless samples.exists?(sample)
 
+    if !sample.molecule.nil? then
+
     ProjectMolecule.new(:project_id => self.id, :molecule_id => sample.molecule.id, :user_id => user.id).save unless molecules.exists?(sample.molecule)
+
+    end
 
     rootlibrary.add_sample(sample, user) unless rootlibrary.sample_exists?(sample)
 

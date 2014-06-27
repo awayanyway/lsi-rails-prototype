@@ -29,7 +29,7 @@ development:
   admin_password: admin_password
   ssl: false
   # <<: *AUTHORIZATIONS
-  
+
 developments3:
   host: localhost
   port: 389

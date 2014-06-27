@@ -29,7 +29,11 @@ class Library < ActiveRecord::Base
   def add_sample(sample, user)
 
     le = LibraryEntry.new
-    le.molecule_id = sample.molecule.id
+
+    if !sample.molecule.nil? then
+      le.molecule_id = sample.molecule.id
+    end
+
     le.sample_id = sample.id
     le.library_id = self.id
     le.save

@@ -5,6 +5,8 @@
 <div class="row">
     
     <% if !(@device.devicetype.name == "legacy_vnc") then %>
+
+    <%= hidden_field_tag 'simulation' %>
        
     <div class="col-sm-6 col-md-4">    
 
@@ -16,7 +18,7 @@
 
                 <p>Do not connect to a physical device.</p>
                 <p>
-                  <button class = "btn btn-primary" onclick="document.getElementById('beaglebone_serialnumber').value = ''; ">Simulation mode</button>
+                  <button class = "btn btn-primary" onclick="document.getElementById('simulation').value = 'true'; ">Simulation mode</button>
                 </p>
             </div>
 
@@ -36,7 +38,7 @@
                 <%= select_tag(:beaglebone_id, options_for_select(current_user.beaglebones.collect{ |r| [r.serialnumber, r.id] }, @device.beaglebone_id)) %>
 
                 <p>
-                 <button class = "btn btn-primary">Connect</button>                
+                 <button class = "btn btn-primary" onclick="document.getElementById('simulation').value = 'false'; ">Connect</button>                
                 </p>
 
             </div>

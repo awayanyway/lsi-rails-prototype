@@ -87,11 +87,19 @@
               </td>
 
               <td>
+
+                 <% if !dataset.sample.nil? then %>
+
                 <% sample = dataset.sample %>
                 
 <h4><%= link_to(sample_path(sample, :project_id => @project.id)) do %><span class="glyphicon glyphicon-glass" /><%=  sample.longname %><% end %> <% if !sample.reactions.first.nil? then %><small><% sample.reactions.each do |r| %><em> <%= sample.role %> in </em> <%= link_to reaction_path(r, :project_id => @project.id) do %><span class="glyphicon glyphicon-flash" /><%= r.name %><% end %><% end %><% end %></small></h4>
 
 
+                  <% else %>
+
+                  No Sample.
+
+                  <% end %>
               </td>
 
             </td>

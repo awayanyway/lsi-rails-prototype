@@ -10,11 +10,13 @@ GIT
   specs:
     dial_a_device_node (0.0.89)
 
+
 GIT
   remote: git://github.com/Cominch/openbabel-heroku-gem.git
   revision: f5e55fbf86aad995b30b11e13bc1a6790af81d88
   specs:
     openbabel-heroku (2.3.2.3)
+
 
 GIT
   remote: git://github.com/awayanyway/kaitatari.git
@@ -32,7 +34,9 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
+
   revision: 01ccfcebd45b8de0a6846d0f33b9daf74673dcc1
+
   specs:
     simple_form (3.1.0.rc1)
       actionpack (~> 4.0)
@@ -40,6 +44,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
+
   revision: 3be7f294cdbe44501eb2090241652b852fa23bdb
   branch: 4-0-stable
   specs:
@@ -48,6 +53,7 @@ GIT
       mail (~> 2.5, >= 2.5.4)
     actionpack (4.0.6)
       activesupport (= 4.0.6)
+
       builder (~> 3.1.0)
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
@@ -81,6 +87,7 @@ GIT
       thor (>= 0.18.1, < 2.0)
 
 GIT
+
   remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
   revision: d70d004389b4da5e4cff0c35532347e8f792cea9
   specs:
@@ -88,6 +95,7 @@ GIT
       sass (~> 3.2)
 
 GIT
+
   remote: git://github.com/timon/dav4rack.git
   revision: 734ccbac30d2354bfac9440d2bbc8072531513e0
   specs:
@@ -104,6 +112,8 @@ GEM
       activerecord (>= 3.0)
     arel (4.0.2)
     bcrypt (3.1.7)
+    bootstrap-sass (3.1.1.1)
+      sass (~> 3.2)
     bootstrap-wysiwyg-rails (0.3.1)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -126,6 +136,11 @@ GEM
       execjs
     coffee-script-source (1.7.0)
     daemons (1.1.9)
+    delayed_job (4.0.2)
+      activesupport (>= 3.0, < 4.2)
+    delayed_job_active_record (4.0.1)
+      activerecord (>= 3.0, < 4.2)
+      delayed_job (>= 3.0, < 4.1)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -146,7 +161,9 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.3)
     excon (0.37.0)
+
     execjs (2.2.1)
+
     faye-websocket (0.7.3)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.3.1)
@@ -169,9 +186,12 @@ GEM
       net-ssh (>= 2.1.3)
     fog-json (1.0.0)
       multi_json (~> 1.0)
+
     foreman (0.74.0)
       dotenv (~> 0.11.1)
       thor (~> 0.19.1)
+
+
     formatador (0.2.5)
     hike (1.2.3)
     hiredis (0.5.2)
@@ -179,7 +199,9 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.6.9)
+
     inflecto (0.0.2)
+
     ipaddress (0.8.0)
     jquery-hotkeys-rails (0.7.9.1)
       railties (>= 3.1)
@@ -206,6 +228,7 @@ GEM
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
     openbabel (2.3.2.0)
+    openbabel-heroku (2.3.2.3)
     orm_adapter (0.5.0)
     pg (0.17.1)
     protected_attributes (1.0.8)
@@ -284,7 +307,9 @@ DEPENDENCIES
   actionmailer
   acts_as_list
   arel (~> 4.0.0)
+
   bootstrap-sass!
+
   bootstrap-wysiwyg-rails
   carrierwave
   carrierwave_direct
@@ -292,12 +317,13 @@ DEPENDENCIES
   cocoon
   coffee-rails
   dav4rack!
+  delayed_job_active_record
   devise
   devise_invitable
   devise_ldap_authenticatable
   dial_a_device_node!
   fog
-  foreman
+  foreman (= 0.63)
   httparty
   jquery-hotkeys-rails
   jquery-rails
@@ -306,7 +332,7 @@ DEPENDENCIES
   mini_magick
   noVNC!
   openbabel
-  openbabel-heroku!
+  openbabel-heroku
   pg
   protected_attributes
   pundit

@@ -1,25 +1,60 @@
 <% if (@locations != nil) then %>
     <% @locations.each do |location| %>
-      <li>
 
-        <% if ((location != nil) && (location.sample_id != nil)) then %>
+    <%if !location.nil? then %>
 
-        <% sample = Sample.find(location.sample_id) %>
 
-        <a href="#">
-        <span class="glyphicon glyphicon-glass" /><%=  sample.longname %>&nbsp; <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/checkout?sample_id=<%= sample.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Check out</a>
+        <% if location.runs.where(["finished = ?", false]).length == 0 then %>
 
-        <script>
-          // alert ("<%= location.sample_id %>");
-            if (typeof detectedSample == 'function') {
-              detectedSample ('<%= location.sample_id %>', false);
-            }
-        </script>
+
+
+            <% if (location.sample_id != nil) then %>
+
+            <% sample = Sample.find(location.sample_id) %>
+
+          
+            <p class="navbar-text"><span class="glyphicon glyphicon-glass" /><%=  sample.longname %></p> &nbsp; <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/checkout?sample_id=<%= sample.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Check out</a>
+
+            <script>
+              // alert ("<%= location.sample_id %>");
+                if (typeof detectedSample == 'function') {
+                  detectedSample ('<%= location.sample_id %>', false);
+                }
+            </script>
+
+            <% else %>
+
+              <p class="navbar-text">No sample.</p>
+
+              <a href="/devices/<%= @device.id %>/checkinselect" class="btn btn-xs btn-success">Check in sample</a>
+
+            <% end %>
+
+
+            <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/startrun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-success">Start measurement</a>
+
+        <% else %>
+
+        <% if (location.sample_id != nil) then %>
+
+            <% sample = Sample.find(location.sample_id) %>
+
+             <p class="navbar-text">
+            <span class="glyphicon glyphicon-glass" /><%=  sample.longname %></p> 
+
+            <% else %>
+
+              <a href="">No sample.</a>
+
+            <% end %>
+
+
+        <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/stoprun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Stop measurement</a>
 
         <% end %>
 
 
-      </li>
+      <% end %>
 
     <% end %>
 

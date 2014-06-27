@@ -1,10 +1,10 @@
 ActionMailer::Base.smtp_settings = {
-  :address  => 'localhost',
-  :port   => '587',
+  :address  => ENV['SMTP_HOST'],
+  :port   => ENV['SMTP_PORT'],
   :authentication => :plain,
-  :user_name  => 'username',
-  :password => 'password',
-  :domain => 'localdomain'
+  :user_name  => ENV['SMTP_USER_NAME'],
+  :password => ENV['SMTP_PASSWORD'],
+  :domain => ENV['SMTP_DOMAIN']
 }
 ActionMailer::Base.delivery_method ||= :smtp
 
@@ -17,7 +17,7 @@ CarrierWave.configure do |config|
 end
 
 LsiRailsPrototype::Application.configure do
-  config.useldap = false
+  config.useldap = (ENV['USE_LDAP'].downcase == "true")
   # Settings specified here will take precedence over those in config/application.rb
 
   # Code is not reloaded between requests
@@ -88,9 +88,10 @@ LsiRailsPrototype::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.action_mailer.default_url_options = { :host => 'localhost:3000'}
-
   config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 
-  config.datasetroot = "/home/cominch/"
+  # Jdx file support through kaitatari : options
+  config.jdx_support.cw_thumbnail     = true      #carrierwave thumbnail creation   in uploaders/attachment_uploader
+  config.jdx_support.detect_jdx       = true      # detect file extension jdx and  parameters in model/dataset::detect_parameters  
+  config.jdx_support.interactive_plot = true      #interactive plot of the jdx data in view/datasets/show 
 end
