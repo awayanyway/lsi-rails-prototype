@@ -907,17 +907,17 @@ function install(what) {
 
     var b = require('bonescript');
 
-    file = '/var/lib/cloud9/autorun/addcleanupscript.js';
-      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('"
+    //file = '/var/lib/cloud9/autorun/addcleanupscript.js';
+      //b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('"
 
 
-        +"echo -n \"rm -r /var/log && reboot \" > /etc/cron.daily/clean; "
+        //+"echo -n \"rm -r /var/log && reboot \" > /etc/cron.daily/clean; "
 
-        +"chmod +x /etc/cron.daily/clean; "
+        //+"chmod +x /etc/cron.daily/clean; "
 
-        +"rm /var/lib/cloud9/autorun/addcleanupscript.js; "
+        //+"rm /var/lib/cloud9/autorun/addcleanupscript.js; "
 
-        +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+        //+"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
 
           file = '/var/lib/cloud9/start.js';
           b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
@@ -934,7 +934,7 @@ function install(what) {
 
           });  
 
-      });
+      //});
 
 
   } 
