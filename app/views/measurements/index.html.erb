@@ -75,18 +75,14 @@
       </td>
 
       <td>
-      	<%= link_to discard_measurement_path(m), :class => "btn btn-danger" do %>Discard<% end %>
+      	<%= link_to('<span class="glyphicon glyphicon-remove"/>'.html_safe, discard_measurement_path(m), :confirm => "Are you sure you want to discard this measurement?") %>
       </td>
 
       <td>
 
-      	<% if m.complete? then %>
+      	<% if !m.complete? then %>
 
-      	<%= link_to confirm_measurement_path(m), :class => "btn btn-success" do %>Confirm<% end %>
-
-      	<% else %>
-
-	      <%= link_to import_measurement_path(m), :class => "btn btn-warning" do %>Import<% end %>
+  	      <%= link_to import_measurement_path(m), :class => "btn btn-warning" do %>Import<% end %>
 
 	      <% end %>
   		</td>

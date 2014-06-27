@@ -157,11 +157,18 @@ class MeasurementsController < ApplicationController
 
     @measurement.save
 
+    if @measurement.complete? then
 
-    respond_to do |format|
+      redirect_to measurements_path
+
+    else
+
+      respond_to do |format|
         format.html { render action: "import" }
         format.json { render json: @measurement.errors, status: :unprocessable_entity }
       end
+
+    end
   end
 
   def discard
