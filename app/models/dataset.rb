@@ -35,6 +35,15 @@ class Dataset < ActiveRecord::Base
 
   end
 
+  def commit(user)
+
+    c = Commit.new
+    c.dataset_id = self.id
+    c.user_id = user.id
+    c.save
+
+  end
+
   def transfer_attachments_to_dataset(dataset)
     self.attachments.each do |a|
 

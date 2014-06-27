@@ -233,6 +233,8 @@ def assign
 
     measurement.dataset.collect_datapoints
 
+    measurement.dataset.commit(current_user)
+
     
     WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.stoprun", @device
 

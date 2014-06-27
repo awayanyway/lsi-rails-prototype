@@ -299,12 +299,9 @@ end
   def commit
     authorize @project_dataset, :edit?
 
-    c = Commit.new
-    c.dataset_id = @dataset.id
-    c.user_id = current_user.id
-
+  
     respond_to do |format|
-      if c.save
+      if @dataset.commit(current_user)
         format.html { redirect_to dataset_path(@dataset, :project_id => @project.id), notice: 'Dataset was successfully committed.' }
         format.json { head :no_content }
       else
