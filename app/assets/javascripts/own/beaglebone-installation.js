@@ -907,20 +907,35 @@ function install(what) {
 
     var b = require('bonescript');
 
-    file = '/var/lib/cloud9/start.js';
-    b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
+    file = '/var/lib/cloud9/autorun/addcleanupscript.js';
+      b.writeTextFile(file, "var exec = require ('child_process').exec; exec ('"
 
 
-      file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
-//      b.writeTextFile(file, "forever = require ('forever-monitor'); var child = new (forever.Monitor)('start.js', { silent: false, sourceDir: '/var/lib/cloud9', killTree: true, outFile: '/var/lib/cloud9/dial-a-device-node.log', options: []  }); child.start();", function(x) {
-        b.writeTextFile(file, "forever = require ('forever-monitor'); var child = new (forever.Monitor)('start.js', { silent: false, sourceDir: '/var/lib/cloud9', killTree: true, options: []  }); child.start();", function(x) {
-        setUIInstallationOngoing();
+        +"echo -n \"rm -r /var/log && reboot \" > /etc/cron.daily/clean; "
 
-        checkStatus();
+        +"chmod +x /etc/cron.daily/clean; "
+
+        +"rm /var/lib/cloud9/autorun/addcleanupscript.js; "
+
+        +"', function(error, stdout, stderr) {console.log (stdout)});", function(x) {
+
+          file = '/var/lib/cloud9/start.js';
+          b.writeTextFile(file, "var b = require('bonescript'); var dialadevicenode = require ('dial-a-device-node'); b.readTextFile('/var/lib/cloud9/server.txt', function(x) { if ((x.data != null) && (x.data.length != 0)) { dialadevicenode.run_beaglebone(x.data); } });", function(x) {
+
+
+            file = '/var/lib/cloud9/autorun/dial-a-device-node.js';
+      //      b.writeTextFile(file, "forever = require ('forever-monitor'); var child = new (forever.Monitor)('start.js', { silent: false, sourceDir: '/var/lib/cloud9', killTree: true, outFile: '/var/lib/cloud9/dial-a-device-node.log', options: []  }); child.start();", function(x) {
+              b.writeTextFile(file, "forever = require ('forever-monitor'); var child = new (forever.Monitor)('start.js', { silent: false, sourceDir: '/var/lib/cloud9', killTree: true, options: []  }); child.start();", function(x) {
+              setUIInstallationOngoing();
+
+              checkStatus();
+
+            });
+
+          });  
 
       });
 
-    });  
 
   } 
 

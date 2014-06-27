@@ -29,6 +29,10 @@ class Dataset < ActiveRecord::Base
 
     newdataset.save
 
+    dsg = Datasetgroup.new
+    dsg.save
+    dsg.datasets << newdataset
+
     sample.add_dataset(newdataset, user)
 
     return newdataset
