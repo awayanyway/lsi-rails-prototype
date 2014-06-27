@@ -3,12 +3,15 @@
 function dual_mouse_zoom(container,container2, data, op) {
 
     var options, options2, options3, graph, graph2, graph3, selec, i, x0, y0;
-
-    options = Flotr._.extend({selection: { mode: 'xy',
-                                           fps: 30
-                                          }, 
-                              HtmlText: false}
-                             , op);
+ 
+     
+    options = Flotr._.extend({
+    	                      selection: { mode: 'xy',
+                                           fps: 30,
+                                           }, 
+                              HtmlText: false,
+                              },       op);
+   
     options2 = {   
     		selection: { mode: 'x',
                 fps: 30
@@ -24,7 +27,8 @@ function dual_mouse_zoom(container,container2, data, op) {
             showLabels: false,
             margin: false,
             autoscale: true ,
-            }
+            },
+            
         };
 
     options.title = null;
@@ -61,7 +65,9 @@ function dual_mouse_zoom(container,container2, data, op) {
 
   
     // Actually draw the graph.
-    graph  = drawGraph({margin: false});
+    graph  = drawGraph({margin: false,
+ 
+                     });
     graph2 = drawGraph2();
 //    graph3 = drawGraph3();
     // Hook into the 'flotr:select' event.
@@ -128,8 +134,13 @@ function dual_mouse_zoom2(container,container2, data, op, chips) {
     options = Flotr._.extend({selection: { mode: 'xy',
                                            fps: 30
                                           }, 
-                              HtmlText: false}
+                              HtmlText: false,
+                              spreadsheetJdx: { show: true,
+                                              tickFormatter: function(e) {return e + '';},
+                                             },
+                              }
                              , op);
+    //options.spreadsheetJdx.ldrS = {};
     options2 = {   
             selection: { mode: 'x',
                 fps: 30

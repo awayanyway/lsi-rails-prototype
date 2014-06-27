@@ -176,31 +176,20 @@ class DatasetsController < ApplicationController
   
   
  def munch
-     puts "munch it!"
      @dataset =  Dataset.where(["id = ?",params[:dataset_id]]).first
-      puts "nice dataset"
-     if (file=@dataset.jdx_file)
-       puts "monic says U r dumb!"
-        @kumara=Rails.cache.fetch("#{file}", :expires_in => 5.minutes){ 
-        puts " spoon !  " 
-        opt=":file "+file.to_s+" :tab all :process header spec param data point raw first_page " 
-        dx_data=Kai.new(opt).flotr2_data 
-       if dx_data.is_a?(Switchies::Ropere) 
-          puts "\nhello Kumara! \n"
-          kumara=dx_data.to_kumara
-       else  
-         nil
-       end  
-      }
-      else puts "spacehead!"
+     file=nil
+     
+      file=inspect_uploader(@dataset) 
+     if file #= @dataset.jdx_file
+        @kumara= Kai.load(":file #{file} :return_as kumara")
+    
+       
      end
-     kumara= @kumara #||Rails.cache.read("kumara")
-     puts kumara.inspect.slice(0..100)
+     kumara= @kumara 
       block ||= (params[:block] && params[:block].to_i) || 0
       page  ||= (params[:page]  && params[:page].to_i)  || 0
       limit ||= (params[:limit] && params[:limit].to_i) || 2048
      if kumara.is_a?(Switchies::Kumara)
-     puts "I can't grab your ghost chips!"
      else
      kumara=Switchies::Kumara.blank 
      end
@@ -209,7 +198,6 @@ class DatasetsController < ApplicationController
         r0=params[:r0].to_f
         r1=params[:r1].to_f  
         k= (kumara.xy && kumara.xy[block] && kumara.xy[block][page]) || [[0,0],[0,0]] 
-        puts "inspect xy: #{puts k.inspect.slice(0..100)}\n"
         step=( k[-1][0] - k[0][0] )/(k.size - 1)
         r0= ( (r0 - k[0][0]) / step).to_i
         r1= ( (r1 - k[0][0]) / step).to_i 
@@ -222,7 +210,7 @@ class DatasetsController < ApplicationController
     
      puts "munch it with <r0..r1:#{r0}..#{r1}> <r:#{r}> <block:#{block}> <page:#{page}> <limit:#{limit}>"
       @plotdx=kumara.chip_it(r,block,page,limit)
-     #puts [k.trim_point(r,limit)].to_s.slice(0..100)
+  
      
      
      render :json => (k && [k.trim_point(r,limit)]) || nil
@@ -230,24 +218,16 @@ class DatasetsController < ApplicationController
    
 end
  
+ 
   
   def plotpoint
      @dataset =  Dataset.where(["id = ?",params[:dataset_id]]).first
-      if Kai.test_file(@dataset.jdx_file)
-       file=@dataset.jdx_file 
-        puts "nice dataset @<#{file}>"
-        @kumara=Rails.cache.fetch("#{file}", :expires_in => 5.minutes){ 
-                puts " spoon !  " 
-                opt=":file "+file.to_s+" :tab all :process header spec param data point raw first_page " 
-                dx_data=Kai.new(opt).flotr2_data 
-               if dx_data.is_a?(Switchies::Ropere) 
-                  puts "\nhello Kumara! \n"
-                  kumara=dx_data.to_kumara
-               else  
-                  puts "\nwanna chips? Bro'  \n"
-                 nil
-               end  
-          }
+      file=inspect_uploader(@dataset)
+       
+      if Kai.test_file(file) #@dataset.jdx_file)
+       #file=@dataset.jdx_file 
+       @kumara= Kai.load(":file #{file} :return_as kumara")
+        
       end
        
       if !@kumara
@@ -265,8 +245,6 @@ end
 
   def show
     authorize @project_dataset
-
-
     @changerights = false
 
     if !current_user.nil? && current_user.datasetowner_of?(@dataset) then @changerights = true end
@@ -274,12 +252,12 @@ end
     if Commit.exists?(["dataset_id = ?", @dataset.id]) then @changerights = false end
 
     @attachment = Attachment.new(:dataset => @dataset)
-    ####
-    puts "~~~~~~~~~~~~~\nGeorge is pretty drunk"
+
+    
     @kumara=Switchies::Kumara.blank
     @plotdx=@kumara.chip_it
-    puts @plotdx.inspect.slice(0..100)
-    puts "~~~~~~~~~~~~~~~~"
+    # puts '>'*20+@plotdx.inspect.slice(0..60)
+ 
     
     respond_to do |format|
       if !(Commit.exists?(["dataset_id = ?", @dataset.id])) then flash.now[:notice] = 'Dataset is in editing mode. Commit your changes after you\'re done.' end
@@ -590,4 +568,39 @@ end
       @project_dataset = ProjectDataset.where(["project_id = ? AND dataset_id = ?", @project.id, @dataset.id]).first
     end
 
+def inspect_uploader(dataset=nil)
+     return nil if dataset.nil?
+    
+     if dataset
+      v=[] 
+      dataset.attachments.each{|a| v << ((a.file.version_exists?(:jdx) && a.file.jdx)||nil) }
+      v.compact!
+     end
+     if v.size==0
+       dataset.attachments.each{|a| a.read_attribute(:file) =~ /j?dx\z/ && a.recreate_versions!
+                                    v << ((a.file.version_exists?(:jdx) && a.file.jdx)||nil)}
+     v.compact!
+     end
+
+
+   
+    ####  todo: here there is something to do
+    u=v[0] 
+    ####
+    return if !u
+    ### uploader methods to check:  
+    met=[]
+    #met=[:inspect, :class, :file , :url, :default_url,:cached?, :path,:current_path, :cache_name, :cache_dir]      
+    ### check  before caching
+    line  = "\n"+"@"*10+"BEFORE caching"+"<path = cache_dir + cache_name> is "+((u.path.to_s == File.join(u.cache_dir.to_s,u.cache_name.to_s) && "TRUE") || "FALSE")
+    met.each{|meth| line+="\n@@@#{meth}"+" "*(16-meth.size)+":"+u.send(meth).inspect}
+    ### cache uploader if not cached
+    line << "\n" << "@"*10 << ((u.cached? &&  "attachement already cached") || (u.cache! &&  "attachment now cached") )
+    ###check  after caching
+    line += "\n"+"@"*10+" AFTER caching"+"<path = cache_dir + cache_name> is "+((u.path.to_s == File.join(u.cache_dir.to_s,u.cache_name.to_s) && "TRUE" )|| "FALSE")
+    met.each{|meth| line+="\n@@@#{meth}"+" "*(16-meth.size)+":"+u.send(meth).inspect}
+    puts line
+    #############
+    "yaml|"+u.current_path.to_s
+ end
 end

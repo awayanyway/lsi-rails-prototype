@@ -55,12 +55,7 @@ group :development, :localserver ,:developments3 do
 	gem 'openbabel'
 end
 
-group :developments3 do
-  gem 'fakes3'
-  gem 'aws-s3'
-  gem 'rest-client'
-  gem 'right_aws'  
-end
+
 
 gem 'rubabel'
 
@@ -133,4 +128,4 @@ gem 'will_paginate-bootstrap'
 
 gem 'rubyzip'
 
-gem 'kaitatari', :git => 'git://github.com/awayanyway/kaitatari.git' # :branch => "ntuple" # :path => ""
+gem 'kaitatari',  :git => 'git://github.com/awayanyway/kaitatari.git',  :branch => "ntuple" # :path => "/home/pi/workspace/kaitatari"

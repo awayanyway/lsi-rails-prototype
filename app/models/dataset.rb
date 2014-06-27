@@ -267,60 +267,22 @@ class Dataset < ActiveRecord::Base
   def detect_parameters
     self.update_attribute(:jdx_file,nil)
     attachments.each do |a|
-
+     
+     a.file.version_exists?(:dummy) && a.file.dummy.remove!
     #detect jdx
-
-      #if (Rails.env.localserver? or Rails.env.development?) && a.folder == "" && a.read_attribute(:file) =~ /j?dx\z/i then
+   
       
-      if Rails.configuration.jdx_support.detect_jdx  && a.read_attribute(:file) =~ /j?dx\z/i then
+      if Rails.configuration.jdx_support.detect_jdx  && a.read_attribute(:file) =~ /j?dx\z/i && (y_file = inspect_uploader(a)) then
         
-        ###########################
-        # uploader methods to check:  
-        met=[:inspect, :class, :file , :url, :default_url,:cached?, :path,:current_path, :cache_name, :cache_dir]
-        u=a.file
-        
-        #check outputs before caching
-        line = "\n\n"+"@"*50+"\ninspect BEFORE caching\n"
-        met.each{|meth| line+="\n#{meth}"+" "*(16-meth.size)+":"+eval("u.#{meth}").to_s}
-        line << "\n<path = cache_dir + cache_name> is "+((u.path.to_s ==  File.join(u.cache_dir.to_s,u.cache_name.to_s).to_s && "TRUE\n") || "FALSE\n")+"@"*50+"\n\n"
-        puts line
-        
-        #cache uploader if not cached
-        line << ((u.cached? &&  "already cached") || (u.cache! &&  "now cached") )
-        
-        #check outputs after caching
-        line << "\n\n"+"@"*50+"\ninspect AFTER caching\n"
-        met.each{|meth| line+="\n#{meth}"+" "*(16-meth.size)+":"+eval("u.#{meth}").to_s}
-        line << "\n<path = cache_dir + cache_name> is "+((u.path.to_s == File.join(u.cache_dir.to_s,u.cache_name.to_s).to_s && "TRUE\n") || "FALSE\n")+"@"*50+"\n\n"
-        puts line
-        ###########################
-        
-
-        extract_label="TITLE, DATA TYPE,.OBSERVE NUCLEUS,.SOLVENT NAME,.PULSE SEQUENCE,.OBSERVE FREQUENCY"
-
-        jdx_data = Jcampdx.load_jdx(":file #{a.file.path.to_s} :process  extract #{extract_label}, extract_first ").last[:extract]      
-        
-        title = (jdx_data[:"TITLE"] && jdx_data[:"TITLE"][0] ) || "n.d." 
-        if jdx_data[:"DATA TYPE"] && jdx_data[:"DATA TYPE"][0] =~ /NMR/
-          m = "NMR/"
-          m << jdx_data[:".OBSERVE NUCLEUS"][0].gsub(/\^/,"") if jdx_data[:".OBSERVE NUCLEUS"]
-          m << "/"
-          m << jdx_data[:".SOLVENT NAME"][0] if jdx_data[:".SOLVENT NAME"]
-          m << "/"
-          m <<  jdx_data[:".OBSERVE FREQUENCY"][0].to_f.round.to_s if jdx_data[:".OBSERVE FREQUENCY"]
-          title << "-" + jdx_data[:".PULSE SEQUENCE"][0]  if jdx_data[:".PULSE SEQUENCE"]
-         
-        else
-          m = (jdx_data[:"DATA TYPE"] && jdx_data[:"DATA TYPE"][0]) || "n.d."  
-        end
-
+        jdx_data = Kai.new(":file yaml|#{y_file}").result 
+        m = jdx_data.detect(:method)
+        title = jdx_data.detect(:title)
+        title = "" 
         self.update_attribute(:title, title) if title
         self.update_attribute(:method, m)    if m
-        self.update_attribute(:jdx_file, "jdx|"+a.file.path.to_s)
+        self.update_attribute(:jdx_file, "yaml|"+y_file)
 
       end
-
-
 
       if a.folder == "pdata/1/" && a.read_attribute(:file) == "proc" then
 
@@ -444,6 +406,30 @@ class Dataset < ActiveRecord::Base
     super(:include => [:attachments => {:methods => [:filename, :filesize]}])
   end
 
+  
+  
+  def inspect_uploader(a=nil)
+    return if a.nil? || !a.file.version_exists?(:jdx)
+   
+     u=a.file.jdx
+     ### uploader methods to check:  
+        met=[]
+        #met=[:inspect, :class, :file , :url, :default_url,:cached?, :path,:current_path, :cache_name, :cache_dir]      
+        ### check  before caching
+        line  = "\n"+"@"*10+"BEFORE caching"+"<path = cache_dir + cache_name> is "+((u.path.to_s == File.join(u.cache_dir.to_s,u.cache_name.to_s) && "TRUE") || "FALSE")
+        met.each{|meth| line+="\n@@@#{meth}"+" "*(16-meth.size)+":"+u.send(meth).inspect}
+        ### cache uploader if not cached
+        line << "\n" << "@"*10 << ((u.cached? &&  "attachement already cached") || (u.cache! &&  "attachment now cached") )
+        ###check  after caching
+        line += "\n"+"@"*10+" AFTER caching"+"<path = cache_dir + cache_name> is "+((u.path.to_s == File.join(u.cache_dir.to_s,u.cache_name.to_s) && "TRUE" )|| "FALSE")
+        met.each{|meth| line+="\n@@@#{meth}"+" "*(16-meth.size)+":"+u.send(meth).inspect}
+        puts line
+        ###########################
+        ret = (u.current_path && u.current_path.to_s) || nil
+        ret
+ end
+
+
 
   def collect_datapoints
 
@@ -486,5 +472,6 @@ class Dataset < ActiveRecord::Base
     end
 
   end
+
 
 end
