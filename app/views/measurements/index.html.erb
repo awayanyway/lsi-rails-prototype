@@ -39,7 +39,7 @@
         <% if m.device.nil? then %>
           Not assigned.
         <% else %>
-          <%= m.device.name %>
+          <%= link_to m.device.name, m.device %>
         <% end %>
       </td>
 
