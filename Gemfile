@@ -108,7 +108,7 @@ gem 'mini_magick'
 
 gem 'carrierwave_direct'
 
-gem 'bootstrap-sass', '~> 3.1.1'
+gem 'bootstrap-sass', '~> 3.2.0.0'
 
 gem 'bootstrap-wysiwyg-rails'
 
