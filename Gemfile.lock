@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 2357eee0d9357cf996f300de67ab8516e6a79d90
+  revision: 350048700047af62ba4e0c4c9fc819acd6fb8519
   specs:
-    dial_a_device_node (0.0.95)
+    dial_a_device_node (0.0.96)
 
 GIT
   remote: git://github.com/awayanyway/kaitatari.git
@@ -221,7 +221,7 @@ GEM
       redis (>= 3.0.2)
     ref (1.0.5)
     rubabel (0.1.0)
-    rubyzip (1.1.4)
+    rubyzip (1.1.5)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
