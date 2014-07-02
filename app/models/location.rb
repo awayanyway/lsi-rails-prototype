@@ -9,7 +9,17 @@ class Location < ActiveRecord::Base
 
   def runningmeasurement
 
-  	runs.where(["finished = ?", false]).last.measurement
+  	if runs.where(["finished = ?", false]).length > 0 then
+
+  		runs.where(["finished = ?", false]).last.measurement
+
+  	end
+
+  end
+
+  def currentrun
+
+  	runs.where(["finished = ?", false]).last
 
   end
 

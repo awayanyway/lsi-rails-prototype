@@ -1,58 +1,6 @@
 
 <%= include_novnc_javascript_all %>
 
-<% if (@measurements.length > 0) then %>
-
-<div id="devicestatus" class="col-md-6">
-
-    <h2>Recently measured</h2>
-
-    <% @measurements.each do |m| %>
-
-    <% if !m.dataset.nil? then %>
-
-    <div class="thumbnail">
-        <div>
-        <b><%= m.dataset.method %></b><% if !m.dataset.title.empty? then %> - <%= m.dataset.title %><% end %>
-        </div>
-    <p><small>Created at: <%= m.recorded_at %></small></p>
-
-    <% if m.user_id.nil? then %>
-
-          <%= link_to import_measurement_path(m), :class => "btn btn-xs btn-warning" do %>Import<% end %>
-
-    <% else %>
-    <p>Assigned to <%= User.find(m.user_id).email %><% if (m.confirmed == false) then %> (unconfirmed)<% end %></p>
-
-    <% if !(m.reaction_id.nil?) && !(m.molecule_id.nil?) then %>
-
-        <% if m.user_id == current_user.id && !m.confirmed? then %>
-
-        <%= link_to confirm_measurement_path(m), :class => "btn btn-xs btn-success" do %>Confirm<% end %>
-
-        <% end %>
-
-        <% else %>
-
-          <%= link_to import_measurement_path(m), :class => "btn btn-xs btn-warning" do %>Import<% end %>
-
-        <% end %>
-
-    <% end %>
-
-    
-
-    </div>
-
-    <% end %><!-- if dataset not nil -->
-
-    <% end %> 
-
-    <%= will_paginate @measurements, renderer: BootstrapPagination::Rails %>
-
-</div>
-
-<% end %>
 
 <% if !(@device.token.nil?) then %>
 

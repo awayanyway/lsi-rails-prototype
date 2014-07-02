@@ -60,6 +60,9 @@ LsiRailsPrototype::Application.routes.draw do
 
   resources :devices do
     get 'showvnc', on: :member
+    get 'showmeasurements', on: :member
+    get 'showmeasurementsmini', on: :member
+
     get 'connect', on: :member
     post 'connectit', on: :member, as: :connect_do
 
@@ -69,6 +72,9 @@ LsiRailsPrototype::Application.routes.draw do
     get 'checkinselect', on: :member, as: :checkinselect_sample_to
     get 'checkin', on: :member, as: :checkin_sample_to
     get 'checkout', on: :member, as: :checkout_sample_to
+
+    get 'loadmeasurement', on: :member, as: :load_measurement_to
+    get 'unloadmeasurement', on: :member, as: :unload_measurement_to
 
     get 'startrun', on: :member, as: :startrun_at
     get 'stoprun', on: :member, as: :stoprun_at
@@ -89,7 +95,7 @@ LsiRailsPrototype::Application.routes.draw do
   end
 
   resources :measurements do
-    get 'import', on: :member
+  
     get 'discard', on: :member
 
     get 'confirm', on: :member

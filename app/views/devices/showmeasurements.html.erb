@@ -1,0 +1,116 @@
+<h1><%= @device.name %> <small>(<%= @device.devicetype.name %>)</small>&nbsp;<%= link_to 'Back', device_path(@device), :class => "btn btn-default" %></h1>
+
+   <!-- <div class="tabbable">
+
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Control</a></li>
+    <li><a href="#tab2" data-toggle="tab">Details</a></li>
+    </ul>
+
+    <div class="tab-content">
+    <div class="tab-pane active" id="tab1">-->
+<% if (@measurements.length > 0) then %>
+
+<table class="table">
+  <thead>
+    <th>Time</th>
+    <th>Dataset</th>
+    <th></th>
+    <th></th>
+  </thead>
+
+  <tbody>
+
+    <% @measurements.each do |m| %>
+
+    <tr>
+
+      <td>
+        <% if !m.recorded_at.nil? then %><%= m.recorded_at.strftime('%Y-%m-%d %H:%M:%S %Z') %><br><% end %>
+        <% if !m.recorded_end_at.nil? && !m.recorded_at.nil? then %>Duration: <%= (m.recorded_end_at - m.recorded_at).round(1) %> s<% end %>
+      </td>
+
+      <td><% if !m.dataset.nil? then %><%= image_tag(m.dataset.preview_url, size: "150x100") %><% end %></td>
+
+
+        <td>
+
+          <% if m.runs.last.nil? then %>
+
+            No Dataset.
+          <% else %>
+              <% if (m.runs.last.finished && !m.dataset.nil?) then %>
+
+                <b><%= m.dataset.method %></b>&nbsp;-&nbsp;<%= m.dataset.title %>
+
+              <% else %>
+
+                Acquisition Ongoing...
+
+              <% end %>
+
+        <% end %>
+
+      </td>
+
+
+
+    <td>
+      
+
+    <% if m.user_id.nil? then %>
+
+          <%= link_to edit_measurement_path(m), :class => "btn btn-xs btn-warning" do %>Import<% end %>
+
+    <% else %>
+
+          <p>Assigned to <%= User.find(m.user_id).email %><% if (m.confirmed == false) then %> (unconfirmed)<% end %></p>
+
+          <% if !(m.complete?) then %>
+
+                <%= link_to edit_measurement_path(m), :class => "btn btn-xs btn-warning" do %>Import<% end %>
+
+          <% end %>
+
+    <% end %>
+
+    
+
+    </td>
+
+
+    <% end %><!-- if dataset not nil -->
+
+
+  </tbody>
+</table>
+
+    <%= will_paginate @measurements, renderer: BootstrapPagination::Rails %>
+
+<% else %>
+
+<p>No measurements yet.</p>
+
+<% end %>
+
+
+
+<% @showsidebar = true %>
+
+<% content_for :sidebar_switch do @showsidebar = true end %>
+
+<% content_for :sidebar do %>
+
+ <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+
+          <div class="well">
+            <%= render 'layouts/sidebar' %>
+          </div>
+
+ </div>
+  
+<% end %>
+
+<%  @showfooter = false %>
+
+<% if (current_user != nil) then @showtasks = true end %>

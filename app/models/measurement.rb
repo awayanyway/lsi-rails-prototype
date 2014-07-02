@@ -1,5 +1,5 @@
 class Measurement < ActiveRecord::Base
-  attr_accessible :dataset_id, :device_id, :sample_id, :recorded_at, :reaction_id, :molecule_id
+  attr_accessible :dataset_id, :device_id, :sample_id, :recorded_at, :reaction_id, :molecule_id, :title
 
   attr_accessible :user_id, :confirmed, :samplename
 
@@ -12,6 +12,18 @@ class Measurement < ActiveRecord::Base
 
   has_many :runs
   has_many :locations, :through => :runs
+
+  before_create do
+
+    self.title = "New measurement"
+
+  end
+
+  def finished?
+
+    samplename == "finished"
+
+  end
 
   def complete?
 

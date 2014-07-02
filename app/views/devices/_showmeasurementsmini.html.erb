@@ -1,0 +1,47 @@
+		<h4>Measurements</h4>
+
+            <% if Measurement.where(["device_id = ?", @device.id]).length == 0 then %>
+
+              <p>No recent measurements.</p>
+
+            <% else %>
+
+            <table>
+
+
+            	<tbody>
+
+                <% Measurement.where(["device_id = ?", @device.id]).order("created_at DESC").limit(5).each do |m| %>
+
+                <tr>
+
+                  <td>
+			        <small><% if !m.recorded_at.nil? then %><% if !m.recorded_end_at.nil? && !m.recorded_at.nil? then %>Duration: <%= (m.recorded_end_at - m.recorded_at).round(1) %> s<% end %><% else %>Ongoing...<% end %></small>
+			      </td>
+
+			        
+			      <td>
+
+			        <% if !m.sample.nil? then %>
+
+			        <%= Sample.find(m.sample_id).name %>
+
+			        <% else %>
+
+			        Import
+
+			        <% end %>
+			      </td>
+
+
+                  </tr>
+
+                <% end %>
+
+            </tbody>
+
+        </table>
+
+              <%= link_to showmeasurements_device_path(@device), :class => "btn btn-xs btn-success" do %>show more...<% end %>
+
+            <% end %>
