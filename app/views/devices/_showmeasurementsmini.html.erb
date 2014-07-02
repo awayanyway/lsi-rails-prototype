@@ -16,7 +16,9 @@
                 <tr>
 
                   <td>
-			        <small><% if !m.recorded_at.nil? then %><% if !m.recorded_end_at.nil? && !m.recorded_at.nil? then %>Duration: <%= (m.recorded_end_at - m.recorded_at).round(1) %> s<% end %><% else %>Ongoing...<% end %></small>
+			        <small><% if !m.recorded_at.nil? then %><% if !m.recorded_end_at.nil? && !m.recorded_at.nil? then %><%= (m.recorded_end_at - m.recorded_at).round(1) %> s<% end %><% else %>Ongoing...<% end %></small>
+
+              &nbsp;
 			      </td>
 
 			        
@@ -28,7 +30,7 @@
 
 			        <% else %>
 
-			        Import
+			        -
 
 			        <% end %>
 			      </td>
