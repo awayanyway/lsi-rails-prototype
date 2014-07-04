@@ -63,7 +63,7 @@ gem 'jquery-rails'
 
 gem "jquery-hotkeys-rails"
 
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '4.2.1'
 
 gem 'noVNC', :git => "git://github.com/davidw/noVNCgem.git"
 
