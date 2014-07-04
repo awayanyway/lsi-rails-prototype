@@ -17,19 +17,10 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
-  <div class="field">
-    <%= f.label :connectiontype %><br />
-    <%= f.select :connectiontype, options_for_select([['simulation', "simulation"], ['serial port', 'beaglebone']], @device.connectiontype ) %>
-  </div>
 
   <div class="field">
-    <%= f.label :portname %><br />
-    <%= f.text_field :portname %>
-  </div>
-
-  <div class="field">
-    <%= f.label :portbaud %><br />
-    <%= f.text_field :portbaud %>
+    <%= f.label :fwroot %><br />
+    <%= f.text_field :fwroot %>
   </div>
 
   <div class="field">

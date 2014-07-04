@@ -66,11 +66,28 @@ def assign
 
       @device.vncrelay_id = params[:vncrelay_id]
 
+
+      if (params[:beaglebone_id] == "-1") then
+
+        @device[:beaglebone_id] = nil
+
+        @device.connectiontype = "vnc"
+
+      else
+
+        @device[:beaglebone_id] = params[:beaglebone_id]
+
+        @device.connectiontype = "vnc+node"
+
+      end
+
       @device.save
 
       redirect_to device_path(@device), notice: "Device connected via VNC."
 
-    elsif (params[:simulation] == "true") then
+    elsif (params[:beaglebone_id] == "-1") then
+
+      @device[:beaglebone_id] = nil
 
       @device.connectiontype = "simulation"
 
@@ -80,7 +97,7 @@ def assign
 
     else
 
-      @device.connectiontype = "serial"
+      @device.connectiontype = "node"
         
       @device[:beaglebone_id] = params[:beaglebone_id]  
 
@@ -544,6 +561,6 @@ def assign
 
     # Only allow a trusted parameter "white list" through.
     def device_params
-      params.require(:device).permit(:name, :connectiontype, :portbaud, :portdetails, :portname, :porttype, :devicetype_id, :beaglebone_id, :lastseen, :websockifygateway, :websockifygatewayport, :vnchost, :vncport, :token, :vncpassword)
+      params.require(:device).permit(:name, :connectiontype, :portbaud, :portdetails, :portname, :porttype, :devicetype_id, :beaglebone_id, :lastseen, :websockifygateway, :websockifygatewayport, :vnchost, :vncport, :token, :vncpassword, :fwroot)
     end
 end

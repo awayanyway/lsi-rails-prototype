@@ -227,7 +227,7 @@ class MeasurementsController < ApplicationController
 
     @measurement.save
 
-    if params[:measurement][:sample_id] == -2 then
+    if params[:measurement][:sample_id] == "-2" then
 
       @sample = Sample.new(:name => params[:sample_name])
 
@@ -240,7 +240,7 @@ class MeasurementsController < ApplicationController
 
       @measurement.sample.add_dataset(@measurement.dataset, current_user)      
 
-    elsif params[:measurement][:sample_id] == -1 then
+    elsif params[:measurement][:sample_id] == "-1" then
 
       @measurement.update_attribute(:sample_id, nil)
 

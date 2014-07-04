@@ -1,3 +1,83 @@
+<%= javascript_include_tag ("/assets/dial_a_device_node/devices/"+ @device.devicetype.name) %>
+
+<%= javascript_include_tag ("/assets/dial_a_device_node/devices/"+ @device.devicetype.name + "_UI") %>
+
+<%= javascript_include_tag ("/assets/dial_a_device_node/devices/"+ @device.devicetype.name + "_SIM") %>
+
+<%= javascript_include_tag ("/assets/dial_a_device_node/consolelogger.js") %>
+<%= javascript_include_tag ("/assets/dial_a_device_node/systemstatus.js") %>
+<%= javascript_include_tag ("/assets/dial_a_device_node/webconnection.js") %>
+
+<script type="text/javascript">
+    var devicetype = "<%= @device.devicetype.name %>"
+    var operation_id = "<%= if (@operation != nil) then @operation.id end %>"
+    var device_id = "<%= @device.id %>"
+    var user_id = "<%= if (@current_user != nil) then  @current_user.id end %>"
+    var connectiontype = "<%= @device.connectiontype %>"
+    var channel_name = "channel_dev_" + device_id;
+    var run_id = "<%= if (@run != nil) then @run.id end%>"
+
+    var eventbus = new EventEmitter();
+
+    systemstatus.init (eventbus);
+
+    webconnection.init (eventbus, false);
+    
+    eventbus.emit ("device.announce.deviceid", device_id);
+    eventbus.emit ("device.announce.operationid", operation_id);
+    eventbus.emit ("device.announce.devicetype", devicetype);
+
+    eventbus.emit ("webconnection.set.url", window.location.host+"/websocket");
+    eventbus.emit ("webconnection.set.channelname", channel_name);
+
+    device.init (eventbus);
+    ui.init (eventbus);
+    if (connectiontype == "simulation") {
+      simulator.init (eventbus);
+    }
+    consolelogger.init (eventbus);
+
+
+    eventbus.emit ("webconnection.connect");
+
+    eventbus.on ("ui.status", function (model) {
+
+        if (model.devicesimulation) {
+            $("#connstatus").text ("Simulation mode");
+            $("#connstatus").removeClass ("label-success");
+            $("#connstatus").removeClass ("label-danger");
+            $("#connstatus").addClass ("label-warning");
+        } else {
+            if (model.webconnection) {     
+
+              if (model.deviceconnection) {
+
+                $("#connstatus").text ("Device Connected");
+                $("#connstatus").removeClass ("label-warning");
+                $("#connstatus").removeClass ("label-danger");
+                $("#connstatus").addClass ("label-success");
+
+              } else {
+
+                $("#connstatus").text ("Device Disconnected");
+                $("#connstatus").removeClass ("label-success");
+                $("#connstatus").removeClass ("label-warning");  
+                $("#connstatus").addClass ("label-danger");
+            
+              }
+
+            }
+            else {
+
+                $("#connstatus").text ("No Server Connection");
+                $("#connstatus").removeClass ("label-success");
+                $("#connstatus").removeClass ("label-warning");
+                $("#connstatus").addClass ("label-danger");
+            }
+        }
+    });
+</script>
+
 
 <%= include_novnc_javascript_all %>
 
@@ -62,9 +142,9 @@
             }
 
             
-            $("#connstatus").removeClass ("label-*");
+            $("#vncconnstatus").removeClass ("label-*");
             
-            $("#connstatus").addClass ("label-"+level);
+            $("#vncconnstatus").addClass ("label-"+level);
             
 
             if (typeof(msg) !== 'undefined') {
@@ -105,11 +185,13 @@
 
 $(document).ready (function () {
 
-    $("#connstatus").removeClass ("label-*");
+    $("#vncconnstatus").removeClass ("label-*");
             
-    $("#connstatus").addClass ("label-default");
+    $("#vncconnstatus").addClass ("label-default");
 
-    $("#connstatus").text ("Remote control deactivated");
+    $("#vncconnstatus").css ("display", "");
+
+    $("#vncconnstatus").text ("Remote control deactivated");
 
 });
 
