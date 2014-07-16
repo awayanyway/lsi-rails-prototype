@@ -209,7 +209,7 @@ class SamplesController < ApplicationController
 
     
     l = Library.create!
-    l.title = "Copy"
+    l.title = "Clone of "+@library.title
     l.save
 
 
@@ -224,6 +224,34 @@ class SamplesController < ApplicationController
     end
 
 
+    ProjectLibrary.new(:project_id => @project.id, :library_id => l.id, :user_id => current_user.id).save
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => l.id)
+
+  end
+
+  def new_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    @project_library = ProjectLibrary.where(["library_id = ?",  @library.id]).first
+
+    
+    l = Library.create!
+    l.title = "New"
+    l.save
+
+
+    
     ProjectLibrary.new(:project_id => @project.id, :library_id => l.id, :user_id => current_user.id).save
 
 

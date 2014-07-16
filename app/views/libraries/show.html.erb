@@ -70,7 +70,8 @@
             </ul>
         </div>
 
-        &nbsp;<%= link_to 'Create sub-library', clone_library_samples_path(:project_id => @project.id, :library_id => @library.id), :class => "btn btn-sm btn-info" %>
+        &nbsp;<%= link_to 'Clone', clone_library_samples_path(:project_id => @project.id, :library_id => @library.id), :class => "btn btn-sm btn-info" %>
+        &nbsp;<%= link_to 'Create new', new_library_samples_path(:project_id => @project.id, :library_id => @library.id), :class => "btn btn-sm btn-info" %>
 
 
 

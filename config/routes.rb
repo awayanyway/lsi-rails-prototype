@@ -57,6 +57,8 @@ LsiRailsPrototype::Application.routes.draw do
 
     get 'clone_library', on: :collection, as: :clone_library, :to => 'samples#clone_library'
 
+    get 'new_library', on: :collection, as: :new_library, :to => 'samples#new_library'
+
     get 'clone_to_library', on: :member, as: :clone_to_library, :to => 'samples#clone_to_library'
     get 'move_to_library', on: :member, as: :move_to_library, :to => 'samples#move_to_library'
   end
