@@ -18,7 +18,7 @@ class LibrariesController < ApplicationController
   def show
     authorize @project_library
 
-    @project_library_entries = ProjectLibrary.where(["project_id = ? AND library_id = ?", @project.id, @library.id]).first.library_entries.paginate(:page => params[:page])
+    @project_library_entries = @project_library.library.library_entries.paginate(:page => params[:page])
   end
 
   # GET /libraries/new
@@ -52,10 +52,14 @@ class LibrariesController < ApplicationController
   def update
     authorize @project_library
 
-    if @library.update(library_params)
-      redirect_to @library, notice: 'Library was successfully updated.'
-    else
-      render action: 'edit'
+    respond_to do |format|
+      if @library.update(library_params)
+        format.html { redirect_to @library, notice: 'Library was successfully updated.' }
+        format.json { respond_with_bip(@library) }
+      else
+        format.html { render action: "edit" }
+        format.json { respond_with_bip(@library) }
+      end
     end
   end
 

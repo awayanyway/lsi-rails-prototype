@@ -23,7 +23,7 @@ class Sample < ActiveRecord::Base
 
   before_destroy :checkout_everywhere
 
-  before_destroy :cleanup_projects
+  before_destroy :cleanup_localprojects
 
   def checkout_everywhere
 
@@ -135,9 +135,11 @@ class Sample < ActiveRecord::Base
 
     newsample = self.dup
 
+    newsample.save
+
     project.add_sample(newsample, user)
 
-    return newsample
+    newsample
 
   end
 

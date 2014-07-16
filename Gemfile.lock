@@ -18,6 +18,15 @@ GIT
     kaitatari (0.0.2.27)
 
 GIT
+  remote: git://github.com/bernat/best_in_place.git
+  revision: 52c795fefa378d999653443f07c68af2633afd0b
+  branch: rails-4
+  specs:
+    best_in_place (2.0.3)
+      jquery-rails
+      rails (~> 4)
+
+GIT
   remote: git://github.com/davidw/noVNCgem.git
   revision: 50f1826e9d1d9f37e7adfc992a12eca409c885bb
   specs:
@@ -26,15 +35,15 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: 01ccfcebd45b8de0a6846d0f33b9daf74673dcc1
+  revision: 97c5832473588b0ad33649264de991d3f7351c59
   specs:
-    simple_form (3.1.0.rc1)
+    simple_form (3.1.0.rc2)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 2063a6a8d9ad1828fdcff032b0c70fd84a8908a3
+  revision: f6007d621fe2c32385a53a3a401526239fd11b47
   branch: 4-0-stable
   specs:
     actionmailer (4.0.8)
@@ -110,10 +119,10 @@ GEM
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
-    coffee-script (2.2.0)
+    coffee-script (2.3.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.7.0)
+    coffee-script-source (1.7.1)
     daemons (1.1.9)
     delayed_job (4.0.2)
       activesupport (>= 3.0, < 4.2)
@@ -139,9 +148,9 @@ GEM
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.37.0)
+    excon (0.38.0)
     execjs (2.2.1)
-    faye-websocket (0.7.3)
+    faye-websocket (0.7.4)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.3.1)
     fog (1.22.1)
@@ -172,7 +181,7 @@ GEM
     httparty (0.13.1)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    i18n (0.6.9)
+    i18n (0.6.11)
     inflecto (0.0.2)
     ipaddress (0.8.0)
     jquery-hotkeys-rails (0.7.9.1)
@@ -248,7 +257,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
-    tzinfo (0.3.39)
+    tzinfo (0.3.40)
     uglifier (2.5.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
@@ -258,7 +267,7 @@ GEM
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
-    websocket-driver (0.3.3)
+    websocket-driver (0.3.4)
     websocket-rails (0.7.0)
       em-synchrony
       faye-websocket
@@ -269,7 +278,7 @@ GEM
       redis-objects
       thin
     will_paginate (3.0.7)
-    will_paginate-bootstrap (1.0.0)
+    will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
 
 PLATFORMS
@@ -279,6 +288,7 @@ DEPENDENCIES
   actionmailer
   acts_as_list
   arel (~> 4.0.0)
+  best_in_place!
   bootstrap-sass (~> 3.2.0.0)
   bootstrap-wysiwyg-rails
   carrierwave

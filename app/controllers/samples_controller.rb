@@ -2,11 +2,11 @@ class SamplesController < ApplicationController
 
   before_filter :authenticate_user!, except: [:index, :show]
 
-  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :addliterature, :zip]
+  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library]
 
   before_action :set_project
 
-  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :addliterature, :zip]
+  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library]
 
   before_action :set_empty_project_sample, only: [:createdirect, :create, :new, :assign_do]
 
@@ -27,6 +27,22 @@ class SamplesController < ApplicationController
 
     end
 
+
+  end
+
+  def update
+
+    authorize @project_sample, :edit?
+
+    respond_to do |format|
+      if @sample.update_attributes(params[:sample])
+        format.html { redirect_to @sample, notice: 'Sample was successfully updated.' }
+        format.json { respond_with_bip(@sample) }
+      else
+        format.html { render action: "edit" }
+        format.json { respond_with_bip(@sample) }
+      end
+    end
 
   end
 
@@ -110,13 +126,108 @@ class SamplesController < ApplicationController
 
   def index
 
-    @library = @project.rootlibrary
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
 
     @project_library = ProjectLibrary.where(["library_id = ?",  @library.id]).first
 
     @project_library_entries = @project_library.library.library_entries.paginate(:page => params[:page])
 
     render 'libraries/show', :id => @library.id
+
+  end
+
+  def move_to_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    targetlibrary = Library.find(params[:targetlibrary_id])
+
+
+    le = LibraryEntry.where(["library_id = ? and sample_id = ?", @library.id, @sample.id]).first
+
+    if !le.nil? then le.destroy end
+
+    targetlibrary.add_sample(@sample, current_user) unless targetlibrary.sample_exists?(@sample)
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => targetlibrary.id)
+
+  end
+
+  def clone_to_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    targetlibrary = Library.find(params[:targetlibrary_id])
+
+    newsample = @sample.transfer_to_project(@project, current_user)
+
+    targetlibrary.add_sample(newsample, current_user) unless targetlibrary.sample_exists?(newsample)
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => targetlibrary.id)
+
+  end
+
+  def clone_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    @project_library = ProjectLibrary.where(["library_id = ?",  @library.id]).first
+
+    
+    l = Library.create!
+    l.title = "Copy"
+    l.save
+
+
+    @library.library_entries.each do |le|
+
+      sample = Sample.find(le.sample_id)
+
+      newsample = sample.transfer_to_project(@project, current_user)
+
+      l.add_sample(newsample, current_user) unless l.sample_exists?(newsample)
+
+    end
+
+
+    ProjectLibrary.new(:project_id => @project.id, :library_id => l.id, :user_id => current_user.id).save
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => l.id)
 
   end
 

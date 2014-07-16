@@ -54,6 +54,11 @@ LsiRailsPrototype::Application.routes.draw do
     get 'transfer', on: :member
 
     get 'addliterature', on: :member, as: :add_literature_to, :to => 'samples#addliterature'
+
+    get 'clone_library', on: :collection, as: :clone_library, :to => 'samples#clone_library'
+
+    get 'clone_to_library', on: :member, as: :clone_to_library, :to => 'samples#clone_to_library'
+    get 'move_to_library', on: :member, as: :move_to_library, :to => 'samples#move_to_library'
   end
 
   resources :locations
@@ -62,6 +67,8 @@ LsiRailsPrototype::Application.routes.draw do
     get 'showvnc', on: :member
     get 'showmeasurements', on: :member
     get 'showmeasurementsmini', on: :member
+
+    get 'listmeasurements', on: :member
 
     get 'connect', on: :member
     post 'connectit', on: :member, as: :connect_do

@@ -1,8 +1,8 @@
 class DevicesController < ApplicationController
 
-  before_filter :authenticate_user!, except: [:showcase, :showcaseindex]
+  before_filter :authenticate_user!, except: [:showcase, :showcaseindex, :listmeasurements]
 
-  before_action :set_device, only: [:assign, :assign_do, :show, :showmeasurements, :edit, :update, :destroy, :stoprun, :startrun, :control, :share, :invite, :checkin, :checkinselect, :checkout, :connect, :connectit, :loadmeasurement, :unloadmeasurement]
+  before_action :set_device, only: [:assign, :assign_do, :show, :showmeasurements, :edit, :update, :destroy, :stoprun, :startrun, :control, :share, :invite, :checkin, :checkinselect, :checkout, :connect, :connectit, :loadmeasurement, :unloadmeasurement, :listmeasurements]
 
   # GET /devices
   # GET /devices.json
@@ -19,6 +19,15 @@ class DevicesController < ApplicationController
   def control
     authorize @device, :control?
   end
+
+
+  def listmeasurements
+
+    measurements = Measurement.where(["device_id = ?", @device.id])
+
+    render json: measurements, :include => {:dataset => {:include => {:attachments => {:only => :as_mini_json, :methods => [:as_mini_json]}}}}
+  end
+
 
 def assign
 
@@ -399,7 +408,7 @@ def assign
 
     respond_to do |format|
       format.html { render action: "showmeasurementsmini", notice: "" }
-      format.json { render json: @device }
+      format.json { render json: @measurements }
     end
   end
 

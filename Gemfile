@@ -65,6 +65,8 @@ gem "jquery-hotkeys-rails"
 
 gem 'jquery-ui-rails', '4.2.1'
 
+gem "best_in_place", github: 'bernat/best_in_place', branch: "rails-4"
+
 gem 'noVNC', :git => "git://github.com/davidw/noVNCgem.git"
 
 # gem 'audited-activerecord' # rails 4 compatibility

@@ -37,6 +37,7 @@ class Library < ActiveRecord::Base
     le.sample_id = sample.id
     le.library_id = self.id
     le.save
+    
 
   end
 
@@ -48,4 +49,11 @@ class Library < ActiveRecord::Base
     # add sample_id to each dataset from each molecule
 
   end
+
+
+  def clone(project_id, user_id)
+
+    
+  end
+
 end

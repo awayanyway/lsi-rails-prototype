@@ -92,7 +92,7 @@
 
 
 <h1>
-  <span class="glyphicon glyphicon-glass" /><%=  sample.longname %>&nbsp;<%= link_to "/samples/"+sample.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %>
+  <span class="glyphicon glyphicon-glass" /><% if policy(sample).edit? then %><small><%= if !sample.breadcrumbs.empty? then sample.breadcrumbs + "/" end %></small><%= best_in_place sample, :name, :type => :input %><% else %><%=  sample.longname %><% end %>&nbsp;<%= link_to "/samples/"+sample.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %>
 </h1>
 
 <% if !sample.target_amount.nil? && !sample.unit.nil? && !sample.weight.nil? then %>
