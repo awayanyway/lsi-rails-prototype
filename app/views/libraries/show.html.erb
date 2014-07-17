@@ -148,9 +148,14 @@
 
       </td>
 
+      <td>
+
+      </td>
+
     <td><%= link_to split_sample_path(sample, :project_id => @project.id), :class => "btn btn-xs btn-default" do %><span class="glyphicon glyphicon-tint"> Split</span><% end %><br/>
       <!-- <%= link_to transfer_sample_path(sample, :project_id => @project.id), :class => "btn btn-xs btn-default" do %><span class="glyphicon glyphicon-send"> Transfer</span><% end %></td> -->
 
+<%= link_to remove_from_library_sample_path(sample, :project_id => @project.id, :library_id => @library.id), :class => "btn btn-xs btn-warning" do %><span class="glyphicon glyphicon-remove"> Delete</span><% end %>
 
 
     <% if le.molecule_id.nil? then link = "#" else link = molecule end %>

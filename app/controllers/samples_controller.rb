@@ -2,11 +2,11 @@ class SamplesController < ApplicationController
 
   before_filter :authenticate_user!, except: [:index, :show]
 
-  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library]
+  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
 
   before_action :set_project
 
-  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library]
+  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
 
   before_action :set_empty_project_sample, only: [:createdirect, :create, :new, :assign_do]
 
@@ -144,6 +144,24 @@ class SamplesController < ApplicationController
 
   end
 
+  def remove_from_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    @sample.remove_from_library(@library)
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => @library.id)
+
+  end
+
   def move_to_library
 
     if Library.exists?(params[:library_id]) then
@@ -185,6 +203,8 @@ class SamplesController < ApplicationController
     targetlibrary = Library.find(params[:targetlibrary_id])
 
     newsample = @sample.transfer_to_project(@project, current_user)
+
+    newsample.update_attribute(:name, "Clone of "+newsample.name)
 
     targetlibrary.add_sample(newsample, current_user) unless targetlibrary.sample_exists?(newsample)
 

@@ -267,6 +267,17 @@ class Sample < ActiveRecord::Base
 
   end
 
+  def remove_from_library(library)
+
+    ProjectLibrary.where(["library_id = ?", library.id]).each do |pl|
+
+      pl.library.library_entries.where(["sample_id = ?", self.id]).destroy_all
+
+      pl.project.remove_sample_only(self)
+    end
+
+  end
+
   def remove_from_project(project)
 
     project.remove_sample_only(self)
