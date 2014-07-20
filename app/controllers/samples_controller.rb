@@ -206,6 +206,8 @@ class SamplesController < ApplicationController
 
     newsample.update_attribute(:name, "Clone of "+newsample.name)
 
+    @sample.molecule.samples << newsample
+
     targetlibrary.add_sample(newsample, current_user) unless targetlibrary.sample_exists?(newsample)
 
 
@@ -238,6 +240,8 @@ class SamplesController < ApplicationController
       sample = Sample.find(le.sample_id)
 
       newsample = sample.transfer_to_project(@project, current_user)
+
+      sample.molecule.samples << newsample
 
       l.add_sample(newsample, current_user) unless l.sample_exists?(newsample)
 
