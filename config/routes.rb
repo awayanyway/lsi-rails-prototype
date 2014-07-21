@@ -173,6 +173,8 @@ LsiRailsPrototype::Application.routes.draw do
 
   resources :projects do
     get 'adduser/:user_id', :to => 'projects#adduser', :on => :member
+    get 'removeuser/:user_id', :to => 'projects#removeuser', :on => :member, :as => :removeuser
+
     get 'adduser', :to => 'projects#adduser', :on => :member
     get 'invite', :to => 'projects#invite', :on => :member
 

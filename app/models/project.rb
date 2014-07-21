@@ -16,7 +16,7 @@ class Project < ActiveRecord::Base
   end
 
   def members
-  	User.joins(:project_memberships).where(["role_id = ? and project_id = ?", 88, id])
+  	User.joins(:project_memberships).where(["role_id >= ? and project_id = ?", 88, id])
   end
 
   def owner

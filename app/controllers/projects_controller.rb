@@ -37,17 +37,48 @@ class ProjectsController < ApplicationController
 
     end
 
+    if (!params[:role_id].nil?) then
+
+      role_id = params[:role_id]
+
+    else
+
+      role_id = 88
+
+    end
+
 
     pm = ProjectMembership.new
     pm.user = additionaluser
     pm.project = @project
     
-    pm.role_id = 88
+    pm.role_id = role_id
     pm.save
 
     respond_to do |format|
       
         format.html { redirect_to projects_path, notice: 'User was successfully added to the Project.' }
+        format.json { head :no_content }
+      
+    end
+
+  end
+
+  def removeuser
+    @project = Project.find(params[:id])
+
+    authorize @project
+
+    if params[:user_id] != current_user.id then
+
+      ProjectMembership.where(["user_id = ?", Integer(params[:user_id])]).first.destroy
+
+    end
+    
+
+    respond_to do |format|
+      
+        format.html { redirect_to projects_path, notice: 'User was successfully removed from the Project.' }
         format.json { head :no_content }
       
     end
