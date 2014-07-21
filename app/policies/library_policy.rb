@@ -21,19 +21,31 @@ class LibraryPolicy < Struct.new(:user, :library)
   end
 
   def assign?
-    user.libraryowner_of?(library)
+    result = false
+    if !user.nil? && user.libraryowner_of?(library) then result = true end
+
+    result
   end
 
   def edit?
-    user.libraryowner_of?(library)
+    result = false
+    if !user.nil? && user.libraryowner_of?(library) then result = true end
+
+    result
   end
 
   def update?
-    user.libraryowner_of?(library)
+    result = false
+    if !user.nil? && user.libraryowner_of?(library) then result = true end
+
+    result
   end
 
   def destroy?
-    user.libraryowner_of?(library)
+    result = false
+    if !user.nil? && user.libraryowner_of?(library) then result = true end
+
+    result
   end
 
 end
