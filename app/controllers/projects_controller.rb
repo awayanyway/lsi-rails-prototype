@@ -69,9 +69,9 @@ class ProjectsController < ApplicationController
 
     authorize @project
 
-    if params[:user_id] != current_user.id then
+    if params[:user_id].to_s != current_user.id.to_s then
 
-      ProjectMembership.where(["user_id = ?", Integer(params[:user_id])]).first.destroy
+      ProjectMembership.where(["user_id = ?", params[:user_id]]).first.destroy
 
     end
     
