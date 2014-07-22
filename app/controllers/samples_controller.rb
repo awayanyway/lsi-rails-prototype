@@ -2,11 +2,11 @@ class SamplesController < ApplicationController
 
   before_filter :authenticate_user!, except: [:index, :show]
 
-  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
+  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :clone_transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
 
   before_action :set_project
 
-  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
+  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :clone_transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
 
   before_action :set_empty_project_sample, only: [:createdirect, :create, :new, :assign_do]
 
@@ -101,6 +101,32 @@ class SamplesController < ApplicationController
 
     end
 
+    if !@sample.molecule.nil? then
+      @sample.molecule.samples << newsample
+    end
+
+
+  end
+
+
+  def clone_transfer
+
+    targetproject = Project.find(params[:targetproject_id])
+
+    newsample = @sample.transfer_to_project(targetproject, current_user)
+
+    @sample.datasets.each do |ds|
+
+      newdataset = ds.transfer_to_sample(newsample, current_user)
+      ds.transfer_attachments_to_dataset(newdataset)
+
+    end
+
+    if !@sample.molecule.nil? then
+      @sample.molecule.samples << newsample
+    end
+
+    redirect_to samples_path(:project_id => targetproject.id), notice: "Sample was transferred."
 
   end
 

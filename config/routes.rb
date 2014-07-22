@@ -53,6 +53,8 @@ LsiRailsPrototype::Application.routes.draw do
     get 'split', on: :member
     get 'transfer', on: :member
 
+    get 'clone_transfer', on: :member
+
     get 'addliterature', on: :member, as: :add_literature_to, :to => 'samples#addliterature'
 
     get 'clone_library', on: :collection, as: :clone_library, :to => 'samples#clone_library'

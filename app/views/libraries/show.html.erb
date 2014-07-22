@@ -146,6 +146,20 @@
             </ul>
         </div>
 
+
+        <div class="btn-group">
+            <button data-toggle="dropdown" class="btn btn-xs btn-default dropdown-toggle">Transfer to...<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+
+                <% current_user.projects.each do |p| %>
+
+                <li><a href="/samples/<%= sample.id.to_s %>/clone_transfer?targetproject_id=<%= p.id.to_s %>"><%= p.title %></a></li>
+
+              <% end %>
+
+            </ul>
+        </div>
+
       </td>
 
       <td>
