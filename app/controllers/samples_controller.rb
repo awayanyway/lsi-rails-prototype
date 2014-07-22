@@ -204,9 +204,20 @@ class SamplesController < ApplicationController
 
     newsample = @sample.transfer_to_project(@project, current_user)
 
-    newsample.update_attribute(:name, "Clone of "+newsample.name)
+    newsample.update_attribute(:name, "Clone of "+@sample.name)
 
-    @sample.molecule.samples << newsample
+    if !@sample.molecule.nil? then
+      @sample.molecule.samples << newsample
+    end
+
+
+    @sample.datasets.each do |ds|
+
+      newdataset = ds.transfer_to_sample(newsample, current_user)
+      ds.transfer_attachments_to_dataset(newdataset)
+
+    end
+
 
     targetlibrary.add_sample(newsample, current_user) unless targetlibrary.sample_exists?(newsample)
 
