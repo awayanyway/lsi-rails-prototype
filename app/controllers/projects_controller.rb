@@ -71,7 +71,7 @@ class ProjectsController < ApplicationController
 
     if params[:user_id].to_s != current_user.id.to_s then
 
-      ProjectMembership.where(["user_id = ?", params[:user_id]]).first.destroy
+      ProjectMembership.where(["user_id = ? and project_id = ?", params[:user_id], @project.id]).destroy_all
 
     end
     
