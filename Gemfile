@@ -106,6 +106,8 @@ gem 'unf'
 
 gem 'fog'
 
+gem 'tzinfo'
+
 gem 'mini_magick'
 
 gem 'carrierwave_direct'
