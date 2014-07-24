@@ -95,6 +95,12 @@
   <span class="glyphicon glyphicon-glass" /><% if policy(sample).edit? then %><small><%= if !sample.breadcrumbs.empty? then sample.breadcrumbs + "/" end %></small><%= best_in_place sample, :name, :type => :input %><% else %><%=  sample.longname %><% end %>&nbsp;<%= link_to "/samples/"+sample.id.to_s+"/zip?project_id="+@project.id.to_s, :class => "btn btn-info" do %><span class="glyphicon glyphicon-compressed"></span>Download as ZIP<% end %>
 </h1>
 
+<% if !sample.ancestor.nil? then %>
+
+Ancestor: <%= sample.ancestor.longname %>
+
+<% end %>
+
 <% if !sample.target_amount.nil? && !sample.unit.nil? && !sample.weight.nil? then %>
 <h3><%= sample.target_amount.to_s+" "+sample.unit %>  <small> (<%= sample.weight.to_s+" "+sample.unit %>) </small></h3>
 <% end %>

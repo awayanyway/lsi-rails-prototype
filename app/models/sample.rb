@@ -8,6 +8,8 @@ class Sample < ActiveRecord::Base
 
   belongs_to :molecule, :autosave => true, inverse_of: :samples
 
+  belongs_to :ancestor, :class_name => Sample
+
   belongs_to :originsample, :class_name => Sample, :foreign_key => :originsample_id
 
   accepts_nested_attributes_for :molecule 
@@ -136,7 +138,7 @@ class Sample < ActiveRecord::Base
     newsample = self.dup
 
     newsample.ancestor_id = self.id
-    
+
     newsample.save
 
     project.add_sample(newsample, user)
