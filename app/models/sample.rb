@@ -135,6 +135,8 @@ class Sample < ActiveRecord::Base
 
     newsample = self.dup
 
+    newsample.ancestor_id = self.id
+    
     newsample.save
 
     project.add_sample(newsample, user)

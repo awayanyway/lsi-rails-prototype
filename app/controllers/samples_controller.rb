@@ -137,6 +137,7 @@ class SamplesController < ApplicationController
     s.target_amount = "0"
     s.unit = "mg"
     s.originsample_id = @sample.id
+    s.ancestor_id = self.id
     s.save
 
     @sample.molecule.samples << s
