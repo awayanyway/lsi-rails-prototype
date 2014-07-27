@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: d4f68e696d83607a5596b0fcecdbc0e86aaa236a
+  revision: 0629bf9f8638cd6e7e2c0c9aaecda3b43ea05053
   specs:
-    dial_a_device_node (0.0.109)
+    dial_a_device_node (0.0.110)
 
 GIT
   remote: git://github.com/awayanyway/kaitatari.git
@@ -173,7 +173,7 @@ GEM
       net-ssh (>= 2.1.3)
     fog-json (1.0.0)
       multi_json (~> 1.0)
-    fog-softlayer (0.3.10)
+    fog-softlayer (0.3.11)
       fog-core
       fog-json
     foreman (0.63.0)
