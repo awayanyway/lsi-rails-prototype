@@ -45,9 +45,9 @@ else
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 7)) then
-	Devicetype.create :deviceclass_id => 7, :showcase => false, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "03", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355"
+	Devicetype.create :deviceclass_id => 7, :showcase => false, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "knfsimdos", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355"
 else
-	Devicetype.where(["deviceclass_id = ?", 7]).first.update_attributes(:showcase => false, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "03", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355")
+	Devicetype.where(["deviceclass_id = ?", 7]).first.update_attributes(:showcase => false, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "knfsimdos", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355")
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 8)) then
