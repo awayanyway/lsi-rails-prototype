@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: 0629bf9f8638cd6e7e2c0c9aaecda3b43ea05053
+  revision: 0eb2d9b1172a99e073c4a7d334a4f833c7e46d6a
   specs:
-    dial_a_device_node (0.0.110)
+    dial_a_device_node (0.0.111)
 
 GIT
   remote: git://github.com/awayanyway/kaitatari.git
