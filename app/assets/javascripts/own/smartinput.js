@@ -34,11 +34,15 @@ function smartinput (div_id, callbackfn, caption) {
 
         function submitchangeval (val) {
 
-            currentval = parseInt(smartinputfield.value);
+            if (val != 0) {
 
-            newval = currentval + val;
+                currentval = parseInt(smartinputfield.value);
 
-            smartinputfield.value = newval;
+                newval = currentval + val;
+
+                smartinputfield.value = newval;
+
+            }
 
             clearTimeout(waitaftertypingTimer);
 
@@ -57,6 +61,7 @@ function smartinput (div_id, callbackfn, caption) {
         }
 
         $('#'+smartinputfield_id).keyup(function(){
+
 
             submitchangeval(0);
 
