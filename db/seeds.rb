@@ -61,3 +61,9 @@ if (!Devicetype.exists?(:deviceclass_id => 9)) then
 else
 	Devicetype.where(["deviceclass_id = ?", 9]).first.update_attributes(:showcase => true, :name => "ika_ret_control", :displayname => "IKA RET control", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "odd", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A")
 end
+
+if (!Devicetype.exists?(:deviceclass_id => 10)) then
+	Devicetype.create :deviceclass_id => 10, :showcase => true, :name => "pce_balance", :displayname => "PCE Balance", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A"
+else
+	Devicetype.where(["deviceclass_id = ?", 10]).first.update_attributes(:showcase => true, :name => "pce_balance", :displayname => "PCE Balance", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A")
+end
