@@ -28,6 +28,7 @@
 //= require ./external/processing-1.3.6.min.js
 //= require ./external/raphael-min.js
 //= require ./external/typeahead.js
+//= require ./own/smartinput.js
 
 $(document).ready(function() {
   /* Activating Best In Place */

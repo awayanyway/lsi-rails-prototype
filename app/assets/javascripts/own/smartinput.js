@@ -76,6 +76,11 @@ function smartinput (div_id, callbackfn, caption) {
             $("#"+smartinputfield_id).addClass ("dontupdate");
         });
 
+        $("#"+smartinputfield_id).focusin(function() {
+
+            $("#"+smartinputfield_id).addClass ("dontupdate");
+        });
+
         document.getElementById(smartinputfield_id).onblur = function() {
 
           clearTimeout(waitaftertypingTimer);
