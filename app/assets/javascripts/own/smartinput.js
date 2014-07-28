@@ -34,11 +34,13 @@ function smartinput (div_id, callbackfn, caption) {
 
         function submitchangeval (val) {
 
+            
+
+            currentval = parseInt(smartinputfield.value);
+
+            newval = currentval + val;
+
             if (val != 0) {
-
-                currentval = parseInt(smartinputfield.value);
-
-                newval = currentval + val;
 
                 smartinputfield.value = newval;
 
