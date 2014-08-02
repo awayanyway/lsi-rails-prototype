@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: f353d3fbdf0a57f9434deb9cbdef8706afc36a85
+  revision: 9faac4b71705b9d509ad894bbc950594bb251a9c
   specs:
-    dial_a_device_node (0.0.127)
+    dial_a_device_node (0.0.128)
 
 GIT
   remote: git://github.com/awayanyway/kaitatari.git
@@ -148,7 +148,7 @@ GEM
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.38.0)
+    excon (0.39.0)
     execjs (2.2.1)
     faye-websocket (0.7.4)
       eventmachine (>= 0.12.0)
