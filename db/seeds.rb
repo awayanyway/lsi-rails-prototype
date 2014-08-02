@@ -69,7 +69,7 @@ else
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 11)) then
-	Devicetype.create :deviceclass_id => 11, :showcase => false, :name => "knf_rc900", :displayname => "KNF RC900", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "57600", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D"
+	Devicetype.create :deviceclass_id => 11, :showcase => true, :name => "knf_rc900", :displayname => "KNF RC900", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "57600", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D"
 else
-	Devicetype.where(["deviceclass_id = ?", 11]).first.update_attributes(:showcase => false, :name => "knf_rc900", :displayname => "KNF RC900", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "57600", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D")
+	Devicetype.where(["deviceclass_id = ?", 11]).first.update_attributes(:showcase => true, :name => "knf_rc900", :displayname => "KNF RC900", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "57600", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D")
 end
