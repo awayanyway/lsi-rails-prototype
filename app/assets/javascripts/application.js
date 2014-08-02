@@ -15,6 +15,7 @@
 //= require jquery.ui.all
 //= require_directory .
 //= require bootstrap
+//= require bootstrap-sprockets
 //= require cocoon
 //= require bootstrap-wysiwyg
 //= require websocket_rails/main
