@@ -189,31 +189,54 @@ class DatasetsController < ApplicationController
       block ||= (params[:block] && params[:block].to_i) || 0
       page  ||= (params[:page]  && params[:page].to_i)  || 0
       limit ||= (params[:limit] && params[:limit].to_i) || 2048
-     if kumara.is_a?(Switchies::Kumara)
+     ref=params[:ref]
+     if ref.nil?
+     ref={:'1' => [block,page]}
+     end
+     ret=Array.new
+     if ref.is_a?(Hash) # && ref=JSON.parse(params[:ref])
+     select=Array.new
+     ref.each{|k,e| select << (e.is_a?(Array) && e.map{|el| el.to_i}) || nil  }
+     puts ">>>>>>> ref="+ref.inspect
      else
-     kumara=Switchies::Kumara.blank 
+     puts "<<<<<<<> ref="+ref.inspect       
      end
+     select.each{|s| 
+         block = s[0] || block
+         page  = s[1] || page 
+         if kumara.is_a?(Switchies::Kumara)
+         else
+         kumara=Switchies::Kumara.blank 
+         end
+         k= (kumara.xy && kumara.xy[block] && kumara.xy[block][page]) || [[0,0],[0,0]] 
+         if params[:r0] && params[:r1]
+            r0=params[:r0].to_f
+            r1=params[:r1].to_f  
+            
+            step=( k[-1][0] - k[0][0] )/(k.size - 1)
+            r0= ( (r0 - k[0][0]) / step).to_i
+            r1= ( (r1 - k[0][0]) / step).to_i 
+            r0,r1=r1,r0  if r0 > r1
+            r0 -= 1 if r0>0
+            r1 += 1  
+         else r0,r1=0,-1 
+           
+         end
+         r     ||= params[:r]    || r0..r1
+         hh=Hash.new
+         hh[:data]= k.trim_point(r,limit)
+         if kumara.CLASS[block] == 'PEAKTABLE'
+           hh[:bars]= { :show => true, :barWidth => 0.1}
+         else
+           hh[:line]= {:show =>true}
+         end
+         ret << hh
+         #puts "munch it with <r0..r1:#{r0}..#{r1}> <r:#{r}> <block:#{block}> <page:#{page}> <limit:#{limit}>"
+         #@plotdx=kumara.chip_it(r,block,page,limit)
+     }
     
-     if params[:r0] && params[:r1]
-        r0=params[:r0].to_f
-        r1=params[:r1].to_f  
-        k= (kumara.xy && kumara.xy[block] && kumara.xy[block][page]) || [[0,0],[0,0]] 
-        step=( k[-1][0] - k[0][0] )/(k.size - 1)
-        r0= ( (r0 - k[0][0]) / step).to_i
-        r1= ( (r1 - k[0][0]) / step).to_i 
-        r0,r1=r1,r0  if r0 > r1
-        r0 -= 1 if r0>0
-        r1 += 1  
-     else r0,r1=0,-1 
-     end
-     r     ||= params[:r]    || r0..r1
-    
-     puts "munch it with <r0..r1:#{r0}..#{r1}> <r:#{r}> <block:#{block}> <page:#{page}> <limit:#{limit}>"
-      @plotdx=kumara.chip_it(r,block,page,limit)
-  
      
-     
-     render :json => (k && [k.trim_point(r,limit)]) || nil
+     render :json =>  ret   #(k && [k.trim_point(r,limit)]) || nil
      #render :json => @plotdx || nil
    
 end
@@ -232,8 +255,9 @@ end
        
       if !@kumara
         @kumara=Switchies::Kumara.blank
-      end         
-       @plotdx=@kumara.chip_it   
+      end 
+      @selectS = @kumara.selection_header #{:title => @kumara.TITLE, :page => }        
+      @plotdx=@kumara.chip_it   
     respond_to do |format|
       format.html { render partial: 'plotting' , locals: {dataset: @dataset} }
       #format.html { render action: "plot" }

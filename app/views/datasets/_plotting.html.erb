@@ -9,6 +9,7 @@
 
 var cont,cont2, data, opt,chipit; 
 cont  =   document.getElementById("spectrum");
+//cont = $("#spectrum");
 cont2 =  document.getElementById("fullspectrum");
 data =  <%= @plotdx.xy %>;
 opt = {
@@ -25,18 +26,15 @@ opt = {
         spreadsheetJdx: { 
                           show: true,
                           tickFormatter: function(e) {return e + '';},
-                          ldrS: {'Headers' : <%= @plotdx.ldr.to_json.html_safe %> }//{'Headers' : {'TITLE': 'notitle','OWNER': 'nobody'},}         
-                              },
-        // spreadsheetJdx: {ldrSeries: {'Headers' : {'TITLE': 'notitle','OWNER': 'nobody'},
-                                     // 'Sample info' : {},
-                                     // 'Spectral parameters' :  {'NPOINTS': '1024','SYMBOL': 'X,N'},
-                                     // 'Specific parameters' :  {}, 
-                                   // },
-                     //   },     
+                          ldrall: {'Headers' : <%= @kumara.ldr.to_json.html_safe %> },
+                          ldrS: {'Headers' : <%= @plotdx.ldr.to_json.html_safe %> },  
+                          selectS: <%= @selectS.to_json.html_safe %> ,  
+                         }, 
        };
 chipit = {datasetid: <%= @dataset.id%>,
           page: 0,
           block: 0,
+          graphclass: '<%= @plotdx.CLASS[0] %>'
           }     ;
      
 

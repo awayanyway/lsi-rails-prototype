@@ -6638,7 +6638,7 @@ Flotr.addPlugin('selection', {
     this.selection.selecting = true;
 
     if (this.multitouches) {
-      this.selection.setSelectionPos(this.selection.selection.first,  this.getEventPosition(this.multitouches[0]));
+      this.selection.setSelectionPos(this.selection.selection.first,   this.getEventPosition(this.multitouches[0]));
       this.selection.setSelectionPos(this.selection.selection.second,  this.getEventPosition(this.multitouches[1]));
     } else
     if (this.options.selection.pinchOnly) {
@@ -7435,6 +7435,7 @@ Flotr.addPlugin('spreadsheetJdx', {
 	    tabGraphLabel: 'Graph',
 	    tabLabelDataRecord: 'ldr',
 	    tabDataLabel: 'Data',
+	    tabSelectData: 'Select',
 	    toolbarDownload: 'Download CSV', // @todo: add better language support
 	    toolbarSelectAll: 'Select all',
 	    csvFileSeparator: ',',
@@ -7442,9 +7443,10 @@ Flotr.addPlugin('spreadsheetJdx', {
 	    tickFormatter: null,
 	    initialTab: 'graph',
 	  
-	  ldrSeries:{'headers': {'TITLE': 'notitle','OWNER': 'nobody'},
+	    ldrSeries:{'Headers': {'TITLE': 'notitle','OWNER': 'nobody'},
                   //'Spectral parameter': {'NPOINTS': 2048,'SYMBOL': 'X,N'},
-	                                      }//this.options.title
+	                                      },//this.options.title
+	    selectSeries:{'Title':['title0', 'title1'],'page': [0,1]},
 	  },
 	  /**
 	   * Builds the tabs in the DOM
@@ -7461,11 +7463,13 @@ Flotr.addPlugin('spreadsheetJdx', {
 	        graph     = D.node('<div style="float:left" class="flotr-tab selected">'+this.options.spreadsheetJdx.tabGraphLabel+'</div>'),
 	        data      = D.node('<div style="float:left" class="flotr-tab">'+this.options.spreadsheetJdx.tabDataLabel+'</div>'),
 	        ldr       = D.node('<div style="float:left" class="flotr-tab">'+this.options.spreadsheetJdx.tabLabelDataRecord+'</div>'),
+	        select    = D.node('<div style="float:left" class="flotr-tab">'+this.options.spreadsheetJdx.tabSelectData+'</div>'),
 	        offset;
 
 	      ss.tabsContainer = container;
-	      ss.tabs = { graph : graph, ldr : ldr ,data : data };
-
+	      ss.tabs = { select: select, graph : graph, ldr : ldr ,data : data };
+          
+	      D.insert(container, select);
 	      D.insert(container, graph);
 	      D.insert(container, ldr);
 	      D.insert(container, data);
@@ -7477,12 +7481,13 @@ Flotr.addPlugin('spreadsheetJdx', {
 	      D.setStyles(container, {top: this.canvasHeight-offset+'px'});
 
 	      this.
-	        observe(graph, 'click',  function(){ss.showTab('graph');}).
-	        observe(ldr,   'click',  function(){ss.showTab('ldr');}).
-	        observe(data,  'click',  function(){ss.showTab('data');});
-	      if (this.options.spreadsheetJdx.initialTab !== 'graph'){
-	        ss.showTab(this.options.spreadsheetJdx.initialTab);
-	      }
+	        observe(select, 'click',  function(){ss.showTab('select');}).
+	        observe(graph,  'click',  function(){ss.showTab('graph' );}).
+	        observe(ldr,    'click',  function(){ss.showTab('ldr'   );}).
+	        observe(data,   'click',  function(){ss.showTab('data'  );});
+	        if (this.options.spreadsheetJdx.initialTab !== 'graph'){
+	            ss.showTab(this.options.spreadsheetJdx.initialTab);
+	        } //else {ss.showTab('graph');}
 	    }
 	  },
 	  /**
@@ -7607,7 +7612,7 @@ Flotr.addPlugin('spreadsheetJdx', {
 	        container = D.node('<div class="flotr-datagrid-container" style="position:absolute;left:0px;top:0px;width:'+
 	          this.canvasWidth+'px;height:'+containerHeight+'px;overflow:auto;z-index:10"></div>');
 
-	    D.insert(container, toolbar);
+	  //  D.insert(container, toolbar);
 	    D.insert(container, t);
 	    D.insert(this.el, container);
 	    this.spreadsheetJdx.datagrid = t;
@@ -7653,6 +7658,8 @@ Flotr.addPlugin('spreadsheetJdx', {
 		    this.seriesldr = rows;
 		    return this.seriesldr;
 		  },
+		  
+      
 	  
 	  constructLdrGrid: function(){
 		    // If the data grid has already been built, nothing to do here
@@ -7660,17 +7667,15 @@ Flotr.addPlugin('spreadsheetJdx', {
 		   
 		  var  colgroup = ['<colgroup><col />'],
 	        buttonDownload, buttonSelect, t;
-		  
-		//  if (!this.spreadsheetJdx.ldrgrid){
-		    var s = this.options.spreadsheetJdx.ldrSeries,   
-		        ldrgrid = this.spreadsheetJdx.loadldrGrid();
-//		        colgroup = ['<colgroup><col />'],
-//		        buttonDownload, buttonSelect, t;
+		 
+		  var s = this.options.spreadsheetJdx.ldrSeries,   
+		      ldrgrid = this.spreadsheetJdx.loadldrGrid();
+
 		    
 		    // First row : series' labels
-		    var html = ['<table class="flotr-datagrid"><tr class="first-row">'];
+		   var html = ['<table class="flotr-datagrid"><tr class="first-row">'];
 		   // html.push('<th>&nbsp;</th>');
-		  //  _.keys(s, function(serie){
+		   //  _.keys(s, function(serie){
 		    _.each(s,function(val,key){
 		      html.push('<th scope="col">'+(key || String.fromCharCode(65+i))+'</th>');
 		      html.push('<th scope="col">'+(key || String.fromCharCode(65+i))+'</th>');
@@ -7679,7 +7684,6 @@ Flotr.addPlugin('spreadsheetJdx', {
 		  //  });
 		    html.push('</tr>');
 		    // Data rows
-
 		    _.each(ldrgrid, function(row){
 			      html.push('<tr>');
 			      _.times(row.length, function(i){
@@ -7722,7 +7726,7 @@ Flotr.addPlugin('spreadsheetJdx', {
 		        container = D.node('<div class="flotr-datagrid-container" style="position:absolute;left:0px;top:0px;width:'+
 		          this.canvasWidth+'px;height:'+containerHeight+'px;overflow:auto;z-index:10"></div>');
 
-		    D.insert(container, toolbar);
+		  //  D.insert(container, toolbar);
 		    D.insert(container, t);
 		    D.insert(this.el, container);
 		    this.spreadsheetJdx.ldrgrid = t;
@@ -7742,7 +7746,92 @@ Flotr.addPlugin('spreadsheetJdx', {
 //			    D.insert(container, this.spreadsheetJdx.ldrgrid);
 //			    this.spreadsheetJdx.container = container;
 //		    }
-		  },  
+		  }, 
+		
+//		  loadselectGrid: function(){
+//			    if (this.seriesselect) return this.seriesselect;
+//			    //
+//			  
+//			    return this.seriesselect;
+//			  },
+//			  
+		  
+      constructSelectGrid: function(){
+			  
+	       if (this.spreadsheetJdx.selectgrid) {  return this.spreadsheetJdx.selectgrid;} 
+		   
+	       var  colgroup = ['<colgroup><col />'],
+	            buttonDownload, buttonSelect, t;
+		   var s = this.options.spreadsheetJdx.selectS, // eries,   
+		       selectgrid = s; //this.spreadsheetJdx.loadselectGrid();
+		  
+		   // First row : series' labels
+ 		   var html = ['<table class="flotr-datagrid"><tr class="first-row">'];
+ 	  	   html.push('<th>&nbsp;</th>');
+     	   _.each(['Title','Data class', 'Data type', 'page'],function(key){
+		      html.push('<th scope="col">'+(key || String.fromCharCode(65+i))+'</th>');
+		    //  html.push('<th scope="col">'+(key || String.fromCharCode(65+i))+'</th>');
+		      colgroup.push('<col />');
+		   });
+		   html.push('<th>&nbsp;</th>');
+		   html.push('</tr>');
+		       
+		    // Data rows
+		   _.each(selectgrid, function(row,rind){
+		      html.push('<tr>');
+		      var tag = 'th',
+		    	  content = rind;
+		      html.push('<'+tag+(tag=='th'?' scope="row"':'')+'>'+content+'</'+tag+'>');
+			     _.times(row.length-1, function(i){
+		             var tag = 'td',
+		                 content = row[i];
+                     html.push('<'+tag+(tag=='th'?' scope="row"':'')+'>'+content+'</'+tag+'>');
+			             }, this);             
+			  html.push('<th>'+'<input class="dataselect" type="checkbox" id='+row[4]+' ></input>'+'</th>');    
+		      html.push('</tr>');
+		          }, this);
+		    colgroup.push('</colgroup>');
+		    t = D.node(html.join(''));
+		    
+            var listi = t.getElementsByClassName('dataselect'),
+                //m=[],
+                 chst = this.options.spreadsheetJdx.checkstate;
+		    if (listi.length > 0) {
+		    						listi[0].checked =true; 
+		    						if (chst && chst.length == listi.length) {
+		    							_.each( listi,function(element,index) { element.checked = chst[index]; }, this);
+		    						}  
+		    }
+//		    buttonDownload = D.node(
+//		      '<button type="button" class="flotr-datagrid-toolbar-button">' +
+//		      this.options.spreadsheetJdx.toolbarDownload +
+//		      '</button>');
+//
+//		    buttonSelect = D.node(
+//		      '<button type="button" class="flotr-datagrid-toolbar-button">' +
+//		      this.options.spreadsheetJdx.toolbarSelectAll+
+//		      '</button>');
+//
+//		    this.
+//		      observe(buttonDownload, 'click', _.bind(this.spreadsheetJdx.downloadLdr, this)).
+//		      observe(buttonSelect, 'click', _.bind(this.spreadsheetJdx.selectAllLdr, this));
+//
+//		    var toolbar = D.node('<div class="flotr-datagrid-toolbar"></div>');
+//		    D.insert(toolbar, buttonDownload);
+//		    D.insert(toolbar, buttonSelect);
+//		    
+
+		    var containerHeight =this.canvasHeight - D.size(this.spreadsheetJdx.tabsContainer).height-2,
+		        container = D.node('<div class="flotr-datagrid-container" style="position:absolute;left:0px;top:0px;width:'+
+		                           this.canvasWidth+'px;height:'+containerHeight+'px;overflow:auto;z-index:10"></div>');
+
+//          D.insert(container, toolbar);
+		    D.insert(container, t);
+		    D.insert(this.el, container);
+		    this.spreadsheetJdx.selectgrid = t;
+		    this.spreadsheetJdx.containerselect = container;
+		    return t;
+		  },
 
 	  /**
 	   * Shows the specified tab, by its name
@@ -7753,33 +7842,37 @@ Flotr.addPlugin('spreadsheetJdx', {
 	    if (this.spreadsheetJdx.activeTab === tabName){
 	      return;
 	    }
+	    this.spreadsheetJdx.constructDataGrid();
+        this.spreadsheetJdx.constructLdrGrid();
+        this.spreadsheetJdx.constructSelectGrid();
+        
+        
+//        this.spreadsheetJdx.containerselect.style.display = 'none';
+        D.hide(this.spreadsheetJdx.containerselect);
+	    D.hide(this.spreadsheetJdx.containerdata);
+        D.hide(this.spreadsheetJdx.containerldr);
+        D.removeClass(this.spreadsheetJdx.tabs.data,  'selected');
+        D.removeClass(this.spreadsheetJdx.tabs.ldr,   'selected');
+        D.removeClass(this.spreadsheetJdx.tabs.select,'selected');
+        D.removeClass(this.spreadsheetJdx.tabs.graph, 'selected');
+        
 	    switch(tabName) {
 	      case 'graph':
-	        D.hide(this.spreadsheetJdx.containerdata);
-	        D.hide(this.spreadsheetJdx.containerldr);
-	        D.removeClass(this.spreadsheetJdx.tabs.data, 'selected');
-	        D.removeClass(this.spreadsheetJdx.tabs.ldr, 'selected');
-	        D.addClass(this.spreadsheetJdx.tabs.graph, 'selected');
-	      break;
+	        D.addClass(this.spreadsheetJdx.tabs.graph, 'selected');    
+	        break;
 	      case 'data':
-	      //  if (!this.spreadsheetJdx.datagrid)
-	          this.spreadsheetJdx.constructDataGrid();
 	        D.show(this.spreadsheetJdx.containerdata);
-	        D.hide(this.spreadsheetJdx.containerldr);
 	        D.addClass(this.spreadsheetJdx.tabs.data, 'selected');
-	        D.removeClass(this.spreadsheetJdx.tabs.graph, 'selected');
-	        D.removeClass(this.spreadsheetJdx.tabs.ldr, 'selected');
-	      break;
+            break;
 	      case 'ldr':
-		   //     if (!this.spreadsheetJdx.ldrgrid)
-		          this.spreadsheetJdx.constructLdrGrid();
-		        D.show(this.spreadsheetJdx.containerldr);
-		        D.hide(this.spreadsheetJdx.containerdata);
-		        D.removeClass(this.spreadsheetJdx.tabs.graph, 'selected');
-		        D.removeClass(this.spreadsheetJdx.tabs.data, 'selected');
-		        D.addClass(this.spreadsheetJdx.tabs.ldr, 'selected');
-		       
-		      break;
+		    D.show(this.spreadsheetJdx.containerldr);
+		    D.addClass(this.spreadsheetJdx.tabs.ldr, 'selected');
+		    break;
+	      case 'select': 
+//	        this.spreadsheetJdx.containerselect.style.display = 'block';
+	    	D.show(this.spreadsheetJdx.containerselect);
+		    D.addClass(this.spreadsheetJdx.tabs.select, 'selected');
+		    break;
 	      default:
 	        throw 'Illegal tab name: ' + tabName;
 	    }
