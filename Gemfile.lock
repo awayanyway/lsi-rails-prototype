@@ -6,9 +6,20 @@ GIT
 
 GIT
   remote: git://github.com/Cominch/dial-a-device-node.git
-  revision: a28139998154b54647b4610ce81040be1c085c8f
+  revision: 2ba751ed341c52c527e80ae030bb1408e2572c91
   specs:
-    dial_a_device_node (0.0.89)
+    dial_a_device_node (0.0.139)
+
+
+
+GIT
+  remote: git://github.com/bernat/best_in_place.git
+  revision: 52c795fefa378d999653443f07c68af2633afd0b
+  branch: rails-4
+  specs:
+    best_in_place (2.0.3)
+      jquery-rails
+      rails (~> 4)
 
 GIT
   remote: git://github.com/davidw/noVNCgem.git
@@ -19,51 +30,57 @@ GIT
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: 01ccfcebd45b8de0a6846d0f33b9daf74673dcc1
+
+  revision: ed3de1c2b566a962697529e824953f6b280e2867
+
   specs:
-    simple_form (3.1.0.rc1)
+    simple_form (3.1.0.rc2)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 3be7f294cdbe44501eb2090241652b852fa23bdb
+
+  revision: cb5d8892bb3d5aae89030eba052e9af0182843e7
+
   branch: 4-0-stable
   specs:
-    actionmailer (4.0.6)
-      actionpack (= 4.0.6)
+    actionmailer (4.0.8)
+      actionpack (= 4.0.8)
       mail (~> 2.5, >= 2.5.4)
-    actionpack (4.0.6)
-      activesupport (= 4.0.6)
+
+    actionpack (4.0.8)
+      activesupport (= 4.0.8)
+
       builder (~> 3.1.0)
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
-    activemodel (4.0.6)
-      activesupport (= 4.0.6)
+    activemodel (4.0.8)
+      activesupport (= 4.0.8)
       builder (~> 3.1.0)
-    activerecord (4.0.6)
-      activemodel (= 4.0.6)
+    activerecord (4.0.8)
+      activemodel (= 4.0.8)
       activerecord-deprecated_finders (~> 1.0.2)
-      activesupport (= 4.0.6)
+      activesupport (= 4.0.8)
       arel (~> 4.0.0)
-    activesupport (4.0.6)
+    activesupport (4.0.8)
       i18n (~> 0.6, >= 0.6.9)
       minitest (~> 4.2)
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
-    rails (4.0.6)
-      actionmailer (= 4.0.6)
-      actionpack (= 4.0.6)
-      activerecord (= 4.0.6)
-      activesupport (= 4.0.6)
+    rails (4.0.8)
+      actionmailer (= 4.0.8)
+      actionpack (= 4.0.8)
+      activerecord (= 4.0.8)
+      activesupport (= 4.0.8)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.0.6)
+      railties (= 4.0.8)
       sprockets-rails (~> 2.0)
-    railties (4.0.6)
-      actionpack (= 4.0.6)
-      activesupport (= 4.0.6)
+    railties (4.0.8)
+      actionpack (= 4.0.8)
+      activesupport (= 4.0.8)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
 
@@ -89,7 +106,7 @@ GEM
       activerecord (>= 3.0)
     arel (4.0.2)
     bcrypt (3.1.7)
-    bootstrap-sass (3.1.1.1)
+    bootstrap-sass (3.2.0.1)
       sass (~> 3.2)
     bootstrap-wysiwyg-rails (0.3.1)
       actionpack (>= 3.1)
@@ -108,10 +125,10 @@ GEM
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
-    coffee-script (2.2.0)
+    coffee-script (2.3.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.7.0)
+    coffee-script-source (1.7.1)
     daemons (1.1.9)
     delayed_job (4.0.2)
       activesupport (>= 3.0, < 4.2)
@@ -124,7 +141,7 @@ GEM
       railties (>= 3.2.6, < 5)
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
-    devise_invitable (1.3.5)
+    devise_invitable (1.3.6)
       actionmailer (>= 3.2.6, < 5)
       devise (>= 3.2.0)
     devise_ldap_authenticatable (0.8.1)
@@ -137,30 +154,38 @@ GEM
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.37.0)
+
+    excon (0.39.0)
     execjs (2.2.1)
-    faye-websocket (0.7.3)
+    faye-websocket (0.7.4)
+
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.3.1)
-    fog (1.22.1)
+    fog (1.23.0)
       fog-brightbox
-      fog-core (~> 1.22)
+      fog-core (~> 1.23)
       fog-json
+      fog-softlayer
       ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
     fog-brightbox (0.1.1)
       fog-core (~> 1.22)
       fog-json
       inflecto
-    fog-core (1.22.0)
+    fog-core (1.23.0)
       builder
-      excon (~> 0.33)
+      excon (~> 0.38)
       formatador (~> 0.2)
       mime-types
       net-scp (~> 1.1)
       net-ssh (>= 2.1.3)
     fog-json (1.0.0)
       multi_json (~> 1.0)
+
+    fog-softlayer (0.3.11)
+      fog-core
+      fog-json
+
     foreman (0.63.0)
       dotenv (>= 0.7)
       thor (>= 0.13.6)
@@ -170,7 +195,9 @@ GEM
     httparty (0.13.1)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    i18n (0.6.9)
+
+    i18n (0.6.11)
+
     inflecto (0.0.2)
     ipaddress (0.8.0)
     jquery-hotkeys-rails (0.7.9.1)
@@ -185,7 +212,7 @@ GEM
     mail (2.6.1)
       mime-types (>= 1.16, < 3)
     mime-types (2.3)
-    mini_magick (3.7.0)
+    mini_magick (3.8.0)
       subexec (~> 0.2.1)
     mini_portile (0.6.0)
     minitest (4.7.5)
@@ -195,7 +222,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
-    nokogiri (1.6.2.1)
+    nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     openbabel (2.3.2.0)
     openbabel-heroku (2.3.2.3)
@@ -215,11 +242,11 @@ GEM
     rails_stdout_logging (0.0.3)
     rake (10.3.2)
     redis (3.1.0)
-    redis-objects (0.9.1)
+    redis-objects (1.0.0)
       redis (>= 3.0.2)
     ref (1.0.5)
     rubabel (0.1.0)
-    rubyzip (1.1.4)
+    rubyzip (1.1.6)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -246,8 +273,8 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
-    tzinfo (0.3.39)
-    uglifier (2.5.1)
+    tzinfo (0.3.40)
+    uglifier (2.5.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unf (0.1.4)
@@ -256,7 +283,7 @@ GEM
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
-    websocket-driver (0.3.3)
+    websocket-driver (0.3.4)
     websocket-rails (0.7.0)
       em-synchrony
       faye-websocket
@@ -266,8 +293,8 @@ GEM
       redis
       redis-objects
       thin
-    will_paginate (3.0.5)
-    will_paginate-bootstrap (1.0.0)
+    will_paginate (3.0.7)
+    will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
 
 PLATFORMS
@@ -277,7 +304,10 @@ DEPENDENCIES
   actionmailer
   acts_as_list
   arel (~> 4.0.0)
-  bootstrap-sass (~> 3.1.1)
+
+  best_in_place!
+  bootstrap-sass (~> 3.2.0.0)
+
   bootstrap-wysiwyg-rails
   carrierwave
   carrierwave_direct
@@ -295,7 +325,7 @@ DEPENDENCIES
   httparty
   jquery-hotkeys-rails
   jquery-rails
-  jquery-ui-rails
+  jquery-ui-rails (= 4.2.1)
   kaitatari!
   mini_magick
   noVNC!
@@ -314,6 +344,7 @@ DEPENDENCIES
   simple_form!
   therubyracer
   thin
+  tzinfo
   uglifier
   unf
   websocket-rails

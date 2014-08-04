@@ -1,22 +1,30 @@
-<div class = "navbar navbar-fixed-bottom navbar-inverse">
-	<div class="navbar-inner">
-		<div class="container">
-			<span class="navbar-form navbar-left">
+<nav class="navbar navbar-fixed-bottom navbar-inverse" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle measurements</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
 
-				<span class="form-group" id="checkedinsamples">
-					
-		      		<%= render 'devices/samplelocations', :layout => false %>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" id="checkedinsamples">
 
-		      	</span>
-  			</span>
+        <%= render 'devices/samplelocations', :layout => false %>
 
-			<span class="navbar-form navbar-right">
 
-	  			<span class="form-group">
-	    			<a href="#">
-	    			<span id="connstatus" class="label label-default">Connection Status</span></a>
-	  			</span>
-	  		</span>
-		</div>
-	</div>
-</div>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">
+            <span id="vncconnstatus" class="label label-default" style="display:none;">VNC</span></a></li>
+        <li><a href="#">
+	    			<span id="connstatus" class="label label-default">Connection Status</span></a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>

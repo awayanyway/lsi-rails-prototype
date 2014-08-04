@@ -8,6 +8,8 @@ class Sample < ActiveRecord::Base
 
   belongs_to :molecule, :autosave => true, inverse_of: :samples
 
+  belongs_to :ancestor, :class_name => Sample
+
   belongs_to :originsample, :class_name => Sample, :foreign_key => :originsample_id
 
   accepts_nested_attributes_for :molecule 
@@ -23,7 +25,7 @@ class Sample < ActiveRecord::Base
 
   before_destroy :checkout_everywhere
 
-  before_destroy :cleanup_projects
+  before_destroy :cleanup_localprojects
 
   def checkout_everywhere
 
@@ -135,9 +137,13 @@ class Sample < ActiveRecord::Base
 
     newsample = self.dup
 
+    newsample.ancestor_id = self.id
+
+    newsample.save
+
     project.add_sample(newsample, user)
 
-    return newsample
+    newsample
 
   end
 
@@ -261,6 +267,17 @@ class Sample < ActiveRecord::Base
 
       parent = Project.find(parent.parent_id)
 
+    end
+
+  end
+
+  def remove_from_library(library)
+
+    ProjectLibrary.where(["library_id = ?", library.id]).each do |pl|
+
+      pl.library.library_entries.where(["sample_id = ?", self.id]).destroy_all
+
+      pl.project.remove_sample_only(self)
     end
 
   end

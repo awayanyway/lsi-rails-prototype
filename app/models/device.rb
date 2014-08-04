@@ -1,5 +1,5 @@
 class Device < ActiveRecord::Base
-  attr_accessible :devicetype_id, :connectiontype, :lastseen, :name, :beaglebone_id, :portname, :portbaud, :portdetails, :porttype, :vnchost, :vncpassword, :vncport, :websockifygateway, :websockifygatewayport, :vncrelay_id
+  attr_accessible :devicetype_id, :connectiontype, :lastseen, :name, :beaglebone_id, :portname, :portbaud, :portdetails, :porttype, :vnchost, :vncpassword, :vncport, :websockifygateway, :websockifygatewayport, :vncrelay_id, :fwroot
 
   belongs_to :devicetype
 

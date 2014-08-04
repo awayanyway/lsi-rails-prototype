@@ -24,7 +24,7 @@
 
                 <td>
                   
-                  <% if project.members.length > 0 then %>Shared with:<% project.members.each do |m| %><br/><%= m.email %><% end %>
+                  <% if project.members.length > 0 then %>Shared with:<% project.members.each do |m| %><br/><%= m.email %> (<%= project.role_str(m) %>) <% if policy(project).adduser? && m.id != current_user.id then %><%= link_to 'Remove', removeuser_project_path(project, :user_id => m.id), :class => "btn btn-warning btn-xs" %><% end %> <% end %>
    <% else %>This project is private.
    <% end %>
 

@@ -1,58 +1,86 @@
+<%= javascript_include_tag ("/assets/dial_a_device_node/devices/"+ @device.devicetype.name) %>
+
+<%= javascript_include_tag ("/assets/dial_a_device_node/devices/"+ @device.devicetype.name + "_UI") %>
+
+<%= javascript_include_tag ("/assets/dial_a_device_node/devices/"+ @device.devicetype.name + "_SIM") %>
+
+<%= javascript_include_tag ("/assets/dial_a_device_node/consolelogger.js") %>
+<%= javascript_include_tag ("/assets/dial_a_device_node/systemstatus.js") %>
+<%= javascript_include_tag ("/assets/dial_a_device_node/webconnection.js") %>
+
+<script type="text/javascript">
+    var devicetype = "<%= @device.devicetype.name %>"
+    var operation_id = "<%= if (@operation != nil) then @operation.id end %>"
+    var device_id = "<%= @device.id %>"
+    var user_id = "<%= if (@current_user != nil) then  @current_user.id end %>"
+    var connectiontype = "<%= @device.connectiontype %>"
+    var channel_name = "channel_dev_" + device_id;
+    var run_id = "<%= if (@run != nil) then @run.id end%>"
+
+    var eventbus = new EventEmitter();
+
+    systemstatus.init (eventbus);
+
+    webconnection.init (eventbus, false);
+    
+    eventbus.emit ("device.announce.deviceid", device_id);
+    eventbus.emit ("device.announce.operationid", operation_id);
+    eventbus.emit ("device.announce.devicetype", devicetype);
+
+    eventbus.emit ("webconnection.set.url", window.location.host+"/websocket");
+    eventbus.emit ("webconnection.set.channelname", channel_name);
+
+    device.init (eventbus);
+    ui.init (eventbus);
+    if (connectiontype == "simulation") {
+      simulator.init (eventbus);
+    }
+    consolelogger.init (eventbus);
+
+
+    eventbus.emit ("webconnection.connect");
+
+    eventbus.on ("ui.status", function (model) {
+
+        if (model.devicesimulation) {
+            $("#connstatus").text ("Simulation mode");
+            $("#connstatus").removeClass ("label-success");
+            $("#connstatus").removeClass ("label-danger");
+            $("#connstatus").addClass ("label-warning");
+        } else {
+            if (model.webconnection) {     
+
+              if (model.deviceconnection) {
+
+                $("#connstatus").text ("Device Connected");
+                $("#connstatus").removeClass ("label-warning");
+                $("#connstatus").removeClass ("label-danger");
+                $("#connstatus").addClass ("label-success");
+
+              } else {
+
+                $("#connstatus").text ("Device Disconnected");
+                $("#connstatus").removeClass ("label-success");
+                $("#connstatus").removeClass ("label-warning");  
+                $("#connstatus").addClass ("label-danger");
+            
+              }
+
+            }
+            else {
+
+                $("#connstatus").text ("No Server Connection");
+                $("#connstatus").removeClass ("label-success");
+                $("#connstatus").removeClass ("label-warning");
+                $("#connstatus").addClass ("label-danger");
+            }
+        }
+    });
+</script>
+
 
 <%= include_novnc_javascript_all %>
 
-<% if (@measurements.length > 0) then %>
-
-<div id="devicestatus" class="col-md-6">
-
-    <h2>Recently measured</h2>
-
-    <% @measurements.each do |m| %>
-
-    <% if !m.dataset.nil? then %>
-
-    <div class="thumbnail">
-        <div>
-        <b><%= m.dataset.method %></b><% if !m.dataset.title.empty? then %> - <%= m.dataset.title %><% end %>
-        </div>
-    <p><small>Created at: <%= m.recorded_at %></small></p>
-
-    <% if m.user_id.nil? then %>
-
-          <%= link_to import_measurement_path(m), :class => "btn btn-xs btn-warning" do %>Import<% end %>
-
-    <% else %>
-    <p>Assigned to <%= User.find(m.user_id).email %><% if (m.confirmed == false) then %> (unconfirmed)<% end %></p>
-
-    <% if !(m.reaction_id.nil?) && !(m.molecule_id.nil?) then %>
-
-        <% if m.user_id == current_user.id && !m.confirmed? then %>
-
-        <%= link_to confirm_measurement_path(m), :class => "btn btn-xs btn-success" do %>Confirm<% end %>
-
-        <% end %>
-
-        <% else %>
-
-          <%= link_to import_measurement_path(m), :class => "btn btn-xs btn-warning" do %>Import<% end %>
-
-        <% end %>
-
-    <% end %>
-
-    
-
-    </div>
-
-    <% end %><!-- if dataset not nil -->
-
-    <% end %> 
-
-    <%= will_paginate @measurements, renderer: BootstrapPagination::Rails %>
-
-</div>
-
-<% end %>
 
 <% if !(@device.token.nil?) then %>
 
@@ -114,9 +142,9 @@
             }
 
             
-            $("#connstatus").removeClass ("label-*");
+            $("#vncconnstatus").removeClass ("label-*");
             
-            $("#connstatus").addClass ("label-"+level);
+            $("#vncconnstatus").addClass ("label-"+level);
             
 
             if (typeof(msg) !== 'undefined') {
@@ -157,11 +185,13 @@
 
 $(document).ready (function () {
 
-    $("#connstatus").removeClass ("label-*");
+    $("#vncconnstatus").removeClass ("label-*");
             
-    $("#connstatus").addClass ("label-default");
+    $("#vncconnstatus").addClass ("label-default");
 
-    $("#connstatus").text ("Remote control deactivated");
+    $("#vncconnstatus").css ("display", "");
+
+    $("#vncconnstatus").text ("Remote control deactivated");
 
 });
 

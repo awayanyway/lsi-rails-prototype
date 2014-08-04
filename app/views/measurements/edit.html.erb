@@ -1,0 +1,4 @@
+
+<h1>Edit measurement <%= link_to "Back", measurements_path, :class => "btn btn-default" %><% if @measurement.complete? then %><%= link_to "Confirm", confirm_measurement_path(@measurement), :class => "btn btn-success" %><% end %></h1>
+
+<%= render 'form' %>

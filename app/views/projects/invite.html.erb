@@ -24,7 +24,7 @@
   <div>
 
       <div class="alert alert-info" style="display:none;">
-      <%= content_tag :div, "Affiliation", :id => "info" %>
+      <%= content_tag :div, "Affiliation exists", :id => "info" %>
     </div>
 
 
@@ -41,6 +41,9 @@
 
  </div>
 
+<br>
+
+Permissions: <%= select_tag(:role_id, options_for_select([["Read only", 88],["Read and write", 99]], 88)) %>
 
   <br/>
 

@@ -45,9 +45,9 @@ else
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 7)) then
-	Devicetype.create :deviceclass_id => 7, :showcase => false, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "03", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355"
+	Devicetype.create :deviceclass_id => 7, :showcase => true, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "knfsimdos", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355"
 else
-	Devicetype.where(["deviceclass_id = ?", 7]).first.update_attributes(:showcase => false, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "03", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355")
+	Devicetype.where(["deviceclass_id = ?", 7]).first.update_attributes(:showcase => true, :name => "knf_simdos_02", :displayname => "KNF SIMDOS 02", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "knfsimdos", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "023030", :portsuffix => "0355")
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 8)) then
@@ -57,7 +57,25 @@ else
 end
 
 if (!Devicetype.exists?(:deviceclass_id => 9)) then
-	Devicetype.create :deviceclass_id => 9, :showcase => false, :name => "ika_ret_control", :displayname => "IKA RET control", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "odd", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A"
+	Devicetype.create :deviceclass_id => 9, :showcase => true, :name => "ika_ret_control", :displayname => "IKA RET control", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "odd", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A"
 else
-	Devicetype.where(["deviceclass_id = ?", 9]).first.update_attributes(:showcase => false, :name => "ika_ret_control", :displayname => "IKA RET control", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "odd", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A")
+	Devicetype.where(["deviceclass_id = ?", 9]).first.update_attributes(:showcase => true, :name => "ika_ret_control", :displayname => "IKA RET control", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "odd", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A")
+end
+
+if (!Devicetype.exists?(:deviceclass_id => 10)) then
+	Devicetype.create :deviceclass_id => 10, :showcase => true, :name => "pce_balance", :displayname => "PCE Balance", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A"
+else
+	Devicetype.where(["deviceclass_id = ?", 10]).first.update_attributes(:showcase => true, :name => "pce_balance", :displayname => "PCE Balance", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "9600", :portlinebreak => "0D0A", :portdatabits => 7, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A")
+end
+
+if (!Devicetype.exists?(:deviceclass_id => 11)) then
+	Devicetype.create :deviceclass_id => 11, :showcase => true, :name => "knf_rc900", :displayname => "KNF RC900", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "57600", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D"
+else
+	Devicetype.where(["deviceclass_id = ?", 11]).first.update_attributes(:showcase => true, :name => "knf_rc900", :displayname => "KNF RC900", :porttype => "serial", :portname => "/dev/ttyACM0", :portbaud => "57600", :portlinebreak => "0D", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D")
+end
+
+if (!Devicetype.exists?(:deviceclass_id => 12)) then
+	Devicetype.create :deviceclass_id => 12, :showcase => true, :name => "eppendorf_innova_42", :displayname => "Eppendorf Innova 42", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "19200", :portlinebreak => "0D0A", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A"
+else
+	Devicetype.where(["deviceclass_id = ?", 12]).first.update_attributes(:showcase => true, :name => "eppendorf_innova_42", :displayname => "Eppendorf Innova 42", :porttype => "serial", :portname => "/dev/ttyUSB0", :portbaud => "19200", :portlinebreak => "0D0A", :portdatabits => 8, :portparity => "none", :portstopbits => 1, :portprefix => "", :portsuffix => "0D0A")
 end

@@ -63,7 +63,9 @@ gem 'jquery-rails'
 
 gem "jquery-hotkeys-rails"
 
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '4.2.1'
+
+gem "best_in_place", github: 'bernat/best_in_place', branch: "rails-4"
 
 gem 'noVNC', :git => "git://github.com/davidw/noVNCgem.git"
 
@@ -104,11 +106,13 @@ gem 'unf'
 
 gem 'fog'
 
+gem 'tzinfo'
+
 gem 'mini_magick'
 
 gem 'carrierwave_direct'
 
-gem 'bootstrap-sass', '~> 3.1.1'
+gem 'bootstrap-sass', '~> 3.2.0.0'
 
 gem 'bootstrap-wysiwyg-rails'
 
@@ -128,4 +132,6 @@ gem 'will_paginate-bootstrap'
 
 gem 'rubyzip'
 
+
 gem 'kaitatari',   :git => 'git://github.com/awayanyway/kaitatari.git' ,  :branch => "ntuple" # :path => ""
+

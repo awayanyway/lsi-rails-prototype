@@ -34,11 +34,17 @@ function smartinput (div_id, callbackfn, caption) {
 
         function submitchangeval (val) {
 
+            
+
             currentval = parseInt(smartinputfield.value);
 
             newval = currentval + val;
 
-            smartinputfield.value = newval;
+            if (val != 0) {
+
+                smartinputfield.value = newval;
+
+            }
 
             clearTimeout(waitaftertypingTimer);
 
@@ -58,6 +64,7 @@ function smartinput (div_id, callbackfn, caption) {
 
         $('#'+smartinputfield_id).keyup(function(){
 
+
             submitchangeval(0);
 
         });
@@ -72,6 +79,11 @@ function smartinput (div_id, callbackfn, caption) {
                 smartinputfield.blur();
                 callbackfn (newval);
             }
+
+            $("#"+smartinputfield_id).addClass ("dontupdate");
+        });
+
+        $("#"+smartinputfield_id).focusin(function() {
 
             $("#"+smartinputfield_id).addClass ("dontupdate");
         });

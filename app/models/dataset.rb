@@ -29,9 +29,22 @@ class Dataset < ActiveRecord::Base
 
     newdataset.save
 
+    dsg = Datasetgroup.new
+    dsg.save
+    dsg.datasets << newdataset
+
     sample.add_dataset(newdataset, user)
 
     return newdataset
+
+  end
+
+  def commit(user)
+
+    c = Commit.new
+    c.dataset_id = self.id
+    c.user_id = user.id
+    c.save
 
   end
 
@@ -435,29 +448,41 @@ class Dataset < ActiveRecord::Base
 
     tempfile = Rails.root.join('tmp').join("datapoints_"+self.id.to_s+".list")
 
-    newattachment = Attachment.new(:dataset => self)
+    if File.exists?(tempfile) then 
 
-    newattachment.folder = ""
+      newattachment = Attachment.new(:dataset => self)
 
-    if Rails.env.localserver? or Rails.env.development? then 
+      newattachment.folder = ""
 
-      old_path = tempfile
+      if Rails.env.localserver? or Rails.env.development? then 
 
-      new_path = LsiRailsPrototype::Application.config.datasetroot + "datasets/#{self.id}/recording.txt"
+        old_path = tempfile
+
+        new_path = LsiRailsPrototype::Application.config.datasetroot + "datasets/#{self.id}/recording.txt"
 
 
-      FileUtils.mkdir_p(File.dirname(new_path))
-      FileUtils.cp(old_path, new_path)
+        FileUtils.mkdir_p(File.dirname(new_path))
+        FileUtils.cp(old_path, new_path)
 
-      newattachment.file = File.new(new_path)
+        newattachment.file = File.new(new_path)
 
-    else
-      newattachment.file = File.new(tempfile)
-    end      
+      else
 
-    newattachment.save
+          old_path = tempfile
 
-    self.add_attachment(newattachment)
+          new_path = Rails.root.join('tmp').join("recording.txt")
+
+          FileUtils.cp(old_path, new_path)
+          
+          newattachment.file = File.new(new_path)
+        
+      end      
+
+      newattachment.save
+
+      self.add_attachment(newattachment)
+
+    end
 
     # add_to_project(measurement.user.rootproject_id, measurement.user)
 

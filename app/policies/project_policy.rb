@@ -98,6 +98,19 @@ class ProjectPolicy < Struct.new(:user, :project)
 
   end
 
+  def removeuser?
+        result = false
+
+    if !user.nil? then
+      project_membership = ProjectMembership.where(["project_id = ? and user_id = ?", project.id, user.id]).first
+
+      if project_membership.role_id >= 99 then result = true end
+    end
+
+    result
+
+  end
+
   def edit?
         result = false
 

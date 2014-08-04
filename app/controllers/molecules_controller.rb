@@ -309,9 +309,15 @@ class MoleculesController < ApplicationController
     @project = Project.find(params[:molecule][:project_id])
     @project_molecule = ProjectMolecule.new(:project_id => @project.id)
 
+    library = @project.rootlibrary
+
+    if Library.exists?(params[:molecule][:library_id]) then library = Library.find(params[:molecule][:library_id]) end
+
+
     params[:molecule].delete :reaction_id
     params[:molecule].delete :role
     params[:molecule].delete :project_id
+    params[:molecule].delete :library_id
 
     @molecule = Molecule.new(params[:molecule])
 
@@ -404,9 +410,9 @@ class MoleculesController < ApplicationController
 
           @molecule.samples << s
 
-          @project.add_sample(s, current_user)
+          @project.add_sample(s, current_user, library)
 
-          format.html { redirect_to sample_path(s, :project_id => @project.id), notice: 'Molecule was successfully created.' }
+          format.html { redirect_to sample_path(s, :project_id => @project.id, :library_id => library.id), notice: 'Molecule was successfully created.' }
           format.json { render json: s, status: :created, location: @molecule }
 
         end

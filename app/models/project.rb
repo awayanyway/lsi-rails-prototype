@@ -16,7 +16,7 @@ class Project < ActiveRecord::Base
   end
 
   def members
-  	User.joins(:project_memberships).where(["role_id = ? and project_id = ?", 88, id])
+  	User.joins(:project_memberships).where(["role_id >= ? and project_id = ?", 88, id])
   end
 
   def owner
@@ -48,12 +48,13 @@ class Project < ActiveRecord::Base
   end
 
   def create_rootlibrary(user)
-    rp = Library.create!
-    rp.save
+    l = Library.create!
+    l.title = "Master Library"
+    l.save
 
-    ProjectLibrary.new(:project_id => self.id, :library_id => rp.id, :user_id => user.id).save
+    ProjectLibrary.new(:project_id => self.id, :library_id => l.id, :user_id => user.id).save
 
-    update_attributes(:rootlibrary_id => rp.id)
+    update_attributes(:rootlibrary_id => l.id)
 
   end
 
@@ -176,17 +177,25 @@ class Project < ActiveRecord::Base
   end
 
 
-  def add_molecule(molecule, user)
+  def add_molecule(molecule, user, library = nil)
 
     ProjectMolecule.new(:project_id => self.id, :molecule_id => molecule.id, :user_id => user.id).save unless molecules.exists?(molecule)
     
-    rootlibrary.add_molecule(molecule, user)
+    if !library.nil? then
+
+      library.add_molecule(molecule, user)
+
+    else 
+
+      rootlibrary.add_molecule(molecule, user)
+
+    end
 
     parent.add_molecule(molecule, user) unless !parent_exists?
 
   end
 
-  def add_sample_only(sample, user)
+  def add_sample_only(sample, user, library = nil)
 
     ProjectSample.new(:project_id => self.id, :sample_id => sample.id, :user_id => user.id).save unless samples.exists?(sample)
 
@@ -196,7 +205,19 @@ class Project < ActiveRecord::Base
 
     end
 
-    rootlibrary.add_sample(sample, user) unless rootlibrary.sample_exists?(sample)
+    
+
+    if !library.nil? then
+
+      library.add_sample(sample, user) unless library.sample_exists?(sample)
+
+    else 
+
+      rootlibrary.add_sample(sample, user) unless rootlibrary.sample_exists?(sample)
+
+    end
+
+    
 
     sample.datasets.each do |ds|
       add_dataset_only(ds, user)
@@ -204,9 +225,9 @@ class Project < ActiveRecord::Base
 
   end
 
-  def add_sample(sample, user)
+  def add_sample(sample, user, library = nil)
 
-    add_sample_only(sample, user)
+    add_sample_only(sample, user, library)
     
     parent.add_sample(sample, user) unless !parent_exists?
   end

@@ -11,7 +11,12 @@ ActionMailer::Base.delivery_method ||= :smtp
 CarrierWave.configure do |config|
 
     config.storage = :fog
-    config.fog_directory = 'dial-a-device'
+
+    if ENV['AWS_ROOT_DIRECTORY'].blank? then
+      config.fog_directory = "lsi-rails-prototype"
+    else
+      config.fog_directory = ENV['AWS_ROOT_DIRECTORY']
+    end  
 
     config.fog_public = false
     config.fog_authenticated_url_expiration = 10.minutes

@@ -53,13 +53,29 @@ LsiRailsPrototype::Application.routes.draw do
     get 'split', on: :member
     get 'transfer', on: :member
 
+    get 'clone_transfer', on: :member
+
     get 'addliterature', on: :member, as: :add_literature_to, :to => 'samples#addliterature'
+
+    get 'clone_library', on: :collection, as: :clone_library, :to => 'samples#clone_library'
+
+    get 'new_library', on: :collection, as: :new_library, :to => 'samples#new_library'
+
+    get 'clone_to_library', on: :member, as: :clone_to_library, :to => 'samples#clone_to_library'
+    get 'move_to_library', on: :member, as: :move_to_library, :to => 'samples#move_to_library'
+
+    get 'remove_from_library', on: :member, as: :remove_from_library, :to => 'samples#remove_from_library'
   end
 
   resources :locations
 
   resources :devices do
     get 'showvnc', on: :member
+    get 'showmeasurements', on: :member
+    get 'showmeasurementsmini', on: :member
+
+    get 'listmeasurements', on: :member
+
     get 'connect', on: :member
     post 'connectit', on: :member, as: :connect_do
 
@@ -69,6 +85,9 @@ LsiRailsPrototype::Application.routes.draw do
     get 'checkinselect', on: :member, as: :checkinselect_sample_to
     get 'checkin', on: :member, as: :checkin_sample_to
     get 'checkout', on: :member, as: :checkout_sample_to
+
+    get 'loadmeasurement', on: :member, as: :load_measurement_to
+    get 'unloadmeasurement', on: :member, as: :unload_measurement_to
 
     get 'startrun', on: :member, as: :startrun_at
     get 'stoprun', on: :member, as: :stoprun_at
@@ -89,7 +108,7 @@ LsiRailsPrototype::Application.routes.draw do
   end
 
   resources :measurements do
-    get 'import', on: :member
+  
     get 'discard', on: :member
 
     get 'confirm', on: :member
@@ -156,6 +175,8 @@ LsiRailsPrototype::Application.routes.draw do
 
   resources :projects do
     get 'adduser/:user_id', :to => 'projects#adduser', :on => :member
+    get 'removeuser/:user_id', :to => 'projects#removeuser', :on => :member, :as => :removeuser
+
     get 'adduser', :to => 'projects#adduser', :on => :member
     get 'invite', :to => 'projects#invite', :on => :member
 

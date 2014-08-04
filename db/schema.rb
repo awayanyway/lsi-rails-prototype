@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140612111626) do
+ActiveRecord::Schema.define(version: 20140724074534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 20140612111626) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "vncrelay_id"
+    t.string   "fwroot"
   end
 
   create_table "devicetypes", force: true do |t|
@@ -212,6 +213,7 @@ ActiveRecord::Schema.define(version: 20140612111626) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "sample_id"
+    t.string   "lename"
   end
 
   create_table "locations", force: true do |t|
@@ -227,11 +229,13 @@ ActiveRecord::Schema.define(version: 20140612111626) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.boolean  "confirmed",   default: false
+    t.boolean  "confirmed",       default: false
     t.integer  "molecule_id"
     t.string   "samplename"
     t.integer  "reaction_id"
     t.integer  "sample_id"
+    t.datetime "recorded_end_at"
+    t.string   "title"
   end
 
   create_table "molecule_samples", force: true do |t|
@@ -254,7 +258,7 @@ ActiveRecord::Schema.define(version: 20140612111626) do
     t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "fp"
+    t.string   "fp",           limit: nil
   end
 
   create_table "organization_departments", force: true do |t|
@@ -422,6 +426,7 @@ ActiveRecord::Schema.define(version: 20140612111626) do
     t.integer  "originsample_id"
     t.string   "name"
     t.float    "tare_amount",         default: 0.0
+    t.integer  "ancestor_id"
   end
 
   create_table "user_affiliations", force: true do |t|

@@ -12,13 +12,13 @@
 
 
         <div class="thumbnail">
-            <%= image_submit_tag "../assets/simulation.jpg", :style => "width: 240px; height: 140px;", :onclick => "document.getElementById('beaglebone_serialnumber').value('');" %>
+            <%= image_submit_tag "../assets/simulation.jpg", :style => "width: 240px; height: 140px;", :onclick => "document.getElementById('beaglebone_id').value = '-1';" %>
             <div class="caption">
                 <h3>Simulation Mode</h3>
 
                 <p>Do not connect to a physical device.</p>
                 <p>
-                  <button class = "btn btn-primary" onclick="document.getElementById('simulation').value = 'true'; ">Simulation mode</button>
+                  <button class = "btn btn-primary" onclick="document.getElementById('beaglebone_id').value = '-1'; ">Simulation mode</button>
                 </p>
             </div>
 
@@ -35,7 +35,7 @@
             <div class="caption">
                 <h3>Connect to BeagleBone</h3>     
 
-                <%= select_tag(:beaglebone_id, options_for_select(current_user.beaglebones.collect{ |r| [r.serialnumber, r.id] }, @device.beaglebone_id)) %>
+                <%= select_tag(:beaglebone_id, content_tag(:option,'no node',:value=>"-1")+options_for_select(current_user.beaglebones.collect{ |r| [r.serialnumber, r.id] }, @device.beaglebone_id.nil? ? "-1" : @device.beaglebone_id)) %>
 
                 <p>
                  <button class = "btn btn-primary" onclick="document.getElementById('simulation').value = 'false'; ">Connect</button>                
@@ -63,9 +63,27 @@
                 <p>VNC port:<input id="vncport" type="text" name="vncport" value="<%= @device.vncport %>"/></p>
                 <p>VNC password:<input id="vncpassword" type="text" name="vncpassword" value="<%= @device.vncpassword %>"/></p>
 
+                
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6 col-md-4">    
+
+
+        <div class="thumbnail">
+            <%= image_submit_tag "../assets/beagleboard.jpg", :style => "width: 240px; height: 140px;", :onclick => "" %>
+            <div class="caption">
+                <h3>Connect to BeagleBone</h3>     
+
+                <%= select_tag(:beaglebone_id, content_tag(:option,'no node',:value=>"-1")+options_for_select(current_user.beaglebones.collect{ |r| [r.serialnumber, r.id] }, @device.beaglebone_id)) %>
+
                 <p>
-                 <button class = "btn btn-primary">Connect</button>                
+                 <button class = "btn btn-primary" onclick="document.getElementById('simulation').value = 'false'; ">Connect</button>                
                 </p>
+
             </div>
 
         </div>

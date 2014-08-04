@@ -1,19 +1,66 @@
 <% if (@locations != nil) then %>
+
     <% @locations.each do |location| %>
+
+
 
     <%if !location.nil? then %>
 
 
-        <% if location.runs.where(["finished = ?", false]).length == 0 then %>
+       <% if location.runs.where(["finished = ? and started_at IS NOT NULL", false]).length == 0 then %>
+
+          <% @running = false %>
+        <!-- no run exists -->
+
+            <li><a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/startrun?location_id=<%= location.id %>'); $('#measurementsmini').load('/devices/<%= @device.id %>/showmeasurementsmini'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-success">Run</a></li>
+
+        <% else %>
+
+        <!-- a run exists -->
+
+          <% @running = true %>
+
+          <li><a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/stoprun?location_id=<%= location.id %>'); $('#measurementsmini').load('/devices/<%= @device.id %>/showmeasurementsmini');document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Stop</a></li>
+
+        <% end %>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><% if !location.runningmeasurement.nil? then %>Measurement <%= location.runningmeasurement.id %><% else %>New measurement<% end %> <% if !@running then %><span class="caret"></span><% end %></a>
+
+          <% if !@running then %>
+          <ul class="dropdown-menu" role="menu">
+
+
+            <li><a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/loadmeasurement?measurement_id=-1&location_id=<%= @device.locations.first.id %>'); $('#measurementsmini').load('/devices/<%= @device.id %>/showmeasurementsmini'); return false;">New measurement</a></li>
+
+            <li class="divider"></li>
+
+
+            <% Measurement.where(["device_id = ? and recorded_at is null", @device.id]).order("created_at DESC").each do |m| %>
+
+        
+              <li><a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/loadmeasurement?measurement_id=<%= m.id %>&location_id=<%= @device.locations.first.id %>'); $('#measurementsmini').load('/devices/<%= @device.id %>/showmeasurementsmini'); return false;"><%= m.id %></a></li>
+
+            <% end %>
+
+          </ul>
+          <% end %>
+      </li>
 
 
 
-            <% if (location.sample_id != nil) then %>
+         <% if location.runs.where(["finished = ? and started_at IS NOT NULL", false]).length == 0 then %>
+
+        <!-- no run exists -->
+
+<!--
+
+          <% if (location.sample_id != nil) then %>
 
             <% sample = Sample.find(location.sample_id) %>
 
           
-            <p class="navbar-text"><span class="glyphicon glyphicon-glass" /><%=  sample.longname %></p> &nbsp; <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/checkout?sample_id=<%= sample.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Check out</a>
+            <a class="navbar-text"><span class="glyphicon glyphicon-glass" /><%=  sample.longname %></a> &nbsp; <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/checkout?sample_id=<%= sample.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Check out</a>
 
             <script>
               // alert ("<%= location.sample_id %>");
@@ -24,34 +71,46 @@
 
             <% else %>
 
-              <p class="navbar-text">No sample.</p>
+              <li><a class="navbar-text">New sample</a></li>
 
-              <a href="/devices/<%= @device.id %>/checkinselect" class="btn btn-xs btn-success">Check in sample</a>
+              <li><a href="/devices/<%= @device.id %>/checkinselect" class="btn btn-xs btn-success">Check in sample</a></li>
 
-            <% end %>
+          <% end %>
 
-
-            <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/startrun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-success">Start measurement</a>
+        -->
 
         <% else %>
 
-        <% if (location.sample_id != nil) then %>
+
+        <!-- a run exists -->
+
+
+          <% if (location.sample_id != nil) then %>
 
             <% sample = Sample.find(location.sample_id) %>
 
-             <p class="navbar-text">
-            <span class="glyphicon glyphicon-glass" /><%=  sample.longname %></p> 
+          
+            <li><p class="navbar-text"><span class="glyphicon glyphicon-glass" /> <%=  sample.longname %></p></li>
+
+            <script>
+              // alert ("<%= location.sample_id %>");
+                if (typeof detectedSample == 'function') {
+                  detectedSample ('<%= location.sample_id %>', false);
+                }
+            </script>
 
             <% else %>
 
-              <a href="">No sample.</a>
-
-            <% end %>
+              <!--<li><p class="navbar-text"><span class="glyphicon glyphicon-glass" /> New sample</p></li>-->
 
 
-        <a href="#" onclick=" $('#checkedinsamples').load('/devices/<%= @device.id %>/stoprun?location_id=<%= location.id %>'); document.getElementById('actionpane').style.display = 'none'; return false;" class="btn btn-xs btn-warning">Stop measurement</a>
+          <% end %>
 
         <% end %>
+
+      
+
+      
 
 
       <% end %>
@@ -59,3 +118,5 @@
     <% end %>
 
 <% end %>
+
+

@@ -1,0 +1,32 @@
+<%= simple_form_for(@measurement) do |f| %>
+  <%= f.error_notification %>
+
+
+  <div class="field">
+       <%= f.input :title %>
+  </div>
+
+
+<% if @measurement.recorded_at.nil? then %>
+
+  <h2>Device</h2>
+
+   <div class="field">
+       <%= f.select :device_id, content_tag(:option,'not assigned',:value=>"-1")+options_from_collection_for_select(current_user.devices, "id", "name", @measurement.device_id) %>
+  </div>
+
+
+<% end %>
+
+
+        <h2>Assign to sample</h2>
+          
+          <%= f.select :sample_id, content_tag(:option,'not assigned',:value=>"-1")+content_tag(:option,'create new sample',:value=>"-2")+options_from_collection_for_select(current_user.samples, "id", "name", @measurement.sample_id) %>
+
+          
+   <br/>
+
+  <div class="form-actions">
+    <%= f.button :submit, :id => "submitbutton", :class => "btn btn-success" %>
+  </div>
+<% end %>

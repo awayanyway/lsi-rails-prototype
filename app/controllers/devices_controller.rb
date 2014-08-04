@@ -1,8 +1,8 @@
 class DevicesController < ApplicationController
 
-  before_filter :authenticate_user!, except: [:showcase, :showcaseindex]
+  before_filter :authenticate_user!, except: [:showcase, :showcaseindex, :listmeasurements]
 
-  before_action :set_device, only: [:assign, :assign_do, :show, :edit, :update, :destroy, :stoprun, :startrun, :control, :share, :invite, :checkin, :checkinselect, :checkout, :connect, :connectit]
+  before_action :set_device, only: [:assign, :assign_do, :show, :showmeasurements, :edit, :update, :destroy, :stoprun, :startrun, :control, :share, :invite, :checkin, :checkinselect, :checkout, :connect, :connectit, :loadmeasurement, :unloadmeasurement, :listmeasurements]
 
   # GET /devices
   # GET /devices.json
@@ -19,6 +19,15 @@ class DevicesController < ApplicationController
   def control
     authorize @device, :control?
   end
+
+
+  def listmeasurements
+
+    measurements = Measurement.where(["device_id = ?", @device.id])
+
+    render json: measurements, :include => {:dataset => {:include => {:attachments => {:only => :as_mini_json, :methods => [:as_mini_json]}}}}
+  end
+
 
 def assign
 
@@ -66,11 +75,28 @@ def assign
 
       @device.vncrelay_id = params[:vncrelay_id]
 
+
+      if (params[:beaglebone_id] == "-1") then
+
+        @device[:beaglebone_id] = nil
+
+        @device.connectiontype = "vnc"
+
+      else
+
+        @device[:beaglebone_id] = params[:beaglebone_id]
+
+        @device.connectiontype = "vnc+node"
+
+      end
+
       @device.save
 
       redirect_to device_path(@device), notice: "Device connected via VNC."
 
-    elsif (params[:simulation] == "true") then
+    elsif (params[:beaglebone_id] == "-1") then
+
+      @device[:beaglebone_id] = nil
 
       @device.connectiontype = "simulation"
 
@@ -80,7 +106,7 @@ def assign
 
     else
 
-      @device.connectiontype = "serial"
+      @device.connectiontype = "node"
         
       @device[:beaglebone_id] = params[:beaglebone_id]  
 
@@ -101,6 +127,68 @@ def assign
       format.json { render json: @device }
     end
   end
+
+  def loadmeasurement
+    authorize @device, :checkin?
+
+    location = Location.find(params[:location_id])
+
+
+    if params[:measurement_id] == "-1" then
+
+      if !location.currentrun.nil? then
+
+        location.currentrun.update_attribute(:measurement_id, nil)
+
+      end
+
+      location.update_attribute(:sample_id, nil)
+
+
+    else
+
+      @measurement = Measurement.find (params[:measurement_id])
+
+      if location.currentrun.nil? then
+
+        r = Run.new
+
+        r.location = location
+        r.measurement = @measurement
+        r.user_id = current_user.id
+
+        r.save
+
+      end
+
+      if !@measurement.sample.nil? then
+
+        location.update_attribute(:sample_id, @measurement.sample_id)
+
+      end
+
+      location.currentrun.update_attribute(:measurement_id, @measurement.id)
+
+    end
+
+
+    redirect_to samplelocations_at_device_path(@device)
+  end
+
+  def unloadmeasurement
+    authorize @device, :checkin?
+
+    @measurement = Measurement.find (params[:measurement_id])
+
+    ### todo
+
+    l = @device.locations.first
+    l.sample_id = @sample.id
+    l.save
+
+    redirect_to samplelocations_at_device_path(@device)
+  end
+
 
   def checkin
     authorize @device, :checkin?
@@ -142,29 +230,45 @@ def assign
     end
 
 
-
-
     location = Location.find(params[:location_id])
 
-#    if location.sample_id.nil? then
+    if location.runningmeasurement.nil? then 
 
-#      s = Sample.new
+      measurement = Measurement.new
+      measurement.user_id = current_user.id
+      measurement.device_id = @device.id
 
-#      s.save
+      measurement.recorded_at = DateTime.now
+      measurement.save
 
-#      @project.add_sample(s, current_user)
+    else 
 
-#      location.sample_id = s.id
-#      location.save
+      measurement = location.runningmeasurement
 
-#    end
+    end
+
+
+    if (measurement.runs.length == 0) then 
+
+      r = Run.new
+
+      r.location = location
+      r.measurement = measurement
+      r.user_id = current_user.id
+
+      r.save
+
+    else
+
+      r = measurement.runs.first
+
+    end
+
+
+
 
 
     @dataset = Dataset.new
-
-    # @dataset.molecule_id = params[:molecule_id]
-
-    #@dataset.sample_id = s.id
 
     @dataset.title = "Measurement"
     @dataset.method = @device.devicetype.displayname
@@ -179,8 +283,7 @@ def assign
 
     @dataset.save
 
-    
-
+  
     # @project.add_dataset(@dataset, current_user)
 
 
@@ -188,25 +291,15 @@ def assign
     dsg.save
     dsg.datasets << @dataset
 
+   
 
+    measurement.update_attribute(:dataset_id, @dataset.id)
+    measurement.update_attribute(:recorded_at, DateTime.now)
 
-    
-    measurement = Measurement.new
-           measurement.user_id = current_user.id
-           measurement.device_id = @device.id
-           measurement.dataset_id = @dataset.id
-           # measurement.sample_id =  s.id
-           # run.location_id = params[:location_id]
-           # run.active = true;
-    measurement.save
+    r.update_attribute(:measurement_id, measurement.id)
 
-        r = Run.new
+    r.update_attribute(:started_at, DateTime.now)
 
-    r.location = location
-    r.measurement = measurement
-    r.user_id = current_user.id
-
-    r.save
     
     WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.startrun", @device
 
@@ -218,18 +311,27 @@ def assign
 
     location = Location.find(params[:location_id])
 
-    run = Run.where(["location_id = ? and finished = ?", location.id, false]).first
+    run = location.currentrun
 
     run.finished = true
 
-    measurement = run.measurement
-
-            measurement.samplename = "finished"
-            measurement.save
     run.save
 
+    if !run.measurement.nil? then
 
-    measurement.dataset.collect_datapoints
+      measurement = run.measurement
+
+
+
+      measurement.samplename = "finished"
+      measurement.recorded_end_at = DateTime.now
+      measurement.save
+
+      measurement.dataset.collect_datapoints
+
+      measurement.dataset.commit(current_user)
+
+    end
 
     
     WebsocketRails["channel_dev_"+@device.id.to_s].trigger "device.stoprun", @device
@@ -277,6 +379,36 @@ def assign
     respond_to do |format|
       format.html { render action: "show", notice: "" }
       format.json { render json: @device }
+    end
+  end
+
+  def showmeasurements
+    @device = Device.find(params[:id])
+
+    authorize @device, :show?
+
+
+    @measurements = Measurement.where(["device_id = ?", @device.id]).paginate(:page => params[:page], :per_page => 10).order ("recorded_at DESC")
+
+
+    respond_to do |format|
+      format.html { render action: "showmeasurements", notice: "" }
+      format.json { render json: @device }
+    end
+  end
+
+  def showmeasurementsmini
+    @device = Device.find(params[:id])
+
+    authorize @device, :show?
+
+
+    @measurements = Measurement.where(["device_id = ?", @device.id]).paginate(:page => params[:page], :per_page => 10).order ("recorded_at DESC")
+
+
+    respond_to do |format|
+      format.html { render action: "showmeasurementsmini", notice: "" }
+      format.json { render json: @measurements }
     end
   end
 
@@ -438,6 +570,6 @@ def assign
 
     # Only allow a trusted parameter "white list" through.
     def device_params
-      params.require(:device).permit(:name, :connectiontype, :portbaud, :portdetails, :portname, :porttype, :devicetype_id, :beaglebone_id, :lastseen, :websockifygateway, :websockifygatewayport, :vnchost, :vncport, :token, :vncpassword)
+      params.require(:device).permit(:name, :connectiontype, :portbaud, :portdetails, :portname, :porttype, :devicetype_id, :beaglebone_id, :lastseen, :websockifygateway, :websockifygatewayport, :vnchost, :vncport, :token, :vncpassword, :fwroot)
     end
 end

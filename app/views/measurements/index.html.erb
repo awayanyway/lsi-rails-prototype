@@ -15,7 +15,7 @@
   
 <% end %>
 
-<h1>Measurements</h1>
+<h1>Measurements <%= link_to 'New', new_measurement_path, :class => "btn btn-success" %></h1>
 
 <% if @measurements.length > 0 then %>
 
@@ -23,6 +23,7 @@
 <thead>
 
 	<th>Device</th>
+  <th>Time</th>
   <th>Dataset</th>
   <th>Sample</th>
 
@@ -33,14 +34,19 @@
 
 <tbody>
 
-  <% @measurements.each do |m| %>
+  <% @measurements.order("created_at DESC").each do |m| %>
     <tr>
       <td>
         <% if m.device.nil? then %>
           Not assigned.
         <% else %>
-          <%= m.device.name %>
+          <%= link_to m.device.name, m.device %>
         <% end %>
+      </td>
+
+      <td>
+        <% if !m.recorded_at.nil? then %><%= m.recorded_at.strftime('%Y-%m-%d %H:%M:%S %Z') %><br><% end %>
+        <% if !m.recorded_end_at.nil? && !m.recorded_at.nil? then %>Duration: <%= (m.recorded_end_at - m.recorded_at).round(1) %> s<% end %>
       </td>
 
         <td>
@@ -48,7 +54,7 @@
 
             No Dataset.
           <% else %>
-        <% if (m.runs.last.finished) then %>
+        <% if (m.runs.last.finished && !m.dataset.nil?) then %>
 
           <b><%= m.dataset.method %></b>&nbsp;-&nbsp;<%= m.dataset.title %>
 
@@ -63,7 +69,7 @@
 
       <td>
 
-        <% if !m.runs.last.nil? && !m.sample.nil? then %>
+        <% if !m.sample.nil? then %>
 
         <%= Sample.find(m.sample_id).name %>
 
@@ -75,18 +81,14 @@
       </td>
 
       <td>
-      	<%= link_to discard_measurement_path(m), :class => "btn btn-danger" do %>Discard<% end %>
+      	<%= link_to('<span class="glyphicon glyphicon-remove"/>'.html_safe, discard_measurement_path(m), :confirm => "Are you sure you want to discard this measurement?") %>
       </td>
 
       <td>
 
-      	<% if m.complete? then %>
+      	<% if !m.complete? then %>
 
-      	<%= link_to confirm_measurement_path(m), :class => "btn btn-success" do %>Confirm<% end %>
-
-      	<% else %>
-
-	      <%= link_to import_measurement_path(m), :class => "btn btn-warning" do %>Import<% end %>
+  	      <%= link_to edit_measurement_path(m), :class => "btn btn-warning" do %>Import<% end %>
 
 	      <% end %>
   		</td>

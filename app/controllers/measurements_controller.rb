@@ -13,6 +13,74 @@ class MeasurementsController < ApplicationController
     end
   end
 
+  def new
+
+    @measurement = Measurement.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @measurement }
+    end
+  end
+
+  def edit
+
+    @measurement = Measurement.find(params[:id])
+    
+    authorize @measurement, :edit?
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @measurement }
+    end
+  end
+
+  def create
+
+    if params[:measurement][:sample_id] == -2 then
+
+      @sample = Sample.new(:name => params[:sample_name])
+
+      @sample.save
+
+      @sample.add_to_project_recursive(current_user.rootproject_id, current_user)
+
+      params[:measurement][:sample_id] = @sample.id
+
+
+    elsif params[:measurement][:sample_id] == -1 then
+
+      params[:measurement][:sample_id] = nil
+
+    end
+
+    if params[:measurement][:device_id] == -1 then
+
+      params[:measurement][:device_id] = nil      
+
+    end
+
+
+    @measurement = Measurement.new(params[:measurement])
+
+    authorize @measurement
+
+    @measurement.user_id =  current_user.id
+
+
+    respond_to do |format|
+      if @measurement.save
+
+        format.html { redirect_to measurements_path, notice: 'Measurement was successfully initialized.' }
+        format.json { render json: @measurement, status: :created, location: @measurement }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @measurement.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+
   def assign_molecule
 
     @measurement = Measurement.find(params[:id])
@@ -53,10 +121,12 @@ class MeasurementsController < ApplicationController
        #   s.add_to_project(current_user.rootproject_id)
        # end
 
-      @sample.add_to_project(current_user.rootproject_id)
+      @sample.add_to_project_recursive(current_user.rootproject_id, current_user)
 
 
       @measurement.update_attribute(:sample_id, @sample.id)
+
+      @measurement.sample.add_dataset(@measurement.dataset, current_user)
 
 
       redirect_to import_measurement_path(@measurement), notice: "Measurement was assigned to new sample." 
@@ -149,7 +219,7 @@ class MeasurementsController < ApplicationController
   end
 
 
-  def import
+  def update
 
     @measurement = Measurement.find(params[:id])
 
@@ -157,11 +227,42 @@ class MeasurementsController < ApplicationController
 
     @measurement.save
 
+    if params[:measurement][:sample_id] == "-2" then
 
-    respond_to do |format|
-        format.html { render action: "import" }
-        format.json { render json: @measurement.errors, status: :unprocessable_entity }
-      end
+      @sample = Sample.new(:name => params[:sample_name])
+
+      @sample.save
+
+      @sample.add_to_project_recursive(current_user.rootproject_id, current_user)
+
+
+      @measurement.update_attribute(:sample_id, @sample.id)
+
+      @measurement.sample.add_dataset(@measurement.dataset, current_user)      
+
+    elsif params[:measurement][:sample_id] == "-1" then
+
+      @measurement.update_attribute(:sample_id, nil)
+
+    else
+
+      @measurement.update_attribute(:sample_id, params[:measurement][:sample_id])
+
+    end
+
+    if params[:measurement][:device_id] == -1 then
+
+      params[:measurement][:device_id] = nil      
+
+    end
+
+    params[:measurement].delete :sample_id
+
+    if @measurement.update_attributes(params[:measurement]) then
+
+      redirect_to measurements_path
+
+    end
   end
 
   def discard

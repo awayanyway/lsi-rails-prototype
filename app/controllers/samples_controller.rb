@@ -2,11 +2,11 @@ class SamplesController < ApplicationController
 
   before_filter :authenticate_user!, except: [:index, :show]
 
-  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :addliterature, :zip]
+  before_action :set_sample, only: [:show, :edit, :update, :destroy, :assign, :assign_do, :split, :transfer, :clone_transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
 
   before_action :set_project
 
-  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :addliterature, :zip]
+  before_action :set_project_sample, only: [:destroy, :show, :edit, :update, :destroy, :assign, :split, :transfer, :clone_transfer, :addliterature, :zip, :clone_to_library, :move_to_library, :remove_from_library]
 
   before_action :set_empty_project_sample, only: [:createdirect, :create, :new, :assign_do]
 
@@ -27,6 +27,22 @@ class SamplesController < ApplicationController
 
     end
 
+
+  end
+
+  def update
+
+    authorize @project_sample, :edit?
+
+    respond_to do |format|
+      if @sample.update_attributes(params[:sample])
+        format.html { redirect_to @sample, notice: 'Sample was successfully updated.' }
+        format.json { respond_with_bip(@sample) }
+      else
+        format.html { render action: "edit" }
+        format.json { respond_with_bip(@sample) }
+      end
+    end
 
   end
 
@@ -85,6 +101,32 @@ class SamplesController < ApplicationController
 
     end
 
+    if !@sample.molecule.nil? then
+      @sample.molecule.samples << newsample
+    end
+
+
+  end
+
+
+  def clone_transfer
+
+    targetproject = Project.find(params[:targetproject_id])
+
+    newsample = @sample.transfer_to_project(targetproject, current_user)
+
+    @sample.datasets.each do |ds|
+
+      newdataset = ds.transfer_to_sample(newsample, current_user)
+      ds.transfer_attachments_to_dataset(newdataset)
+
+    end
+
+    if !@sample.molecule.nil? then
+      @sample.molecule.samples << newsample
+    end
+
+    redirect_to samples_path(:project_id => targetproject.id), notice: "Sample was transferred."
 
   end
 
@@ -95,6 +137,7 @@ class SamplesController < ApplicationController
     s.target_amount = "0"
     s.unit = "mg"
     s.originsample_id = @sample.id
+    s.ancestor_id = self.id
     s.save
 
     @sample.molecule.samples << s
@@ -110,13 +153,171 @@ class SamplesController < ApplicationController
 
   def index
 
-    @library = @project.rootlibrary
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
 
     @project_library = ProjectLibrary.where(["library_id = ?",  @library.id]).first
 
     @project_library_entries = @project_library.library.library_entries.paginate(:page => params[:page])
 
     render 'libraries/show', :id => @library.id
+
+  end
+
+  def remove_from_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    @sample.remove_from_library(@library)
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => @library.id)
+
+  end
+
+  def move_to_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    targetlibrary = Library.find(params[:targetlibrary_id])
+
+
+    le = LibraryEntry.where(["library_id = ? and sample_id = ?", @library.id, @sample.id]).first
+
+    if !le.nil? then le.destroy end
+
+    targetlibrary.add_sample(@sample, current_user) unless targetlibrary.sample_exists?(@sample)
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => targetlibrary.id)
+
+  end
+
+  def clone_to_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    targetlibrary = Library.find(params[:targetlibrary_id])
+
+    newsample = @sample.transfer_to_project(@project, current_user)
+
+    newsample.update_attribute(:name, "Clone of "+@sample.name)
+
+    if !@sample.molecule.nil? then
+      @sample.molecule.samples << newsample
+    end
+
+
+    @sample.datasets.each do |ds|
+
+      newdataset = ds.transfer_to_sample(newsample, current_user)
+      ds.transfer_attachments_to_dataset(newdataset)
+
+    end
+
+
+    targetlibrary.add_sample(newsample, current_user) unless targetlibrary.sample_exists?(newsample)
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => targetlibrary.id)
+
+  end
+
+  def clone_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    @project_library = ProjectLibrary.where(["library_id = ?",  @library.id]).first
+
+    
+    l = Library.create!
+    l.title = "Clone of "+@library.title
+    l.save
+
+
+    @library.library_entries.each do |le|
+
+      sample = Sample.find(le.sample_id)
+
+      newsample = sample.transfer_to_project(@project, current_user)
+
+      sample.molecule.samples << newsample
+
+      l.add_sample(newsample, current_user) unless l.sample_exists?(newsample)
+
+    end
+
+
+    ProjectLibrary.new(:project_id => @project.id, :library_id => l.id, :user_id => current_user.id).save
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => l.id)
+
+  end
+
+  def new_library
+
+    if Library.exists?(params[:library_id]) then
+
+      @library = Library.find(params[:library_id])
+
+    else
+
+      @library = @project.rootlibrary
+
+    end
+
+    @project_library = ProjectLibrary.where(["library_id = ?",  @library.id]).first
+
+    
+    l = Library.create!
+    l.title = "New"
+    l.save
+
+
+    
+    ProjectLibrary.new(:project_id => @project.id, :library_id => l.id, :user_id => current_user.id).save
+
+
+    redirect_to samples_path(:project_id => @project.id, :library_id => l.id)
 
   end
 
